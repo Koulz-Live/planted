@@ -32,11 +32,13 @@ const recipeSchema = zod_1.z.object({
 const nutritionSchema = zod_1.z.object({
     householdSize: zod_1.z.number().int().positive(),
     focusAreas: zod_1.z.array(zod_1.z.string()),
-    timeAvailablePerDay: zod_1.z.number().positive()
+    timeAvailablePerDay: zod_1.z.number().positive(),
+    mealPhotoUrls: zod_1.z.array(zod_1.z.string().url()).optional()
 });
 const storySchema = zod_1.z.object({
     dishName: zod_1.z.string(),
-    region: zod_1.z.string()
+    region: zod_1.z.string(),
+    foodPhotoUrls: zod_1.z.array(zod_1.z.string().url()).optional()
 });
 router.post('/plant-plan', async (req, res) => {
     try {
