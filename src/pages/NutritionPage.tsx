@@ -285,7 +285,11 @@ export default function NutritionPage() {
 
                 <div className="nt-form-footer">
                   <div className="nt-footer-text">
-                    <span>✨</span>
+                    <span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+                      </svg>
+                    </span>
                     <strong>AI-powered</strong> meal plans in seconds
                   </div>
                   <button
@@ -373,7 +377,11 @@ export default function NutritionPage() {
         <aside className="nt-right-column">
           <article className="nt-card nt-preview-card">
             <div className="nt-card-inner">
-              <div className="nt-hero-icon">🥗</div>
+              <div className="nt-hero-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                </svg>
+              </div>
               <div className="nt-preview-card-top">
                 <div>
                   <h3 className="nt-preview-title">Weekly Meal Planning</h3>

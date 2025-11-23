@@ -233,7 +233,11 @@ export default function LearningPage() {
       <header className="lp-nav">
         <div className="lp-nav-inner">
           <div className="lp-brand">
-            <div className="lp-brand-icon">📚</div>
+            <div className="lp-brand-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+              </svg>
+            </div>
             <span>Planted</span>
           </div>
           <nav className="lp-nav-links">
@@ -251,7 +255,12 @@ export default function LearningPage() {
         {/* Hero Header */}
         <header className="lp-hero-header">
           <div className="lp-eyebrow">
-            <span>🎓</span>
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917z"/>
+                <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z"/>
+              </svg>
+            </span>
             Educational Pathways
           </div>
           <h1 className="lp-title">Learning Pathways</h1>
@@ -303,7 +312,12 @@ export default function LearningPage() {
               <p className="lp-module-desc">{module.description}</p>
 
               <div className="lp-module-meta">
-                <span className="lp-meta-item">⏱️ {module.duration}</span>
+                <span className="lp-meta-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                  </svg>
+                  {module.duration}
+                </span>
                 <span className="lp-meta-item">{difficultyLabels[module.difficulty]}</span>
               </div>
 
@@ -342,15 +356,30 @@ export default function LearningPage() {
 
               <div className="lp-modal-meta">
                 <div className="lp-meta-row">
-                  <span>⏱️ Duration:</span>
+                  <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                    </svg>
+                    Duration:
+                  </span>
                   <strong>{selectedModule.duration}</strong>
                 </div>
                 <div className="lp-meta-row">
-                  <span>📊 Difficulty:</span>
+                  <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+                    </svg>
+                    Difficulty:
+                  </span>
                   <strong>{difficultyLabels[selectedModule.difficulty]}</strong>
                 </div>
                 <div className="lp-meta-row">
-                  <span>🎯 Ethical Focus:</span>
+                  <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                      <path d="M8 1a6.5 6.5 0 0 1 6.5 6.5 6.5 6.5 0 0 1-3.25 5.63l-.5.865A1.5 1.5 0 0 1 9.5 15h-3a1.5 1.5 0 0 1-1.25-.715l-.5-.865A6.5 6.5 0 0 1 1.5 7.5 6.5 6.5 0 0 1 8 1"/>
+                    </svg>
+                    Ethical Focus:
+                  </span>
                   <strong>{selectedModule.ethicalFocus}</strong>
                 </div>
               </div>
