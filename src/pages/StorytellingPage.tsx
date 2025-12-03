@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
@@ -138,280 +138,247 @@ export default function StorytellingPage() {
   };
 
   return (
-    <div className="storytelling-page">
-      {/* Top Navigation */}
-      <header className="st-nav">
-        <div className="st-nav-inner">
-          <div className="st-brand">
-            <div className="st-brand-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-              </svg>
-            </div>
-            <span>Planted</span>
-          </div>
-          <nav className="st-nav-links">
-            <a href="/">Home</a>
-            <a href="/plant-care">Plant Care</a>
-            <a href="/recipes">Recipes</a>
-            <a href="/nutrition">Nutrition</a>
-            <a href="/storytelling" className="active">Storytelling</a>
-            <a href="/community">Community</a>
-          </nav>
+    <div className="storytelling-page container">
+      {/* Hero Section */}
+      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+        <div className="col-lg-8 px-0">
+          <h1 className="display-4 fst-italic">📖 Food Storytelling</h1>
+          <p className="lead my-3">
+            Discover the rich cultural heritage, historical origins, and scientific wisdom 
+            behind traditional dishes from around the world. Explore how food connects us to 
+            our past, shapes our identity, and carries forward ancient knowledge.
+          </p>
         </div>
-      </header>
+      </div>
 
-      <main className="st-shell">
-        {/* Left column: Form */}
-        <section className="st-main-column">
-          <header className="st-hero-header">
-            <div className="st-eyebrow">
-              <span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
-                  <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m7.5-6.923c-.67.204-1.335.82-1.887 1.855q-.215.403-.395.872c.705.157 1.472.257 2.282.287zM4.249 3.539q.214-.577.481-1.078a7 7 0 0 1 .597-.933A7 7 0 0 0 3.051 3.05q.544.277 1.198.49zM3.509 7.5c.036-1.07.188-2.087.436-3.008a9 9 0 0 1-1.565-.667A6.96 6.96 0 0 0 1.018 7.5zm1.4-2.741a12.3 12.3 0 0 0-.4 2.741H7.5V5.091c-.91-.03-1.783-.145-2.591-.332M8.5 5.09V7.5h2.99a12.3 12.3 0 0 0-.399-2.741c-.808.187-1.681.301-2.591.332zM4.51 8.5c.035.987.176 1.914.399 2.741A13.6 13.6 0 0 1 7.5 10.91V8.5zm3.99 0v2.409c.91.03 1.783.145 2.591.332.223-.827.364-1.754.4-2.741zm-3.282 3.696q.18.469.395.872c.552 1.035 1.218 1.65 1.887 1.855V11.91c-.81.03-1.577.13-2.282.287zm.11 2.276a7 7 0 0 1-.598-.933 9 9 0 0 1-.481-1.079 8.4 8.4 0 0 0-1.198.49 7 7 0 0 0 2.276 1.522zm-1.383-2.964A13.4 13.4 0 0 1 3.508 8.5h-2.49a6.96 6.96 0 0 0 1.362 3.675c.47-.258.995-.482 1.565-.667m6.728 2.964a7 7 0 0 0 2.275-1.521 8.4 8.4 0 0 0-1.197-.49 9 9 0 0 1-.481 1.078 7 7 0 0 1-.597.933M8.5 11.909v3.014c.67-.204 1.335-.82 1.887-1.855q.216-.403.395-.872A12.6 12.6 0 0 0 8.5 11.91zm3.555-.401c.57.185 1.095.409 1.565.667A6.96 6.96 0 0 0 14.982 8.5h-2.49a13.4 13.4 0 0 1-.437 3.008M14.982 7.5a6.96 6.96 0 0 0-1.362-3.675c-.47.258-.995.482-1.565.667.248.92.4 1.938.437 3.008zM11.27 2.461q.266.502.482 1.078a8.4 8.4 0 0 0 1.196-.49 7 7 0 0 0-2.275-1.52c.218.283.418.597.597.932m-.488 1.343a8 8 0 0 0-.395-.872C9.835 1.897 9.17 1.282 8.5 1.077V4.09c.81-.03 1.577-.13 2.282-.287z"/>
-                </svg>
-              </span>
-              Cultural Food History
+      {/* Main Content Grid */}
+      <div className="row g-5">
+        {/* Main Content - Form and Story */}
+        <div className="col-md-8">
+          <h3 className="pb-4 mb-4 fst-italic border-bottom">Explore a Dish</h3>
+
+          <article className="p-4 mb-4 bg-body-tertiary rounded">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4 className="mb-0">Dish Details</h4>
+              <span className="badge bg-primary">AI-Powered</span>
             </div>
-            <h1 className="st-title">Food Storytelling</h1>
-            <p className="st-subtitle">
-              Discover the rich cultural heritage, historical origins, and scientific wisdom 
-              behind traditional dishes from around the world.
-            </p>
-          </header>
 
-          <article className="st-card">
-            <div className="st-card-inner">
-              <div className="st-card-header">
-                <h2>Explore a Dish</h2>
-                <div className="st-tag-set">
-                  <div className="st-tag-dot"></div>
-                  AI-Powered
+            <form onSubmit={handleSubmit}>
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <label htmlFor="dishName" className="form-label fw-bold">Dish Name *</label>
+                  <input
+                    id="dishName"
+                    name="dishName"
+                    type="text"
+                    className="form-control"
+                    placeholder="e.g., Injera, Kimchi, Mole"
+                    value={formData.dishName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <div className="form-text">Enter the name of the traditional dish</div>
+                </div>
+
+                <div className="col-md-6">
+                  <label htmlFor="region" className="form-label fw-bold">Region/Culture *</label>
+                  <input
+                    id="region"
+                    name="region"
+                    type="text"
+                    className="form-control"
+                    placeholder="e.g., Ethiopia, Korea, Mexico"
+                    value={formData.region}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <div className="form-text">Country or cultural region of origin</div>
+                </div>
+
+                <div className="col-12">
+                  <label className="form-label fw-bold">Food Photos (Optional)</label>
+                  <ImageUpload
+                    onImagesChange={handleImagesChange}
+                    maxImages={5}
+                    helperText="Upload photos of the dish for AI to provide richer cultural insights and visual analysis."
+                  />
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit}>
-                <div className="st-form-grid">
-                  <div className="st-field">
-                    <label htmlFor="dishName">Dish Name *</label>
-                    <input
-                      id="dishName"
-                      name="dishName"
-                      type="text"
-                      className="st-input"
-                      placeholder="e.g., Injera, Kimchi, Mole"
-                      value={formData.dishName}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <span className="st-helper-text">Enter the name of the traditional dish</span>
-                  </div>
-
-                  <div className="st-field">
-                    <label htmlFor="region">Region/Culture *</label>
-                    <input
-                      id="region"
-                      name="region"
-                      type="text"
-                      className="st-input"
-                      placeholder="e.g., Ethiopia, Korea, Mexico"
-                      value={formData.region}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <span className="st-helper-text">Country or cultural region of origin</span>
-                  </div>
-
-                  <div className="st-field st-form-row-full">
-                    <label>Food Photos (Optional)</label>
-                    <ImageUpload
-                      onImagesChange={handleImagesChange}
-                      maxImages={5}
-                      helperText="Upload photos of the dish for AI to provide richer cultural insights and visual analysis."
-                    />
-                  </div>
+              {error && (
+                <div className="alert alert-danger d-flex align-items-center" role="alert">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                  </svg>
+                  <div>{error}</div>
                 </div>
+              )}
 
-                {error && (
-                  <div className="st-error-message">
-                    <span>⚠️</span>
-                    {error}
-                  </div>
-                )}
-
-                <div className="st-form-footer">
-                  <div className="st-footer-text">
-                    <span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+              <div className="d-flex justify-content-between align-items-center">
+                <small className="text-muted">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-stars me-1" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                    <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.73 1.73 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.73 1.73 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.73 1.73 0 0 0 3.407 2.31zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+                  </svg>
+                  AI-powered cultural narratives
+                </small>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Discovering Story...
+                    </>
+                  ) : (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="me-2" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                        <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
                       </svg>
-                    </span>
-                    <strong>AI-powered</strong> cultural narratives
-                  </div>
-                  <button
-                    type="submit"
-                    className="st-btn-primary"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <span className="icon">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                          </svg>
-                        </span>
-                        Discovering Story...
-                      </>
-                    ) : (
-                      <>
-                        <span className="icon">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-                          </svg>
-                        </span>
-                        Discover Story
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
+                      Discover Story
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </article>
 
           {/* Results Section */}
           {story && (
-            <article className="st-card st-results-card">
-              <div className="st-card-inner">
-                <div className="st-card-header">
-                  <h2>{formData.dishName}</h2>
-                  <div className="st-tag-set">
-                    <div className="st-tag-dot"></div>
-                    {formData.region}
-                  </div>
-                </div>
-
-                <div className="st-narrative-section">
-                  <h3>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
-                      <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-                    </svg>
-                    Cultural Heritage & History
-                  </h3>
-                  <div className="st-narrative-content">
-                    {story.narrative.split('\n\n').map((paragraph, index) => (
-                      <p key={index}>{paragraph}</p>
-                    ))}
-                  </div>
-                </div>
-
-                {story.scienceInsights.length > 0 && (
-                  <div className="st-science-section">
-                    <h3>🔬 Science & Nutrition Insights</h3>
-                    <ul className="st-insights-list">
-                      {story.scienceInsights.map((insight, index) => (
-                        <li key={index}>
-                          <span className="st-insight-icon">•</span>
-                          {insight}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+            <article className="blog-post">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h2 className="display-5 link-body-emphasis mb-0">{formData.dishName}</h2>
+                <span className="badge bg-success">{formData.region}</span>
               </div>
+
+              <div className="mb-4">
+                <h3 className="h4 mb-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" className="me-2" style={{ verticalAlign: 'middle' }}>
+                    <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+                  </svg>
+                  Cultural Heritage & History
+                </h3>
+                {story.narrative.split('\n\n').map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
+              </div>
+
+              {story.scienceInsights.length > 0 && (
+                <div className="p-4 mb-4 bg-body-tertiary rounded">
+                  <h3 className="h4 mb-3">🔬 Science & Nutrition Insights</h3>
+                  <ul className="list-unstyled mb-0">
+                    {story.scienceInsights.map((insight, index) => (
+                      <li key={index} className="mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">
+                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                        </svg>
+                        {insight}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </article>
           )}
-        </section>
+        </div>
 
-        {/* Right column: Preview / Tips */}
-        <aside className="st-right-column">
-          <article className="st-card st-preview-card">
-            <div className="st-card-inner">
-              <div className="st-hero-icon">🌾</div>
-              <div className="st-preview-card-top">
-                <div>
-                  <h3 className="st-preview-title">Cultural Food Stories</h3>
-                  <p className="st-preview-subtitle">
-                    Explore the intersection of history, culture, science, and biodiversity 
-                    through traditional foods from around the world.
-                  </p>
+        {/* Sidebar */}
+        <div className="col-md-4">
+          <div className="position-sticky" style={{ top: '2rem' }}>
+            {/* About Section */}
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h4 className="fst-italic">Cultural Food Stories</h4>
+              <p className="mb-0">
+                Explore the intersection of history, culture, science, and biodiversity 
+                through traditional foods from around the world.
+              </p>
+              {story && (
+                <div className="d-flex gap-2 mt-3 flex-wrap">
+                  <span className="badge bg-success">{formData.region}</span>
+                  <span className="badge bg-secondary">{story.scienceInsights.length} insights</span>
                 </div>
-              </div>
-
-              {story ? (
-                <div className="st-pill-row">
-                  <div className="st-pill">{formData.region}</div>
-                  <div className="st-pill muted">{story.scienceInsights.length} insights</div>
+              )}
+              {!story && (
+                <div className="d-flex gap-2 mt-3 flex-wrap">
+                  <span className="badge bg-secondary">Global Cuisine</span>
+                  <span className="badge bg-secondary">Cultural Heritage</span>
+                  <span className="badge bg-secondary">Science-Backed</span>
                 </div>
-              ) : (
-                <>
-                  <div className="st-pill-row">
-                    <div className="st-pill">Global Cuisine</div>
-                    <div className="st-pill muted">Cultural Heritage</div>
-                    <div className="st-pill muted">Science-Backed</div>
-                  </div>
-
-                  <div className="st-preview-sample">
-                    <h4>Example: Kimchi (Korea)</h4>
-                    <p className="st-preview-description">
-                      A fermented vegetable dish with 1,500+ year history, deeply rooted in 
-                      Korean agricultural traditions and preservation techniques...
-                    </p>
-                  </div>
-                </>
               )}
             </div>
-          </article>
 
-          <article className="st-card st-tips-card">
-            <div className="st-card-inner">
-              <h3>💡 Discovery Tips</h3>
-              <ul className="st-tips-list">
-                <li>
+            {/* Example Section */}
+            {!story && (
+              <div className="p-4 mb-3 bg-body-tertiary rounded">
+                <h4 className="fst-italic">Example Story</h4>
+                <h6 className="mb-2">Kimchi (Korea)</h6>
+                <p className="mb-0 small text-muted">
+                  A fermented vegetable dish with 1,500+ year history, deeply rooted in 
+                  Korean agricultural traditions and preservation techniques...
+                </p>
+              </div>
+            )}
+
+            {/* Discovery Tips */}
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h4 className="fst-italic">💡 Discovery Tips</h4>
+              <ul className="list-unstyled mb-0">
+                <li className="mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
                   <strong>Be specific with dish names</strong> – Traditional names yield richer stories
                 </li>
-                <li>
+                <li className="mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
                   <strong>Upload food photos</strong> – AI can identify ingredients and ceremonial elements
                 </li>
-                <li>
+                <li className="mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
                   <strong>Explore diverse cuisines</strong> – Learn about global food traditions
                 </li>
                 <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
                   <strong>Understand sustainability</strong> – Discover ecological wisdom in traditional foods
                 </li>
               </ul>
             </div>
-          </article>
 
-          <article className="st-card">
-            <div className="st-card-inner">
-              <h3>Recent Stories</h3>
+            {/* Recent Stories */}
+            <div className="p-4">
+              <h4 className="fst-italic">Recent Stories</h4>
               {history.length > 0 ? (
-                <ul className="st-tips-list" style={{ gap: '0.75rem' }}>
+                <ul className="list-unstyled">
                   {history.map((item) => (
-                    <li key={item.id} style={{ paddingLeft: 0 }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
-                        <strong style={{ color: 'var(--accent-dark)' }}>
-                          {item.dishName}
-                        </strong>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                    <li key={item.id} className="border-top py-3">
+                      <div>
+                        <h6 className="mb-0">{item.dishName}</h6>
+                        <small className="text-muted">
                           {item.region} · {new Date(item.timestamp).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric'
                           })}
-                        </span>
+                        </small>
                       </div>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '1rem 0' }}>
+                <p className="text-muted small mb-0">
                   No stories yet. Discover your first food story above!
                 </p>
               )}
             </div>
-          </article>
-        </aside>
-      </main>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
