@@ -185,3 +185,63 @@ input, select, textarea {
 main {
   flex: 1;
 }
+
+/* Page-specific adaptations for blog template */
+/* Ensure pages with custom layouts work well in container */
+.learning-page,
+.nutrition-page,
+.rc-page,
+.community-page,
+.plant-care-page,
+.storytelling-page,
+.challenges-page,
+.soc-page {
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding-left: calc(50vw - 50%);
+  padding-right: calc(50vw - 50%);
+}
+
+/* Typography improvements for consistency */
+.display-4 {
+  font-size: 3.5rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.fst-italic {
+  font-style: italic !important;
+}
+
+.lead {
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+
+/* Ensure blog-style cards work across pages */
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .learning-page,
+  .nutrition-page,
+  .rc-page,
+  .community-page,
+  .plant-care-page,
+  .storytelling-page,
+  .challenges-page,
+  .soc-page {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
