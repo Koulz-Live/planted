@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
-import { HomePage, PlantCarePage, RecipesPage, NutritionPage, LearningPage, StorytellingPage, CommunityPage, ChallengesPage } from './pages';
+import { HomePage, PlantCarePage, RecipesPage, NutritionPage, LearningPage, StorytellingPage, CommunityPage, ChallengesPage, SOCPage } from './pages';
 import './App.css';
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
         <Route path="/storytelling" element={<StorytellingPage />} />
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/challenges" element={<ChallengesPage />} />
+        <Route path="/soc" element={<SOCPage />} />
       </Routes>
     </Router>
   );

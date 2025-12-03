@@ -14,6 +14,7 @@ export function Navigation() {
           <Link className="nav-link" to="/storytelling">Stories</Link>
           <Link className="nav-link" to="/community">Community</Link>
           <Link className="nav-link" to="/challenges">Challenges</Link>
+          <Link className="nav-link" to="/soc">SOC</Link>
         </div>
       </div>
     </nav>
