@@ -584,3 +584,31 @@
     gap: 0.35rem;
   }
 }
+
+/* Recipe Results Slider Responsive Behavior */
+@media (max-width: 768px) {
+  .rc-recipes-desktop {
+    display: none;
+  }
+  .rc-recipes-mobile {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .rc-recipes-desktop {
+    display: block;
+  }
+  .rc-recipes-mobile {
+    display: none;
+  }
+}
+
+/* Mobile slider card padding for indicators */
+.rc-recipe-slide {
+  padding-bottom: 3.5rem !important;
+}
+
+.rc-recipes-mobile .card-slider-indicators {
+  bottom: 1rem;
+}

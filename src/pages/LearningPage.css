@@ -632,6 +632,15 @@
     grid-template-columns: 1fr;
   }
 
+  /* Show mobile slider, hide desktop grid */
+  .lp-modules-desktop {
+    display: none;
+  }
+
+  .lp-modules-mobile {
+    display: block;
+  }
+
   .lp-modal {
     padding: 2rem;
   }
@@ -639,6 +648,28 @@
   .lp-modal-header h2 {
     font-size: 1.5rem;
   }
+}
+
+@media (min-width: 769px) {
+  /* Show desktop grid, hide mobile slider */
+  .lp-modules-desktop {
+    display: grid;
+  }
+
+  .lp-modules-mobile {
+    display: none;
+  }
+}
+
+/* Slider-specific styles for mobile modules */
+.lp-module-slide {
+  /* Ensure module cards in slider have proper bottom padding for indicators */
+  padding-bottom: 3.5rem !important;
+}
+
+.lp-modules-mobile .card-slider-indicators {
+  /* Position indicators at bottom of module card */
+  bottom: 1rem;
 }
 
 @media (max-width: 480px) {

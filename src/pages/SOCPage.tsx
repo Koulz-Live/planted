@@ -1,4 +1,5 @@
 import React from 'react';
+import { CardSlider } from '../components/CardSlider';
 import './SOCPage.css';
 
 const ShieldIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -305,7 +306,9 @@ export default function SOCPage() {
               risk visible and manageable.
             </p>
           </div>
-          <div className="soc-layers-grid">
+          
+          {/* Desktop: Grid layout */}
+          <div className="soc-layers-grid soc-layers-desktop">
             {architectureLayers.map((layer) => (
               <article key={layer.title} className="soc-layer-card">
                 <h3>{layer.title}</h3>
@@ -331,6 +334,36 @@ export default function SOCPage() {
               </article>
             ))}
           </div>
+
+          {/* Mobile: Slider */}
+          <div className="soc-layers-mobile">
+            <CardSlider showIndicators>
+              {architectureLayers.map((layer) => (
+                <article key={layer.title} className="soc-layer-card soc-layer-slide">
+                  <h3>{layer.title}</h3>
+                  <p>{layer.description}</p>
+                  <div className="soc-layer-meta">
+                    <div>
+                      <h4>Inputs</h4>
+                      <ul>
+                        {layer.inputs.map((input) => (
+                          <li key={input}>{input}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4>Outputs</h4>
+                      <ul>
+                        {layer.outputs.map((output) => (
+                          <li key={output}>{output}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </CardSlider>
+          </div>
         </section>
 
         {/* Workflow */}
@@ -342,7 +375,9 @@ export default function SOCPage() {
               and ISMS updates, with AI agents assisting at every stage while humans stay accountable.
             </p>
           </div>
-          <div className="soc-workflow">
+          
+          {/* Desktop: Grid layout */}
+          <div className="soc-workflow soc-workflow-desktop">
             {workflowSteps.map((step) => (
               <article key={step.step} className="soc-step-card">
                 <div className="soc-step-badge">{step.step}</div>
@@ -352,6 +387,21 @@ export default function SOCPage() {
                 </div>
               </article>
             ))}
+          </div>
+
+          {/* Mobile: Slider */}
+          <div className="soc-workflow-mobile">
+            <CardSlider showIndicators>
+              {workflowSteps.map((step) => (
+                <article key={step.step} className="soc-step-card soc-step-slide">
+                  <div className="soc-step-badge">{step.step}</div>
+                  <div className="soc-step-content">
+                    <h3>{step.title}</h3>
+                    <p>{step.summary}</p>
+                  </div>
+                </article>
+              ))}
+            </CardSlider>
           </div>
         </section>
 

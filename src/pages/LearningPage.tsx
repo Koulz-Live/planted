@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { CardSlider } from '../components/CardSlider';
 import './LearningPage.css';
 
 interface Module {
@@ -290,8 +291,8 @@ export default function LearningPage() {
           </div>
         </section>
 
-        {/* Modules Grid */}
-        <section className="lp-modules-grid">
+        {/* Modules Grid - Desktop */}
+        <section className="lp-modules-grid lp-modules-desktop">
           {modules.map((module) => (
             <article 
               key={module.id} 
@@ -333,6 +334,53 @@ export default function LearningPage() {
               </button>
             </article>
           ))}
+        </section>
+
+        {/* Modules Slider - Mobile */}
+        <section className="lp-modules-mobile">
+          <CardSlider showIndicators>
+            {modules.map((module) => (
+              <article 
+                key={module.id} 
+                className={`lp-module-card lp-module-slide ${module.completed ? 'completed' : ''}`}
+                style={{ '--category-color': categoryColors[module.category] } as React.CSSProperties}
+              >
+                <div className="lp-module-header">
+                  <span 
+                    className="lp-category-badge"
+                    style={{ backgroundColor: categoryColors[module.category] }}
+                  >
+                    {module.category}
+                  </span>
+                  {module.completed && <span className="lp-completed-badge">✓ Completed</span>}
+                </div>
+                
+                <h3>{module.title}</h3>
+                <p className="lp-module-desc">{module.description}</p>
+
+                <div className="lp-module-meta">
+                  <span className="lp-meta-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                    </svg>
+                    {module.duration}
+                  </span>
+                  <span className="lp-meta-item">{difficultyLabels[module.difficulty]}</span>
+                </div>
+
+                <div className="lp-ethical-focus">
+                  <strong>Ethical Focus:</strong> {module.ethicalFocus}
+                </div>
+
+                <button 
+                  className="lp-module-btn"
+                  onClick={() => setSelectedModule(module)}
+                >
+                  View Details
+                </button>
+              </article>
+            ))}
+          </CardSlider>
         </section>
 
         {/* Module Detail Modal */}

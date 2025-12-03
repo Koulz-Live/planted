@@ -505,4 +505,41 @@
   .soc-hero-title {
     font-size: 2.1rem;
   }
+
+  /* Show mobile sliders, hide desktop layouts */
+  .soc-layers-desktop,
+  .soc-workflow-desktop {
+    display: none;
+  }
+
+  .soc-layers-mobile,
+  .soc-workflow-mobile {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  /* Show desktop layouts, hide mobile sliders */
+  .soc-layers-desktop,
+  .soc-workflow-desktop {
+    display: grid;
+  }
+
+  .soc-layers-mobile,
+  .soc-workflow-mobile {
+    display: none;
+  }
+}
+
+/* Slider-specific styles for SOC cards */
+.soc-layer-slide,
+.soc-step-slide {
+  /* Ensure proper bottom padding for indicators */
+  padding-bottom: 3.5rem !important;
+}
+
+.soc-layers-mobile .card-slider-indicators,
+.soc-workflow-mobile .card-slider-indicators {
+  /* Position indicators at bottom */
+  bottom: 1rem;
 }
