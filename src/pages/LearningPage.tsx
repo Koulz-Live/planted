@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { CardSlider } from '../components/CardSlider';
@@ -229,246 +229,349 @@ export default function LearningPage() {
   }
 
   return (
-    <div className="learning-page">
-      {/* Top Navigation */}
-      <header className="lp-nav">
-        <div className="lp-nav-inner">
-          <div className="lp-brand">
-            <div className="lp-brand-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-              </svg>
-            </div>
-            <span>Planted</span>
-          </div>
-          <nav className="lp-nav-links">
-            <a href="/">Home</a>
-            <a href="/plant-care">Plant Care</a>
-            <a href="/recipes">Recipes</a>
-            <a href="/nutrition">Nutrition</a>
-            <a href="/community">Community</a>
-            <a href="/learning" className="active">Learning</a>
-          </nav>
-        </div>
-      </header>
-
-      <main className="lp-shell">
-        {/* Hero Header */}
-        <header className="lp-hero-header">
-          <div className="lp-eyebrow">
-            <span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
-                <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917z"/>
-                <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z"/>
-              </svg>
-            </span>
-            Educational Pathways
-          </div>
-          <h1 className="lp-title">Learning Pathways</h1>
-          <p className="lp-subtitle">
+    <div className="learning-page container">
+      {/* Hero Section */}
+      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+        <div className="col-lg-8 px-0">
+          <h1 className="display-4 fst-italic">📚 Learning Pathways</h1>
+          <p className="lead my-3">
             Explore structured learning modules on nutrition, cultural respect, sustainable cooking, 
-            and ethical food systems. Track your progress and earn certificates.
+            and ethical food systems. Track your progress and earn certificates as you advance through 
+            each pathway.
           </p>
-        </header>
-
-        {/* Progress Stats */}
-        <section className="lp-stats-bar">
-          <div className="lp-stat">
-            <div className="lp-stat-value">{stats.completed}</div>
-            <div className="lp-stat-label">Completed</div>
+          <div className="d-flex gap-3 flex-wrap">
+            <span className="badge bg-success fs-6">{stats.completed} Completed</span>
+            <span className="badge bg-warning text-dark fs-6">{stats.inProgress} In Progress</span>
+            <span className="badge bg-secondary fs-6">{stats.total - stats.completed} Remaining</span>
+            <span className="badge bg-primary fs-6">{Math.round((stats.completed / stats.total) * 100)}% Overall</span>
           </div>
-          <div className="lp-stat">
-            <div className="lp-stat-value">{stats.inProgress}</div>
-            <div className="lp-stat-label">In Progress</div>
-          </div>
-          <div className="lp-stat">
-            <div className="lp-stat-value">{stats.total - stats.completed}</div>
-            <div className="lp-stat-label">Remaining</div>
-          </div>
-          <div className="lp-stat">
-            <div className="lp-stat-value">{Math.round((stats.completed / stats.total) * 100)}%</div>
-            <div className="lp-stat-label">Overall Progress</div>
-          </div>
-        </section>
+        </div>
+      </div>
 
-        {/* Modules Grid - Desktop */}
-        <section className="lp-modules-grid lp-modules-desktop">
-          {modules.map((module) => (
-            <article 
-              key={module.id} 
-              className={`lp-module-card ${module.completed ? 'completed' : ''}`}
-              style={{ '--category-color': categoryColors[module.category] } as React.CSSProperties}
-            >
-              <div className="lp-module-header">
-                <span 
-                  className="lp-category-badge"
-                  style={{ backgroundColor: categoryColors[module.category] }}
-                >
-                  {module.category}
-                </span>
-                {module.completed && <span className="lp-completed-badge">✓ Completed</span>}
-              </div>
-              
-              <h3>{module.title}</h3>
-              <p className="lp-module-desc">{module.description}</p>
+      {/* Main Content Grid */}
+      <div className="row g-5">
+        {/* Main Content - Modules */}
+        <div className="col-md-8">
+          <h3 className="pb-4 mb-4 fst-italic border-bottom">Available Modules</h3>
 
-              <div className="lp-module-meta">
-                <span className="lp-meta-item">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
-                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                  </svg>
-                  {module.duration}
-                </span>
-                <span className="lp-meta-item">{difficultyLabels[module.difficulty]}</span>
-              </div>
-
-              <div className="lp-ethical-focus">
-                <strong>Ethical Focus:</strong> {module.ethicalFocus}
-              </div>
-
-              <button 
-                className="lp-module-btn"
-                onClick={() => setSelectedModule(module)}
-              >
-                View Details
-              </button>
-            </article>
-          ))}
-        </section>
-
-        {/* Modules Slider - Mobile */}
-        <section className="lp-modules-mobile">
-          <CardSlider showIndicators>
+          {/* Modules Grid - Desktop */}
+          <div className="row g-4 lp-modules-desktop">
             {modules.map((module) => (
-              <article 
-                key={module.id} 
-                className={`lp-module-card lp-module-slide ${module.completed ? 'completed' : ''}`}
-                style={{ '--category-color': categoryColors[module.category] } as React.CSSProperties}
-              >
-                <div className="lp-module-header">
-                  <span 
-                    className="lp-category-badge"
-                    style={{ backgroundColor: categoryColors[module.category] }}
-                  >
-                    {module.category}
-                  </span>
-                  {module.completed && <span className="lp-completed-badge">✓ Completed</span>}
-                </div>
-                
-                <h3>{module.title}</h3>
-                <p className="lp-module-desc">{module.description}</p>
-
-                <div className="lp-module-meta">
-                  <span className="lp-meta-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
-                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                    </svg>
-                    {module.duration}
-                  </span>
-                  <span className="lp-meta-item">{difficultyLabels[module.difficulty]}</span>
-                </div>
-
-                <div className="lp-ethical-focus">
-                  <strong>Ethical Focus:</strong> {module.ethicalFocus}
-                </div>
-
-                <button 
-                  className="lp-module-btn"
-                  onClick={() => setSelectedModule(module)}
-                >
-                  View Details
-                </button>
-              </article>
-            ))}
-          </CardSlider>
-        </section>
-
-        {/* Module Detail Modal */}
-        {selectedModule && (
-          <div className="lp-modal-overlay" onClick={() => setSelectedModule(null)}>
-            <div className="lp-modal" onClick={(e) => e.stopPropagation()}>
-              <button className="lp-modal-close" onClick={() => setSelectedModule(null)}>
-                ✕
-              </button>
-              
-              <div className="lp-modal-header">
-                <span 
-                  className="lp-category-badge"
-                  style={{ backgroundColor: categoryColors[selectedModule.category] }}
-                >
-                  {selectedModule.category}
-                </span>
-                <h2>{selectedModule.title}</h2>
-                <p className="lp-modal-desc">{selectedModule.description}</p>
-              </div>
-
-              <div className="lp-modal-meta">
-                <div className="lp-meta-row">
-                  <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
-                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                    </svg>
-                    Duration:
-                  </span>
-                  <strong>{selectedModule.duration}</strong>
-                </div>
-                <div className="lp-meta-row">
-                  <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
-                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
-                    </svg>
-                    Difficulty:
-                  </span>
-                  <strong>{difficultyLabels[selectedModule.difficulty]}</strong>
-                </div>
-                <div className="lp-meta-row">
-                  <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
-                      <path d="M8 1a6.5 6.5 0 0 1 6.5 6.5 6.5 6.5 0 0 1-3.25 5.63l-.5.865A1.5 1.5 0 0 1 9.5 15h-3a1.5 1.5 0 0 1-1.25-.715l-.5-.865A6.5 6.5 0 0 1 1.5 7.5 6.5 6.5 0 0 1 8 1"/>
-                    </svg>
-                    Ethical Focus:
-                  </span>
-                  <strong>{selectedModule.ethicalFocus}</strong>
-                </div>
-              </div>
-
-              <div className="lp-milestones">
-                <h3>Learning Milestones</h3>
-                <ul>
-                  {selectedModule.milestones.map((milestone, index) => (
-                    <li key={index}>
-                      <span className="lp-milestone-number">{index + 1}</span>
-                      {milestone}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="lp-modal-actions">
-                {selectedModule.completed ? (
-                  <div className="lp-completed-message">
-                    ✓ You completed this module on {selectedModule.completedAt?.toLocaleDateString()}
+              <div key={module.id} className="col-12">
+                <article className={`p-4 mb-3 bg-body-tertiary rounded ${module.completed ? 'border border-success' : ''}`}>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <span 
+                      className="badge"
+                      style={{ backgroundColor: categoryColors[module.category], color: '#000' }}
+                    >
+                      {module.category}
+                    </span>
+                    {module.completed && <span className="badge bg-success">✓ Completed</span>}
                   </div>
-                ) : selectedModule.startedAt ? (
+                  
+                  <h3 className="h4 mb-3">{module.title}</h3>
+                  <p className="text-muted">{module.description}</p>
+
+                  <div className="d-flex gap-3 mb-3 flex-wrap">
+                    <span className="text-muted">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                      </svg>
+                      {module.duration}
+                    </span>
+                    <span className="text-muted">{difficultyLabels[module.difficulty]}</span>
+                  </div>
+
+                  <div className="mb-3 p-3 bg-body rounded border">
+                    <strong className="d-block mb-1">Ethical Focus:</strong>
+                    <span className="text-muted">{module.ethicalFocus}</span>
+                  </div>
+
                   <button 
-                    className="lp-btn-complete"
-                    onClick={() => completeModule(selectedModule)}
+                    className="btn btn-primary"
+                    onClick={() => setSelectedModule(module)}
                   >
-                    Mark as Complete
+                    View Details
                   </button>
-                ) : (
+                </article>
+              </div>
+            ))}
+          </div>
+
+          {/* Modules Slider - Mobile */}
+          <div className="lp-modules-mobile">
+            <CardSlider showIndicators>
+              {modules.map((module) => (
+                <article 
+                  key={module.id} 
+                  className={`p-4 bg-body-tertiary rounded ${module.completed ? 'border border-success' : ''}`}
+                >
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <span 
+                      className="badge"
+                      style={{ backgroundColor: categoryColors[module.category], color: '#000' }}
+                    >
+                      {module.category}
+                    </span>
+                    {module.completed && <span className="badge bg-success">✓ Completed</span>}
+                  </div>
+                  
+                  <h3 className="h4 mb-3">{module.title}</h3>
+                  <p className="text-muted">{module.description}</p>
+
+                  <div className="d-flex gap-3 mb-3 flex-wrap">
+                    <span className="text-muted">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                      </svg>
+                      {module.duration}
+                    </span>
+                    <span className="text-muted">{difficultyLabels[module.difficulty]}</span>
+                  </div>
+
+                  <div className="mb-3 p-3 bg-body rounded border">
+                    <strong className="d-block mb-1">Ethical Focus:</strong>
+                    <span className="text-muted">{module.ethicalFocus}</span>
+                  </div>
+
                   <button 
-                    className="lp-btn-start"
-                    onClick={() => startModule(selectedModule)}
+                    className="btn btn-primary"
+                    onClick={() => setSelectedModule(module)}
                   >
-                    Start Module
+                    View Details
                   </button>
-                )}
+                </article>
+              ))}
+            </CardSlider>
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="col-md-4">
+          <div className="position-sticky" style={{ top: '2rem' }}>
+            {/* Progress Summary */}
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h4 className="fst-italic">Your Progress</h4>
+              <p className="mb-3">Track your learning journey across all modules.</p>
+              <div className="d-flex flex-column gap-2">
+                <div className="d-flex justify-content-between">
+                  <span>Completed</span>
+                  <strong>{stats.completed} / {stats.total}</strong>
+                </div>
+                <div className="progress" role="progressbar" aria-valuenow={(stats.completed / stats.total) * 100} aria-valuemin={0} aria-valuemax={100}>
+                  <div className="progress-bar bg-success" style={{ width: `${(stats.completed / stats.total) * 100}%` }}></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Categories */}
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h4 className="fst-italic">Categories</h4>
+              <ul className="list-unstyled mb-0">
+                <li className="mb-2">
+                  <span 
+                    className="badge me-2"
+                    style={{ backgroundColor: categoryColors.nutrition, color: '#000' }}
+                  >
+                    nutrition
+                  </span>
+                  <span className="text-muted">
+                    {modules.filter(m => m.category === 'nutrition').length} modules
+                  </span>
+                </li>
+                <li className="mb-2">
+                  <span 
+                    className="badge me-2"
+                    style={{ backgroundColor: categoryColors.culture, color: '#000' }}
+                  >
+                    culture
+                  </span>
+                  <span className="text-muted">
+                    {modules.filter(m => m.category === 'culture').length} modules
+                  </span>
+                </li>
+                <li className="mb-2">
+                  <span 
+                    className="badge me-2"
+                    style={{ backgroundColor: categoryColors.sustainability, color: '#000' }}
+                  >
+                    sustainability
+                  </span>
+                  <span className="text-muted">
+                    {modules.filter(m => m.category === 'sustainability').length} modules
+                  </span>
+                </li>
+                <li className="mb-2">
+                  <span 
+                    className="badge me-2"
+                    style={{ backgroundColor: categoryColors.cooking, color: '#000' }}
+                  >
+                    cooking
+                  </span>
+                  <span className="text-muted">
+                    {modules.filter(m => m.category === 'cooking').length} modules
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Difficulty Levels */}
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h4 className="fst-italic">Difficulty Levels</h4>
+              <ul className="list-unstyled mb-0">
+                <li className="mb-2">
+                  <span>🌱 Beginner</span>
+                  <span className="text-muted ms-2">
+                    {modules.filter(m => m.difficulty === 'beginner').length} modules
+                  </span>
+                </li>
+                <li className="mb-2">
+                  <span>🌿 Intermediate</span>
+                  <span className="text-muted ms-2">
+                    {modules.filter(m => m.difficulty === 'intermediate').length} modules
+                  </span>
+                </li>
+                <li className="mb-2">
+                  <span>🌳 Advanced</span>
+                  <span className="text-muted ms-2">
+                    {modules.filter(m => m.difficulty === 'advanced').length} modules
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Learning Tips */}
+            <div className="p-4">
+              <h4 className="fst-italic">Learning Tips</h4>
+              <ul className="list-unstyled">
+                <li className="mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
+                  Start with beginner modules
+                </li>
+                <li className="mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
+                  Complete milestones in order
+                </li>
+                <li className="mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
+                  Practice concepts in your kitchen
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                  </svg>
+                  Share your learnings with others
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Module Detail Modal */}
+      {selectedModule && (
+        <div className="lp-modal-overlay" onClick={() => setSelectedModule(null)}>
+          <div className="lp-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="card border-0 shadow-lg" style={{ maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
+              <div className="card-body p-4">
+                <button 
+                  className="btn-close float-end" 
+                  onClick={() => setSelectedModule(null)}
+                  aria-label="Close"
+                ></button>
+                
+                <div className="mb-4">
+                  <span 
+                    className="badge mb-3"
+                    style={{ backgroundColor: categoryColors[selectedModule.category], color: '#000' }}
+                  >
+                    {selectedModule.category}
+                  </span>
+                  <h2 className="h3 mb-3">{selectedModule.title}</h2>
+                  <p className="text-muted">{selectedModule.description}</p>
+                </div>
+
+                <div className="mb-4">
+                  <div className="d-flex justify-content-between border-bottom pb-2 mb-2">
+                    <span className="text-muted">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                      </svg>
+                      Duration
+                    </span>
+                    <strong>{selectedModule.duration}</strong>
+                  </div>
+                  <div className="d-flex justify-content-between border-bottom pb-2 mb-2">
+                    <span className="text-muted">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+                      </svg>
+                      Difficulty
+                    </span>
+                    <strong>{difficultyLabels[selectedModule.difficulty]}</strong>
+                  </div>
+                  <div className="d-flex justify-content-between pb-2">
+                    <span className="text-muted">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                        <path d="M8 1a6.5 6.5 0 0 1 6.5 6.5 6.5 6.5 0 0 1-3.25 5.63l-.5.865A1.5 1.5 0 0 1 9.5 15h-3a1.5 1.5 0 0 1-1.25-.715l-.5-.865A6.5 6.5 0 0 1 1.5 7.5 6.5 6.5 0 0 1 8 1"/>
+                      </svg>
+                      Ethical Focus
+                    </span>
+                    <strong className="text-end" style={{ maxWidth: '60%' }}>{selectedModule.ethicalFocus}</strong>
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <h3 className="h5 mb-3">Learning Milestones</h3>
+                  <ul className="list-group list-group-flush">
+                    {selectedModule.milestones.map((milestone, index) => (
+                      <li key={index} className="list-group-item d-flex align-items-start">
+                        <span className="badge bg-primary rounded-circle me-2" style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {index + 1}
+                        </span>
+                        <span>{milestone}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mt-4">
+                  {selectedModule.completed ? (
+                    <div className="alert alert-success d-flex align-items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-check-circle-fill flex-shrink-0 me-2" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                      </svg>
+                      <div>
+                        You completed this module on {selectedModule.completedAt?.toLocaleDateString()}
+                      </div>
+                    </div>
+                  ) : selectedModule.startedAt ? (
+                    <button 
+                      className="btn btn-success w-100"
+                      onClick={() => completeModule(selectedModule)}
+                    >
+                      Mark as Complete
+                    </button>
+                  ) : (
+                    <button 
+                      className="btn btn-primary w-100"
+                      onClick={() => startModule(selectedModule)}
+                    >
+                      Start Module
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        )}
-      </main>
+        </div>
+      )}
     </div>
   );
 }
