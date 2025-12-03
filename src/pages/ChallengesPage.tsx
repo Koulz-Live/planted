@@ -264,271 +264,234 @@ export default function ChallengesPage() {
   }
 
   return (
-    <div className="challenges-page">
-      {/* Top Navigation */}
-      <header className="ch-nav">
-        <div className="ch-nav-inner">
-          <div className="ch-brand">
-            <div className="ch-brand-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935M3.504 1q.01.775.056 1.469c.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.5.5 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667q.045-.694.056-1.469z"/>
-              </svg>
-            </div>
-            <span>Planted</span>
-          </div>
-          <nav className="ch-nav-links">
-            <a href="/">Home</a>
-            <a href="/plant-care">Plant Care</a>
-            <a href="/recipes">Recipes</a>
-            <a href="/nutrition">Nutrition</a>
-            <a href="/community">Community</a>
-            <a href="/challenges" className="active">Challenges</a>
-          </nav>
-        </div>
-      </header>
-
-      <main className="ch-shell">
-        {/* Hero Header */}
-        <header className="ch-hero-header">
-          <div className="ch-eyebrow">
-            <span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
-                <path d="M8 1a6.5 6.5 0 0 1 6.5 6.5 6.5 6.5 0 0 1-3.25 5.63l-.5.865A1.5 1.5 0 0 1 9.5 15h-3a1.5 1.5 0 0 1-1.25-.715l-.5-.865A6.5 6.5 0 0 1 1.5 7.5 6.5 6.5 0 0 1 8 1"/>
-              </svg>
-            </span>
-            Food Challenges
-          </div>
-          <h1 className="ch-title">Challenges</h1>
-          <p className="ch-subtitle">
+    <div className="challenges-page container">
+      {/* Hero Section */}
+      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+        <div className="col-lg-8 px-0">
+          <h1 className="display-4 fst-italic">🏆 Food Challenges</h1>
+          <p className="lead my-3">
             Take on food-related challenges focused on sustainability, cultural exploration, 
-            nutrition goals, and community building. Track your progress and earn points!
+            nutrition goals, and community building. Track your progress, earn points, and climb the leaderboard!
           </p>
-        </header>
-
-        {/* Stats Dashboard */}
-        <section className="ch-stats-dashboard">
-          <div className="ch-stat-card">
-            <div className="ch-stat-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+          <div className="d-flex gap-3 flex-wrap">
+            <span className="badge bg-primary fs-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
                 <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15"/>
               </svg>
-            </div>
-            <div className="ch-stat-value">{stats.active}</div>
-            <div className="ch-stat-label">Active Challenges</div>
-          </div>
-          <div className="ch-stat-card">
-            <div className="ch-stat-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+              {stats.active} Active
+            </span>
+            <span className="badge bg-success fs-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
                 <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
               </svg>
-            </div>
-            <div className="ch-stat-value">{stats.completed}</div>
-            <div className="ch-stat-label">Completed</div>
-          </div>
-          <div className="ch-stat-card">
-            <div className="ch-stat-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+              {stats.completed} Completed
+            </span>
+            <span className="badge bg-warning text-dark fs-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
                 <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
               </svg>
-            </div>
-            <div className="ch-stat-value">{stats.totalPoints}</div>
-            <div className="ch-stat-label">Total Points</div>
-          </div>
-          <div className="ch-stat-card">
-            <div className="ch-stat-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+              {stats.totalPoints} Points
+            </span>
+            <span className="badge bg-info fs-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
                 <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
                 <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
               </svg>
-            </div>
-            <div className="ch-stat-value">#{leaderboard.find(e => e.userId === 'demo-user')?.rank}</div>
-            <div className="ch-stat-label">Global Rank</div>
+              Rank #{leaderboard.find(e => e.userId === 'demo-user')?.rank}
+            </span>
           </div>
-        </section>
+        </div>
+      </div>
 
-        <div className="ch-content-layout">
-          {/* Main Column: Challenges */}
-          <section className="ch-main-column">
-            {/* Filter Tabs */}
-            <div className="ch-tabs">
-              <button 
-                className={`ch-tab ${activeTab === 'all' ? 'active' : ''}`}
-                onClick={() => setActiveTab('all')}
-              >
-                All Challenges ({challenges.length})
-              </button>
-              <button 
-                className={`ch-tab ${activeTab === 'active' ? 'active' : ''}`}
-                onClick={() => setActiveTab('active')}
-              >
-                Active ({stats.active})
-              </button>
-              <button 
-                className={`ch-tab ${activeTab === 'completed' ? 'active' : ''}`}
-                onClick={() => setActiveTab('completed')}
-              >
-                Completed ({stats.completed})
-              </button>
-            </div>
+      {/* Main Content Grid */}
+      <div className="row g-5">
+        <div className="col-md-8">
+          <h3 className="pb-4 mb-4 fst-italic border-bottom">Available Challenges</h3>
+          
+          {/* Filter Tabs */}
+          <nav className="nav nav-underline mb-4">
+            <button 
+              className={`nav-link ${activeTab === 'all' ? 'active' : ''}`}
+              onClick={() => setActiveTab('all')}
+              style={{ cursor: 'pointer', border: 'none', background: 'transparent' }}
+            >
+              All ({challenges.length})
+            </button>
+            <button 
+              className={`nav-link ${activeTab === 'active' ? 'active' : ''}`}
+              onClick={() => setActiveTab('active')}
+              style={{ cursor: 'pointer', border: 'none', background: 'transparent' }}
+            >
+              Active ({stats.active})
+            </button>
+            <button 
+              className={`nav-link ${activeTab === 'completed' ? 'active' : ''}`}
+              onClick={() => setActiveTab('completed')}
+              style={{ cursor: 'pointer', border: 'none', background: 'transparent' }}
+            >
+              Completed ({stats.completed})
+            </button>
+          </nav>
 
-            {/* Challenges Grid */}
-            <div className="ch-challenges-grid">
-              {filteredChallenges.length === 0 ? (
-                <div className="ch-empty-state">
-                  <span className="ch-empty-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M8 1a6.5 6.5 0 0 1 6.5 6.5 6.5 6.5 0 0 1-3.25 5.63l-.5.865A1.5 1.5 0 0 1 9.5 15h-3a1.5 1.5 0 0 1-1.25-.715l-.5-.865A6.5 6.5 0 0 1 1.5 7.5 6.5 6.5 0 0 1 8 1"/>
-                    </svg>
-                  </span>
-                  <h3>No challenges found</h3>
-                  <p>
-                    {activeTab === 'active' && 'Join a challenge to get started!'}
-                    {activeTab === 'completed' && 'Complete challenges to see them here!'}
-                  </p>
-                </div>
-              ) : (
-                filteredChallenges.map((challenge) => {
-                  const userChallenge = userChallenges.get(challenge.id);
-                  const isJoined = !!userChallenge;
-                  const isCompleted = userChallenge?.status === 'completed';
+          {/* Challenges List */}
+          <div>
+            {filteredChallenges.length === 0 ? (
+              <div className="text-center p-5 bg-body-tertiary rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16" className="text-secondary mb-3">
+                  <path d="M8 1a6.5 6.5 0 0 1 6.5 6.5 6.5 6.5 0 0 1-3.25 5.63l-.5.865A1.5 1.5 0 0 1 9.5 15h-3a1.5 1.5 0 0 1-1.25-.715l-.5-.865A6.5 6.5 0 0 1 1.5 7.5 6.5 6.5 0 0 1 8 1"/>
+                </svg>
+                <h3 className="text-body-emphasis">No challenges found</h3>
+                <p className="text-body-secondary">
+                  {activeTab === 'active' && 'Join a challenge to get started!'}
+                  {activeTab === 'completed' && 'Complete challenges to see them here!'}
+                </p>
+              </div>
+            ) : (
+              filteredChallenges.map((challenge) => {
+                const userChallenge = userChallenges.get(challenge.id);
+                const isJoined = !!userChallenge;
+                const isCompleted = userChallenge?.status === 'completed';
 
-                  return (
-                    <article 
-                      key={challenge.id} 
-                      className={`ch-challenge-card ${isCompleted ? 'completed' : ''}`}
-                    >
-                      <div className="ch-challenge-header">
-                        <span 
-                          className="ch-type-badge"
-                          style={{ backgroundColor: typeColors[challenge.type] }}
-                        >
-                          {challenge.type}
-                        </span>
-                        <span className="ch-difficulty-badge">
-                          {difficultyLabels[challenge.difficulty]}
-                        </span>
-                      </div>
-
-                      <h3>{challenge.title}</h3>
-                      <p className="ch-challenge-desc">{challenge.description}</p>
-
-                      <div className="ch-challenge-meta">
-                        <div className="ch-meta-item">
-                          <span className="ch-meta-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                            </svg>
+                return (
+                  <article 
+                    key={challenge.id} 
+                    className="blog-post mb-4 pb-4 border-bottom"
+                  >
+                    <div className="d-flex justify-content-between align-items-start mb-3">
+                      <div>
+                        <h2 className="display-6 link-body-emphasis mb-2">{challenge.title}</h2>
+                        <div className="d-flex gap-2 mb-2">
+                          <span className="badge bg-secondary" style={{ backgroundColor: typeColors[challenge.type] }}>
+                            {challenge.type}
                           </span>
-                          <span>{challenge.duration}</span>
-                        </div>
-                        <div className="ch-meta-item">
-                          <span className="ch-meta-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                              <path d="M8 1a6.5 6.5 0 0 1 6.5 6.5 6.5 6.5 0 0 1-3.25 5.63l-.5.865A1.5 1.5 0 0 1 9.5 15h-3a1.5 1.5 0 0 1-1.25-.715l-.5-.865A6.5 6.5 0 0 1 1.5 7.5 6.5 6.5 0 0 1 8 1"/>
-                            </svg>
+                          <span className={`badge ${challenge.difficulty === 'easy' ? 'bg-success' : challenge.difficulty === 'medium' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                            {difficultyLabels[challenge.difficulty]}
                           </span>
-                          <span>{challenge.points} points</span>
-                        </div>
-                        <div className="ch-meta-item">
-                          <span className="ch-meta-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                              <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-                            </svg>
-                          </span>
-                          <span>{challenge.activeParticipants.toLocaleString()} active</span>
                         </div>
                       </div>
-
-                      <div className="ch-goal-box">
-                        <strong>Goal:</strong> {challenge.goal}
-                      </div>
-
                       {isCompleted && (
-                        <div className="ch-completed-banner">
-                          ✓ Completed on {userChallenge?.completedAt?.toLocaleDateString()}
-                        </div>
+                        <span className="badge bg-success fs-6">
+                          ✓ Completed
+                        </span>
                       )}
+                    </div>
 
-                      <div className="ch-challenge-actions">
-                        {!isJoined ? (
-                          <button 
-                            className="ch-btn-join"
-                            onClick={() => joinChallenge(challenge)}
-                          >
-                            Join Challenge
-                          </button>
-                        ) : isCompleted ? (
-                          <button className="ch-btn-completed" disabled>
-                            Challenge Completed 🎉
-                          </button>
-                        ) : (
-                          <>
-                            <button 
-                              className="ch-btn-complete"
-                              onClick={() => completeChallenge(challenge.id)}
-                            >
-                              Mark Complete
-                            </button>
-                            <button 
-                              className="ch-btn-leave"
-                              onClick={() => leaveChallenge(challenge.id)}
-                            >
-                              Leave
-                            </button>
-                          </>
-                        )}
+                    <p className="mb-3">{challenge.description}</p>
+
+                    <div className="p-3 mb-3 bg-body-tertiary rounded">
+                      <strong>Goal:</strong> {challenge.goal}
+                    </div>
+
+                    <div className="d-flex gap-4 mb-3 text-body-secondary small">
+                      <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                        </svg>
+                        {challenge.duration}
+                      </span>
+                      <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                          <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                        </svg>
+                        {challenge.points} points
+                      </span>
+                      <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '6px', verticalAlign: 'middle' }}>
+                          <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                        </svg>
+                        {challenge.activeParticipants.toLocaleString()} active
+                      </span>
+                    </div>
+
+                    {isCompleted && userChallenge?.completedAt && (
+                      <div className="alert alert-success mb-3" role="alert">
+                        <strong>✓ Completed</strong> on {userChallenge.completedAt.toLocaleDateString()}
                       </div>
-                    </article>
-                  );
-                })
-              )}
-            </div>
-          </section>
+                    )}
 
-          {/* Right Column: Leaderboard */}
-          <aside className="ch-right-column">
-            <article className="ch-leaderboard-card">
-              <h2>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                    <div className="d-flex gap-2">
+                      {!isJoined ? (
+                        <button 
+                          className="btn btn-primary"
+                          onClick={() => joinChallenge(challenge)}
+                        >
+                          Join Challenge
+                        </button>
+                      ) : isCompleted ? (
+                        <button className="btn btn-success" disabled>
+                          Challenge Completed 🎉
+                        </button>
+                      ) : (
+                        <>
+                          <button 
+                            className="btn btn-success"
+                            onClick={() => completeChallenge(challenge.id)}
+                          >
+                            Mark Complete
+                          </button>
+                          <button 
+                            className="btn btn-outline-secondary"
+                            onClick={() => leaveChallenge(challenge.id)}
+                          >
+                            Leave Challenge
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </article>
+                );
+              })
+            )}
+          </div>
+        </div>
+
+        {/* Sidebar: Leaderboard */}
+        <div className="col-md-4">
+          <div className="position-sticky" style={{ top: '2rem' }}>
+            <div className="p-4 bg-body-tertiary rounded">
+              <div className="text-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16" className="text-warning">
                   <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935M3.504 1q.01.775.056 1.469c.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.5.5 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667q.045-.694.056-1.469z"/>
                 </svg>
-                Global Leaderboard
-              </h2>
-              <p className="ch-leaderboard-subtitle">
-                Top challengers by total points earned
-              </p>
+                <h4 className="fst-italic mt-2">Global Leaderboard</h4>
+                <p className="text-body-secondary small mb-0">Top challengers by total points earned</p>
+              </div>
               
-              <div className="ch-leaderboard-list">
+              <div>
                 {leaderboard.map((entry) => (
                   <div 
                     key={entry.userId} 
-                    className={`ch-leaderboard-entry ${entry.userId === 'demo-user' ? 'current-user' : ''}`}
+                    className={`d-flex align-items-center gap-3 py-3 border-top ${entry.userId === 'demo-user' ? 'bg-primary-subtle rounded px-2' : ''}`}
                   >
-                    <div className="ch-rank">
+                    <div className="flex-shrink-0" style={{ width: '32px', textAlign: 'center' }}>
                       {entry.rank <= 3 ? (
-                        <span className={`ch-rank-medal rank-${entry.rank}`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill={entry.rank === 1 ? '#FFD700' : entry.rank === 2 ? '#C0C0C0' : '#CD7F32'} viewBox="0 0 16 16">
-                            <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
-                            <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
-                          </svg>
-                        </span>
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          width="24" 
+                          height="24" 
+                          fill={entry.rank === 1 ? '#FFD700' : entry.rank === 2 ? '#C0C0C0' : '#CD7F32'}
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"/>
+                          <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"/>
+                        </svg>
                       ) : (
-                        <span className="ch-rank-number">#{entry.rank}</span>
+                        <span className="fw-bold text-body-secondary">#{entry.rank}</span>
                       )}
                     </div>
-                    <div className="ch-leaderboard-info">
-                      <div className="ch-leaderboard-name">{entry.userName}</div>
-                      <div className="ch-leaderboard-stats">
+                    <div className="flex-grow-1">
+                      <div className="fw-semibold">{entry.userName}</div>
+                      <small className="text-body-secondary">
                         {entry.totalPoints} pts • {entry.completedChallenges} completed
-                      </div>
+                      </small>
                     </div>
                   </div>
                 ))}
               </div>
-            </article>
-          </aside>
+            </div>
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
