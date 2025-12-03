@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, orderBy, limit, Timestamp, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { CardSlider } from '../components/CardSlider';
 import './CommunityPage.css';
 
 interface Post {
@@ -304,7 +305,8 @@ export default function CommunityPage() {
                 Join global challenges and make a positive impact through food
               </p>
               
-              <div className="cm-challenges-list">
+              {/* Desktop: Stacked list */}
+              <div className="cm-challenges-list cm-challenges-desktop">
                 {peaceChallenges.map((challenge) => (
                   <div key={challenge.id} className="cm-challenge-item">
                     <div className="cm-challenge-header">
@@ -332,6 +334,39 @@ export default function CommunityPage() {
                     <button className="cm-btn-join">Join Challenge</button>
                   </div>
                 ))}
+              </div>
+
+              {/* Mobile: Swipeable slider */}
+              <div className="cm-challenges-mobile">
+                <CardSlider showIndicators>
+                  {peaceChallenges.map((challenge) => (
+                    <div key={challenge.id} className="cm-challenge-item cm-challenge-slide">
+                      <div className="cm-challenge-header">
+                        <h4>{challenge.title}</h4>
+                        <span className="cm-challenge-badge">{challenge.category}</span>
+                      </div>
+                      <p className="cm-challenge-desc">{challenge.description}</p>
+                      <div className="cm-challenge-stats">
+                        <span>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
+                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                          </svg>
+                          {challenge.participants.toLocaleString()} participants
+                        </span>
+                        <span>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                          </svg>
+                          Ends {new Date(challenge.endsAt).toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric' 
+                          })}
+                        </span>
+                      </div>
+                      <button className="cm-btn-join">Join Challenge</button>
+                    </div>
+                  ))}
+                </CardSlider>
               </div>
             </div>
           </article>

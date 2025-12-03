@@ -670,6 +670,37 @@
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
+  /* Show mobile slider, hide desktop list */
+  .cm-challenges-desktop {
+    display: none;
+  }
+
+  .cm-challenges-mobile {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  /* Show desktop list, hide mobile slider */
+  .cm-challenges-desktop {
+    display: block;
+  }
+
+  .cm-challenges-mobile {
+    display: none;
+  }
+}
+
+/* Slider-specific styles for mobile challenges */
+.cm-challenge-slide {
+  /* Ensure challenge cards in slider have proper bottom padding for indicators */
+  padding-bottom: 3rem !important;
+}
+
+.cm-challenges-mobile .card-slider-indicators {
+  /* Position indicators at bottom of challenge card */
+  bottom: 1rem;
 }
 
 @media (max-width: 480px) {

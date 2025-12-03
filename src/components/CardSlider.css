@@ -1,0 +1,108 @@
+/* ===========================
+   Card Slider Component
+   Mobile-first swipeable carousel
+   =========================== */
+
+.card-slider {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+/* Indicators positioned inside the card at bottom */
+.card-slider-indicators {
+  position: absolute;
+  left: 50%;
+  bottom: 1.2rem;
+  transform: translateX(-50%);
+  margin: 0;
+  justify-content: center;
+  gap: 0.4rem;
+  z-index: 10;
+}
+
+.card-slider-indicators [data-bs-target] {
+  width: 24px;
+  height: 3px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.25);
+  border: 0;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.card-slider-indicators .active {
+  background-color: #ffffff;
+  width: 32px;
+}
+
+/* Hide navigation arrows by default (touch/swipe preferred on mobile) */
+.card-slider-control {
+  display: none;
+}
+
+/* Show arrows on hover for desktop */
+@media (hover: hover) and (min-width: 768px) {
+  .card-slider:hover .card-slider-control {
+    display: flex;
+  }
+}
+
+/* Smooth transitions */
+.carousel-item {
+  transition: transform 0.4s ease-in-out;
+}
+
+/* Disable transitions during touch drag */
+.carousel-item.carousel-item-start,
+.carousel-item.carousel-item-end {
+  transition: none;
+}
+
+/* Mobile optimization */
+@media (max-width: 767px) {
+  .card-slider {
+    /* Allow full-width swipe gestures */
+    touch-action: pan-y pinch-zoom;
+  }
+  
+  .card-slider-indicators {
+    bottom: 1rem;
+  }
+  
+  .card-slider-indicators [data-bs-target] {
+    width: 20px;
+    height: 2.5px;
+  }
+  
+  .card-slider-indicators .active {
+    width: 28px;
+  }
+}
+
+/* Prevent layout shift during slide transitions */
+.carousel-inner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Ensure cards maintain their styling */
+.carousel-item {
+  display: none;
+  position: relative;
+  width: 100%;
+}
+
+.carousel-item.active,
+.carousel-item-next,
+.carousel-item-prev {
+  display: block;
+}
+
+/* Optional: Add subtle fade effect */
+@media (prefers-reduced-motion: no-preference) {
+  .carousel-item {
+    transition: opacity 0.3s ease-in-out, transform 0.4s ease-in-out;
+  }
+}
