@@ -173,138 +173,130 @@ export default function NutritionPage() {
 
   return (
     <div className="nutrition-page">
-      {/* Top Navigation */}
-      <header className="nt-nav">
-        <div className="nt-nav-inner">
-          <div className="nt-brand">
-            <div className="nt-brand-icon">🍎</div>
-            <span>Planted</span>
-          </div>
-          <nav className="nt-nav-links">
-            <a href="/">Home</a>
-            <a href="/plant-care">Plant Care</a>
-            <a href="/recipes">Recipes</a>
-            <a href="/nutrition" className="active">Nutrition</a>
-            <a href="/storytelling">Storytelling</a>
-            <a href="/community">Community</a>
-          </nav>
+      {/* Hero Section */}
+      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+        <div className="col-lg-8 px-0">
+          <h1 className="display-4 fst-italic">🍽️ Nutrition AI</h1>
+          <p className="lead my-3">
+            Get personalized meal prep plans tailored to your household size, health goals, 
+            and available time. Upload meal photos for AI nutritional analysis and expert recommendations.
+          </p>
+          <p className="lead mb-0">
+            <span className="text-body-emphasis fw-bold">Start planning below →</span>
+          </p>
         </div>
-      </header>
+      </div>
 
-      <main className="nt-shell">
-        {/* Left column: Form */}
-        <section className="nt-main-column">
-          <header className="nt-hero-header">
-            <div className="nt-eyebrow">
-              <span>🍽️</span>
-              AI-Powered Meal Planning
-            </div>
-            <h1 className="nt-title">Nutrition Coach</h1>
-            <p className="nt-subtitle">
-              Get personalized meal prep plans tailored to your household size, health goals, 
-              and available time. Upload meal photos for nutritional analysis.
-            </p>
-          </header>
+      {/* Main Content Grid */}
+      <div className="row g-5">
+        {/* Left Column: Form */}
+        <div className="col-md-8">
+          <h3 className="pb-4 mb-4 fst-italic border-bottom">
+            Meal Plan Request
+          </h3>
 
-          <article className="nt-card">
-            <div className="nt-card-inner">
-              <div className="nt-card-header">
-                <h2>Plan Your Week</h2>
-                <div className="nt-tag-set">
-                  <div className="nt-tag-dot"></div>
-                  Family-Friendly
+          <article className="blog-post">
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <span className="badge bg-primary">7-day meal plan</span>
+                  <span className="text-body-secondary ms-2">~15 seconds</span>
                 </div>
               </div>
 
               <form onSubmit={handleSubmit}>
-                <div className="nt-form-grid">
-                  <div className="nt-field">
-                    <label htmlFor="householdSize">Household Size *</label>
+                <div className="row g-3 mb-3">
+                  <div className="col-md-6">
+                    <label htmlFor="householdSize" className="form-label fw-bold">Household Size *</label>
                     <input
                       id="householdSize"
                       name="householdSize"
                       type="number"
                       min="1"
                       max="20"
-                      className="nt-input"
+                      className="form-control"
                       value={formData.householdSize}
                       onChange={handleInputChange}
                       required
                     />
-                    <span className="nt-helper-text">Number of people to cook for</span>
+                    <small className="form-text text-body-secondary">Number of people to cook for</small>
                   </div>
 
-                  <div className="nt-field">
-                    <label htmlFor="timeAvailablePerDay">Daily Prep Time (minutes) *</label>
+                  <div className="col-md-6">
+                    <label htmlFor="timeAvailablePerDay" className="form-label fw-bold">Daily Prep Time (minutes) *</label>
                     <input
                       id="timeAvailablePerDay"
                       name="timeAvailablePerDay"
                       type="number"
                       min="10"
                       max="240"
-                      className="nt-input"
+                      className="form-control"
                       value={formData.timeAvailablePerDay}
                       onChange={handleInputChange}
                       required
                     />
-                    <span className="nt-helper-text">Time available for meal preparation</span>
-                  </div>
-
-                  <div className="nt-field nt-form-row-full">
-                    <label>Focus Areas</label>
-                    <div className="nt-checkbox-grid">
-                      {focusAreaOptions.map(area => (
-                        <label key={area} className="nt-checkbox-label">
-                          <input
-                            type="checkbox"
-                            checked={formData.focusAreas.includes(area)}
-                            onChange={() => toggleFocusArea(area)}
-                          />
-                          <span>{area}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="nt-field nt-form-row-full">
-                    <label>Current Meal Photos (Optional)</label>
-                    <ImageUpload
-                      onImagesChange={handleImagesChange}
-                      maxImages={5}
-                      helperText="Upload photos of your current meals for AI nutritional analysis and personalized recommendations."
-                    />
+                    <small className="form-text text-body-secondary">Time available for meal preparation</small>
                   </div>
                 </div>
 
+                <div className="mb-3">
+                  <label className="form-label fw-bold">Focus Areas *</label>
+                  <div className="row g-2">
+                    {focusAreaOptions.map(area => (
+                      <div key={area} className="col-6 col-md-4 col-lg-3">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`focus-${area.replace(/\s+/g, '-')}`}
+                            checked={formData.focusAreas.includes(area)}
+                            onChange={() => toggleFocusArea(area)}
+                          />
+                          <label className="form-check-label" htmlFor={`focus-${area.replace(/\s+/g, '-')}`}>
+                            {area}
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <label className="form-label fw-bold">Current Meal Photos (Optional)</label>
+                  <ImageUpload
+                    onImagesChange={handleImagesChange}
+                    maxImages={5}
+                    helperText="Upload photos of your current meals for AI nutritional analysis and personalized recommendations."
+                  />
+                </div>
+
                 {error && (
-                  <div className="nt-error-message">
-                    <span>⚠️</span>
-                    {error}
+                  <div className="alert alert-danger d-flex align-items-center mb-3" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="me-2" viewBox="0 0 16 16">
+                      <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                    </svg>
+                    <div>{error}</div>
                   </div>
                 )}
 
-                <div className="nt-form-footer">
-                  <div className="nt-footer-text">
-                    <span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
-                      </svg>
-                    </span>
-                    <strong>AI-powered</strong> meal plans in seconds
+                <div className="d-flex flex-column gap-3">
+                  <div className="text-body-secondary small">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="me-1" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+                    </svg>
+                    AI will generate a <strong>personalized 7-day meal plan with shopping list</strong> from your inputs.
                   </div>
-                  <button
-                    type="submit"
-                    className="nt-btn-primary"
-                    disabled={loading || formData.focusAreas.length === 0}
-                  >
+                  <button className="btn btn-primary btn-lg" type="submit" disabled={loading || formData.focusAreas.length === 0}>
                     {loading ? (
                       <>
-                        <span className="icon">⏳</span>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                         Generating Plan...
                       </>
                     ) : (
                       <>
-                        <span className="icon">🍳</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="me-2" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5"/>
+                        </svg>
                         Generate Meal Plan
                       </>
                     )}
@@ -316,54 +308,57 @@ export default function NutritionPage() {
 
           {/* Results Section */}
           {nutritionPlan && (
-            <article className="nt-card nt-results-card">
-              <div className="nt-card-inner">
-                <div className="nt-card-header">
-                  <h2>Your 7-Day Meal Plan</h2>
-                  <div className="nt-tag-set">
-                    <div className="nt-tag-dot"></div>
-                    Personalized
-                  </div>
+            <article className="blog-post mt-4">
+              <div className="p-4 mb-3 bg-body-tertiary rounded">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h2 className="h4 mb-0">Your 7-Day Meal Plan</h2>
+                  <span className="badge bg-success">Personalized</span>
                 </div>
 
-                <div className="nt-overview">
-                  <h3>Overview</h3>
-                  <p>{nutritionPlan.overview}</p>
+                <div className="mb-4">
+                  <h3 className="h5 mb-2">Overview</h3>
+                  <p className="text-body-secondary">{nutritionPlan.overview}</p>
                 </div>
 
-                <div className="nt-days-grid">
+                <div className="row g-3 mb-4">
                   {nutritionPlan.plans.map((dayPlan, index) => (
-                    <div key={index} className="nt-day-card">
-                      <h4>{dayPlan.day}</h4>
-                      <div className="nt-meals-list">
-                        {dayPlan.meals.map((meal, mealIndex) => (
-                          <div key={mealIndex} className="nt-meal-item">
-                            <span className="nt-meal-icon">🍽️</span>
-                            {meal}
-                          </div>
-                        ))}
-                      </div>
-                      {dayPlan.prepTips.length > 0 && (
-                        <div className="nt-prep-tips">
-                          <strong>Prep Tips:</strong>
-                          <ul>
-                            {dayPlan.prepTips.map((tip, tipIndex) => (
-                              <li key={tipIndex}>{tip}</li>
-                            ))}
-                          </ul>
+                    <div key={index} className="col-12">
+                      <div className="p-3 bg-body rounded border">
+                        <h4 className="h6 mb-2 text-primary">{dayPlan.day}</h4>
+                        <div className="mb-2">
+                          {dayPlan.meals.map((meal, mealIndex) => (
+                            <div key={mealIndex} className="d-flex align-items-start mb-1">
+                              <span className="me-2">🍽️</span>
+                              <span className="small">{meal}</span>
+                            </div>
+                          ))}
                         </div>
-                      )}
+                        {dayPlan.prepTips.length > 0 && (
+                          <div className="mt-2 pt-2 border-top">
+                            <strong className="small">Prep Tips:</strong>
+                            <ul className="small mb-0 ps-3 mt-1">
+                              {dayPlan.prepTips.map((tip, tipIndex) => (
+                                <li key={tipIndex}>{tip}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="nt-shopping-section">
-                  <h3>Shopping List</h3>
-                  <div className="nt-shopping-grid">
+                <div>
+                  <h3 className="h5 mb-3">Shopping List</h3>
+                  <div className="row g-2">
                     {nutritionPlan.shoppingList.map((item, index) => (
-                      <div key={index} className="nt-shopping-item">
-                        <span>✓</span>
-                        {item}
+                      <div key={index} className="col-6 col-md-4">
+                        <div className="d-flex align-items-center small">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="text-success me-2" viewBox="0 0 16 16">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                          </svg>
+                          {item}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -371,104 +366,101 @@ export default function NutritionPage() {
               </div>
             </article>
           )}
-        </section>
+        </div>
 
-        {/* Right column: Preview / Tips */}
-        <aside className="nt-right-column">
-          <article className="nt-card nt-preview-card">
-            <div className="nt-card-inner">
-              <div className="nt-hero-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
-                </svg>
-              </div>
-              <div className="nt-preview-card-top">
-                <div>
-                  <h3 className="nt-preview-title">Weekly Meal Planning</h3>
-                  <p className="nt-preview-subtitle">
-                    AI-powered nutrition advice tailored to your family's needs, schedule, and health goals.
-                  </p>
+        {/* Right Column: Sidebar */}
+        <div className="col-md-4">
+          <div className="position-sticky" style={{ top: '2rem' }}>
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <div className="d-flex align-items-center mb-3">
+                <span style={{ fontSize: '2rem' }} aria-hidden="true">📅</span>
+                <div className="ms-3">
+                  <h4 className="fst-italic mb-0">
+                    {nutritionPlan ? 'Meal Plan Ready' : 'Meal Plan Preview'}
+                  </h4>
                 </div>
               </div>
-
-              {nutritionPlan ? (
-                <div className="nt-pill-row">
-                  <div className="nt-pill">{formData.householdSize} people</div>
-                  <div className="nt-pill muted">{formData.timeAvailablePerDay} min/day</div>
-                  <div className="nt-pill muted">{nutritionPlan.plans.length} days</div>
-                </div>
-              ) : (
-                <>
-                  <div className="nt-pill-row">
-                    <div className="nt-pill">Family-sized</div>
-                    <div className="nt-pill muted">Heart healthy</div>
-                    <div className="nt-pill muted">30 min prep</div>
-                  </div>
-
-                  <div className="nt-preview-sample">
-                    <h4>Example: Monday</h4>
-                    <p className="nt-preview-description">
-                      Breakfast: Overnight oats with berries<br />
-                      Lunch: Mediterranean chickpea salad<br />
-                      Dinner: Baked salmon with roasted vegetables
-                    </p>
-                  </div>
-                </>
-              )}
+              <p className="mb-0 text-body-secondary">
+                {nutritionPlan
+                  ? 'Your personalized 7-day meal plan is ready!'
+                  : 'Fill in your household details to generate a customized weekly meal plan.'}
+              </p>
             </div>
-          </article>
 
-          <article className="nt-card nt-tips-card">
-            <div className="nt-card-inner">
-              <h3>💡 Nutrition Tips</h3>
-              <ul className="nt-tips-list">
-                <li>
+            {nutritionPlan ? (
+              <div className="p-4 mb-3 bg-body-tertiary rounded">
+                <h4 className="fst-italic mb-3">Plan Summary</h4>
+                <div className="d-flex flex-wrap gap-2">
+                  <span className="badge bg-primary">{formData.householdSize} {formData.householdSize === 1 ? 'person' : 'people'}</span>
+                  <span className="badge bg-secondary">{formData.timeAvailablePerDay} min/day</span>
+                  <span className="badge bg-success">{nutritionPlan.plans.length} days</span>
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 mb-3 bg-body-tertiary rounded">
+                <h4 className="fst-italic mb-3">Example Day</h4>
+                <div className="d-flex flex-wrap gap-2 mb-3">
+                  <span className="badge bg-primary">Family-sized</span>
+                  <span className="badge bg-secondary">Heart healthy</span>
+                  <span className="badge bg-info">30 min prep</span>
+                </div>
+                <div className="small">
+                  <p className="mb-2"><strong>Monday Sample:</strong></p>
+                  <p className="mb-1 text-body-secondary">🌅 Breakfast: Overnight oats with berries</p>
+                  <p className="mb-1 text-body-secondary">☀️ Lunch: Mediterranean chickpea salad</p>
+                  <p className="mb-0 text-body-secondary">🌙 Dinner: Baked salmon with roasted vegetables</p>
+                </div>
+              </div>
+            )}
+
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h4 className="fst-italic mb-3">💡 Nutrition Tips</h4>
+              <ul className="list-unstyled">
+                <li className="mb-2">
                   <strong>Batch cooking saves time</strong> – Prepare multiple meals at once for the week
                 </li>
-                <li>
+                <li className="mb-2">
                   <strong>Upload meal photos</strong> – AI analyzes nutrition and suggests improvements
                 </li>
-                <li>
+                <li className="mb-2">
                   <strong>Select focus areas</strong> – Get plans tailored to your health goals
                 </li>
-                <li>
+                <li className="mb-2">
                   <strong>Plan for leftovers</strong> – Reduce waste and simplify meal prep
                 </li>
               </ul>
             </div>
-          </article>
 
-          <article className="nt-card">
-            <div className="nt-card-inner">
-              <h3>Recent Plans</h3>
+            <div className="p-4 bg-body-tertiary rounded">
+              <h4 className="fst-italic mb-3">Recent Plans</h4>
               {history.length > 0 ? (
-                <ul className="nt-tips-list" style={{ gap: '0.75rem' }}>
+                <ul className="list-unstyled border-top">
                   {history.map((item) => (
-                    <li key={item.id} style={{ paddingLeft: 0 }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
-                        <strong style={{ color: 'var(--accent-dark)' }}>
+                    <li key={item.id} className="border-bottom py-2">
+                      <div className="d-flex flex-column">
+                        <strong className="text-primary">
                           {item.householdSize} {item.householdSize === 1 ? 'person' : 'people'}
                         </strong>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        <small className="text-body-secondary">
                           {new Date(item.timestamp).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
                             year: 'numeric'
                           })}
-                        </span>
+                        </small>
                       </div>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '1rem 0' }}>
+                <p className="text-body-secondary mb-0">
                   No plans yet. Generate your first meal plan above!
                 </p>
               )}
             </div>
-          </article>
-        </aside>
-      </main>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

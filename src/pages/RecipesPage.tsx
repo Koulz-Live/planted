@@ -192,107 +192,105 @@ export default function RecipesPage() {
 
   return (
     <div className="recipes-page">
-      {/* Top Navigation */}
-      <header className="rc-nav">
-        <div className="rc-nav-inner">
-          <div className="rc-brand">
-            <div className="rc-brand-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
-                <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-              </svg>
-            </div>
-            <span>Planted • Recipe AI</span>
-          </div>
-          <nav className="rc-nav-links" aria-label="Primary">
-            <a href="/plant-care">Plant Care</a>
-            <a href="/recipes" className="active">Recipes</a>
-            <a href="/nutrition">Nutrition</a>
-            <a href="/community">Community</a>
-          </nav>
+      {/* Hero Section */}
+      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+        <div className="col-lg-8 px-0">
+          <h1 className="display-4 fst-italic">🍽️ Recipe AI</h1>
+          <p className="lead my-3">
+            Share your dietary preferences, available ingredients, and cultural tastes to receive 
+            personalized, culturally-respectful recipes powered by AI. From pantry staples to gourmet creations.
+          </p>
+          <p className="lead mb-0">
+            <span className="text-body-emphasis fw-bold">Start creating below →</span>
+          </p>
         </div>
-      </header>
+      </div>
 
-      {/* Main Shell */}
-      <main className="rc-shell">
-        {/* Left: Form */}
-        <section aria-label="Recipe generation request">
-          <header className="rc-hero-header">
-            <div className="rc-eyebrow">
-              <span>New •</span> AI-powered recipe generation
-            </div>
-            <h1 className="rc-title">Generate recipes tailored to your needs.</h1>
-            <p className="rc-subtitle">
-              Share your dietary preferences, available ingredients, and cultural tastes with Recipe AI 
-              to receive personalized, culturally-respectful recipes.
-            </p>
-          </header>
+      {/* Main Content Grid */}
+      <div className="row g-5">
+        {/* Left Column: Form */}
+        <div className="col-md-8">
+          <h3 className="pb-4 mb-4 fst-italic border-bottom">
+            Recipe Request
+          </h3>
 
-          <article className="rc-card">
-            <div className="rc-card-inner">
-              <div className="rc-card-header">
-                <h2>Recipe Request</h2>
-                <div className="rc-tag-set">
-                  <span className="rc-tag-dot"></span>
-                  <span>Multiple recipes · ~20 seconds</span>
+          <article className="blog-post">
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <span className="badge bg-primary">Multiple recipes</span>
+                  <span className="text-body-secondary ms-2">~20 seconds</span>
                 </div>
               </div>
 
-              <form className="rc-form-grid" onSubmit={handleSubmit}>
-                <div className="rc-field rc-form-row-full">
-                  <label>Dietary Requirements *</label>
-                  <div className="rc-checkbox-grid">
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label className="form-label fw-bold">Dietary Requirements *</label>
+                  <div className="row g-2">
                     {dietaryOptions.map(option => (
-                      <label key={option} className="rc-checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={formData.dietaryNeeds.includes(option)}
-                          onChange={() => toggleDietaryNeed(option)}
-                        />
-                        <span>{option}</span>
-                      </label>
+                      <div key={option} className="col-6 col-md-4 col-lg-3">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`dietary-${option}`}
+                            checked={formData.dietaryNeeds.includes(option)}
+                            onChange={() => toggleDietaryNeed(option)}
+                          />
+                          <label className="form-check-label" htmlFor={`dietary-${option}`}>
+                            {option}
+                          </label>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="rc-field rc-form-row-full">
-                  <label htmlFor="ingredients">Available Ingredients *</label>
+                <div className="mb-3">
+                  <label htmlFor="ingredients" className="form-label fw-bold">Available Ingredients *</label>
                   <textarea
                     id="ingredients"
                     name="availableIngredients"
-                    className="rc-textarea"
+                    className="form-control"
+                    rows={3}
                     placeholder="e.g. Tomatoes, onions, garlic, pasta, olive oil, chickpeas"
                     value={formData.availableIngredients}
                     onChange={handleInputChange}
                     required
                   ></textarea>
-                  <small className="rc-helper-text">
+                  <small className="form-text text-body-secondary">
                     List ingredients you have available, separated by commas
                   </small>
                 </div>
 
-                <div className="rc-field rc-form-row-full">
-                  <label>Cultural Preferences</label>
-                  <div className="rc-checkbox-grid">
+                <div className="mb-3">
+                  <label className="form-label fw-bold">Cultural Preferences</label>
+                  <div className="row g-2">
                     {culturalOptions.map(option => (
-                      <label key={option} className="rc-checkbox-label">
-                        <input
-                          type="checkbox"
-                          checked={formData.culturalPreferences.includes(option)}
-                          onChange={() => toggleCulturalPreference(option)}
-                        />
-                        <span>{option}</span>
-                      </label>
+                      <div key={option} className="col-6 col-md-4 col-lg-3">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`cultural-${option}`}
+                            checked={formData.culturalPreferences.includes(option)}
+                            onChange={() => toggleCulturalPreference(option)}
+                          />
+                          <label className="form-check-label" htmlFor={`cultural-${option}`}>
+                            {option}
+                          </label>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="rc-field">
-                  <label htmlFor="season">Seasonal Preference</label>
+                <div className="mb-3">
+                  <label htmlFor="season" className="form-label fw-bold">Seasonal Preference</label>
                   <select
                     id="season"
                     name="season"
-                    className="rc-select"
+                    className="form-select"
                     value={formData.season}
                     onChange={handleInputChange}
                   >
@@ -303,8 +301,8 @@ export default function RecipesPage() {
                   </select>
                 </div>
 
-                <div className="rc-field rc-form-row-full">
-                  <label>Pantry/Fridge Photos (Optional)</label>
+                <div className="mb-4">
+                  <label className="form-label fw-bold">Pantry/Fridge Photos (Optional)</label>
                   <ImageUpload
                     onImagesChange={handleImagesChange}
                     maxImages={5}
@@ -313,67 +311,64 @@ export default function RecipesPage() {
                 </div>
 
                 {error && (
-                  <div className="rc-form-row-full">
-                    <div className="rc-error-message">
-                      <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                          <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                        </svg>
-                      </span>
-                      <span>{error}</span>
-                    </div>
+                  <div className="alert alert-danger d-flex align-items-center mb-3" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="me-2" viewBox="0 0 16 16">
+                      <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                    </svg>
+                    <div>{error}</div>
                   </div>
                 )}
 
-                <div className="rc-form-footer rc-form-row-full">
-                  <div className="rc-footer-text">
-                    <span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
-                      </svg>
-                    </span>
-                    <span>
-                      AI will generate <strong>culturally-appropriate recipes with nutritional guidance</strong> from your selections.
-                    </span>
+                <div className="d-flex flex-column gap-3">
+                  <div className="text-body-secondary small">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="me-1" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+                    </svg>
+                    AI will generate <strong>culturally-appropriate recipes with nutritional guidance</strong> from your selections.
                   </div>
-                  <button className="rc-btn-primary" type="submit" disabled={loading}>
-                    <span className="icon">
-                      {loading ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
-                        </svg>
-                      ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                  <button className="btn btn-primary btn-lg" type="submit" disabled={loading}>
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="me-2" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
                           <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5"/>
                         </svg>
-                      )}
-                    </span>
-                    <span>{loading ? 'Generating...' : 'Generate Recipes'}</span>
+                        Generate Recipes
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
             </div>
           </article>
-        </section>
 
-        {/* Right: Preview + Results */}
-        <aside className="rc-right-column" aria-label="Recipe results">
-          <article className="rc-card">
-            <div className="rc-card-inner">
-              <div className="rc-preview-card-top">
-                <div className="rc-hero-icon" aria-hidden="true">🥘</div>
-                <div>
-                  <h2 className="rc-preview-title">
+          {/* Additional Info Cards - No longer needed, moved to sidebar */}
+        </div>
+
+        {/* Right Column: Sidebar */}
+        <div className="col-md-4">
+          <div className="position-sticky" style={{ top: '2rem' }}>
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <div className="d-flex align-items-center mb-3">
+                <span style={{ fontSize: '2rem' }} aria-hidden="true">🥘</span>
+                <div className="ms-3">
+                  <h4 className="fst-italic mb-0">
                     {recipes.length > 0 ? `${recipes.length} Recipe${recipes.length > 1 ? 's' : ''} Generated` : 'Recipe Preview'}
-                  </h2>
-                  <p className="rc-preview-subtitle">
-                    {recipes.length > 0
-                      ? 'Your personalized recipes are ready!'
-                      : 'Fill in your preferences to generate culturally-respectful, delicious recipes.'}
-                  </p>
+                  </h4>
                 </div>
               </div>
+              <p className="mb-0 text-body-secondary">
+                {recipes.length > 0
+                  ? 'Your personalized recipes are ready!'
+                  : 'Fill in your preferences to generate culturally-respectful, delicious recipes.'}
+              </p>
+            </div>
 
+            <div>
               {recipes.length > 0 ? (
                 <>
                   {/* Desktop: Traditional stacked layout */}
@@ -583,57 +578,53 @@ export default function RecipesPage() {
                 </>
               )}
             </div>
-          </article>
 
-          <article className="rc-card rc-tips-card">
-            <div className="rc-card-inner">
-              <h3>💡 Recipe Tips</h3>
-              <ul className="rc-tips-list">
-                <li>
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h4 className="fst-italic mb-3">💡 Recipe Tips</h4>
+              <ul className="list-unstyled">
+                <li className="mb-2">
                   <strong>Be specific about dietary needs</strong> – AI respects religious and cultural requirements
                 </li>
-                <li>
+                <li className="mb-2">
                   <strong>Upload pantry photos</strong> – Vision AI can identify ingredients you might have missed
                 </li>
-                <li>
+                <li className="mb-2">
                   <strong>Select cultural preferences</strong> – Get authentic recipes from various cuisines
                 </li>
-                <li>
+                <li className="mb-2">
                   <strong>Consider seasonal ingredients</strong> – Fresher produce and better flavors
                 </li>
               </ul>
             </div>
-          </article>
 
-          <article className="rc-card">
-            <div className="rc-card-inner">
-              <h3>Recent Recipes</h3>
+            <div className="p-4 bg-body-tertiary rounded">
+              <h4 className="fst-italic mb-3">Recent Recipes</h4>
               {history.length > 0 ? (
-                <ul className="rc-tips-list" style={{ gap: '0.75rem' }}>
+                <ul className="list-unstyled border-top">
                   {history.map((item) => (
-                    <li key={item.id} style={{ paddingLeft: 0 }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
-                        <strong style={{ color: 'var(--accent-dark)' }}>{item.title}</strong>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                    <li key={item.id} className="border-bottom py-2">
+                      <div className="d-flex flex-column">
+                        <strong className="text-primary">{item.title}</strong>
+                        <small className="text-body-secondary">
                           {new Date(item.timestamp).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
                             year: 'numeric'
                           })}
-                        </span>
+                        </small>
                       </div>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '1rem 0' }}>
+                <p className="text-body-secondary mb-0">
                   No recipes yet. Generate your first recipe above!
                 </p>
               )}
             </div>
-          </article>
-        </aside>
-      </main>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
