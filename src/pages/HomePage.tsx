@@ -1,4 +1,91 @@
 import { Link } from 'react-router-dom';
+import './HomePage.css';
+
+const quickLinks = [
+  {
+    title: 'Recipe Generator',
+    description: 'Create culturally rooted, AI-powered meals.',
+    route: '/recipes',
+    icon: '🍽️'
+  },
+  {
+    title: 'Plant Care',
+    description: 'Grow herbs and produce at home.',
+    route: '/plant-care',
+    icon: '🌱'
+  },
+  {
+    title: 'Nutrition Guide',
+    description: 'Dive into evidence-based nutrition lessons.',
+    route: '/nutrition',
+    icon: '🥗'
+  },
+  {
+    title: 'Learning Modules',
+    description: 'Explore sustainable living curriculum.',
+    route: '/learning',
+    icon: '📚'
+  },
+  {
+    title: 'Community Hub',
+    description: 'Share wins and connect with peers.',
+    route: '/community',
+    icon: '👥'
+  },
+  {
+    title: 'Challenges',
+    description: 'Join collective impact missions.',
+    route: '/challenges',
+    icon: '🎯'
+  },
+  {
+    title: 'Storytelling',
+    description: 'Document and honor food traditions.',
+    route: '/storytelling',
+    icon: '📖'
+  },
+  {
+    title: 'SOC Dashboard',
+    description: 'Track supply chain resilience.',
+    route: '/soc',
+    icon: '🏭'
+  }
+];
+
+const featuredServices = [
+  {
+    title: ['Plant', 'Care AI'],
+    description:
+      'Share a few plant details and receive climate-aware care plans with watering schedules, soil tips, and regenerative growing practices.',
+    tags: ['Home', 'Garden', 'Landscape Design', 'Expert'],
+    image: 'https://images.pexels.com/photos/139680/pexels-photo-139680.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    route: '/plant-care'
+  },
+  {
+    title: ['Recipes', 'AI'],
+    description:
+      'Share dietary preferences, pantry staples, and cultural tastes to generate personalized, respectful recipes powered by AI.',
+    tags: ['Indoor', 'Balcony'],
+    image: 'https://images.pexels.com/photos/450516/pexels-photo-450516.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    route: '/recipes'
+  },
+  {
+    title: ['Meal Prep', 'Coach'],
+    description:
+      'Get meal prep plans tuned to household size, health goals, and available time plus nutritional analysis from uploaded dishes.',
+    tags: ['Meal Prep', 'Nutrition Analysis'],
+    image: 'https://images.pexels.com/photos/450062/pexels-photo-450062.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    route: '/nutrition'
+  },
+  {
+    title: ['Food', 'Stories'],
+    description:
+      'Explore cultural heritage, ancestral wisdom, and the science behind traditional dishes that connect communities worldwide.',
+    tags: ['Food History', 'Plant History'],
+    image: 'https://images.pexels.com/photos/450545/pexels-photo-450545.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    route: '/storytelling'
+  }
+];
 
 export default function HomePage() {
   return (
@@ -74,7 +161,75 @@ export default function HomePage() {
 
       {/* Main Content Grid */}
       <div className="row g-5">
-        <div className="col-md-8">
+        <div className="col-12 col-xl-12">
+          <section className="services-section mb-5">
+            <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+              <div className="services-header">| Services |</div>
+              <Link to="/learning" className="services-link text-decoration-none">
+                See more services
+              </Link>
+            </div>
+            <div className="services-accordion mt-3">
+              {featuredServices.map((service) => (
+                <div className="services-panel" key={service.title.join('-')}>
+                  <Link
+                    to={service.route}
+                    className="service-card text-white text-decoration-none"
+                    style={{ backgroundImage: `url(${service.image})` }}
+                  >
+                    <div className="service-card-body">
+                      <div className="d-flex justify-content-between align-items-start mb-4">
+                        <div className="service-tags">
+                          {service.tags.map((tag) => (
+                            <span className="service-tag" key={`${service.route}-${tag}`}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="service-arrow" aria-hidden="true">↗</div>
+                      </div>
+                      <div className="service-long">
+                        <h3 className="service-title mb-3">
+                          {service.title.map((line, idx) => (
+                            <span key={`${service.route}-line-${idx}`} className="d-block">
+                              {line}
+                            </span>
+                          ))}
+                        </h3>
+                        <p className="service-desc mb-0">{service.description}</p>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="quick-links-section mb-5">
+            <div className="text-center text-md-start mb-4">
+              <div className="quick-links-eyebrow mb-2">Navigation</div>
+              <h2 className="quick-links-heading">
+                <span>{quickLinks.length} quick links</span> — one platform
+              </h2>
+            </div>
+            <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 g-lg-4 justify-content-center justify-content-lg-start">
+              {quickLinks.map((link, index) => (
+                <div className="col" key={link.title}>
+                  <Link to={link.route} className="text-decoration-none text-reset">
+                    <div className="card quick-link-card h-100 p-3 p-lg-4">
+                      <div className="d-flex justify-content-between align-items-start mb-3">
+                        <span className="quick-link-label">{String(index + 1).padStart(2, '0')}</span>
+                        <span className="quick-link-badge" aria-hidden="true">{link.icon}</span>
+                      </div>
+                      <h5 className="quick-link-title mb-1">{link.title}</h5>
+                      <p className="quick-link-text mb-0">{link.description}</p>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </section>
+
           <h3 className="pb-4 mb-4 fst-italic border-bottom">
             Recent Updates
           </h3>
@@ -88,6 +243,23 @@ export default function HomePage() {
               and building a more peaceful world through conscious food choices.
             </p>
             <hr />
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h4 className="fst-italic">About Planted</h4>
+              <p className="mb-0">
+                A platform dedicated to sustainable living, plant-based nutrition, and global peace 
+                through conscious food choices. Join us in creating a healthier planet, one meal at a time.
+              </p>
+            </div>
+
+            <div className="p-4 mb-4 bg-body-tertiary rounded">
+              <h4 className="fst-italic">Core Values</h4>
+              <ol className="list-unstyled mb-0">
+                <li>🌍 Environmental Sustainability</li>
+                <li>🤝 Cultural Respect</li>
+                <li>💚 Health & Wellness</li>
+                <li>✌️ Peace Through Food</li>
+              </ol>
+            </div>
             
             <h3>Our Mission</h3>
             <p>
@@ -112,41 +284,6 @@ export default function HomePage() {
               join our <Link to="/community">community</Link> to connect with like-minded individuals.
             </p>
           </article>
-        </div>
-
-        <div className="col-md-4">
-          <div className="position-sticky" style={{ top: '2rem' }}>
-            <div className="p-4 mb-3 bg-body-tertiary rounded">
-              <h4 className="fst-italic">About Planted</h4>
-              <p className="mb-0">
-                A platform dedicated to sustainable living, plant-based nutrition, and global peace 
-                through conscious food choices. Join us in creating a healthier planet, one meal at a time.
-              </p>
-            </div>
-
-            <div className="p-4">
-              <h4 className="fst-italic">Quick Links</h4>
-              <ol className="list-unstyled mb-0">
-                <li><Link to="/recipes" className="link-secondary text-decoration-none">🍽️ Recipe Generator</Link></li>
-                <li><Link to="/plant-care" className="link-secondary text-decoration-none">🌱 Plant Care</Link></li>
-                <li><Link to="/nutrition" className="link-secondary text-decoration-none">🥗 Nutrition Guide</Link></li>
-                <li><Link to="/learning" className="link-secondary text-decoration-none">📚 Learning Modules</Link></li>
-                <li><Link to="/community" className="link-secondary text-decoration-none">👥 Community</Link></li>
-                <li><Link to="/challenges" className="link-secondary text-decoration-none">🎯 Challenges</Link></li>
-                <li><Link to="/storytelling" className="link-secondary text-decoration-none">📖 Stories</Link></li>
-              </ol>
-            </div>
-
-            <div className="p-4">
-              <h4 className="fst-italic">Core Values</h4>
-              <ol className="list-unstyled">
-                <li>🌍 Environmental Sustainability</li>
-                <li>🤝 Cultural Respect</li>
-                <li>💚 Health & Wellness</li>
-                <li>✌️ Peace Through Food</li>
-              </ol>
-            </div>
-          </div>
         </div>
       </div>
     </>

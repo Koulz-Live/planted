@@ -1,0 +1,242 @@
+.quick-links-section {
+  padding-top: 2rem;
+  padding-bottom: 2.5rem;
+}
+
+.quick-links-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: #9d927a;
+}
+
+.quick-links-heading {
+  font-size: clamp(2rem, 2.6vw, 2.6rem);
+  font-weight: 500;
+  color: #26231d;
+  margin-bottom: 0;
+}
+
+.quick-links-heading span {
+  color: #78a344;
+  font-weight: 600;
+}
+
+.quick-link-card {
+  border-radius: 1.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(4px);
+  transition: all 0.4s ease;
+  min-height: 190px;
+}
+
+.quick-link-badge {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f4e2;
+  color: #7a8d4b;
+  font-size: 1.35rem;
+  transition: all 0.4s ease;
+}
+
+.quick-link-label {
+  font-size: 0.7rem;
+  color: #b0a58c;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.quick-link-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #2b2821;
+}
+
+.quick-link-text {
+  font-size: 0.85rem;
+  color: #a0957f;
+}
+
+.quick-link-card:hover {
+  transform: translateY(-4px);
+  background: radial-gradient(circle at 30% 20%, #d0e9b0, #5d7f33);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.quick-link-card:hover .quick-link-title,
+.quick-link-card:hover .quick-link-text,
+.quick-link-card:hover .quick-link-label {
+  color: #ffffff;
+}
+
+.quick-link-card:hover .quick-link-badge {
+  background: radial-gradient(circle at 30% 20%, #ffffff, #b9d892);
+  color: #3f6e30;
+}
+
+.services-section {
+  padding-top: 1rem;
+}
+
+.services-header {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #8c8676;
+}
+
+.services-link {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #3b3a32;
+  border-bottom: 1px solid #3b3a32;
+  padding-bottom: 0.2rem;
+}
+
+.services-link:hover {
+  color: #1f4734;
+  border-color: #1f4734;
+}
+
+.services-accordion {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.services-panel {
+  flex: 0.75;
+  border: 0;
+  transition: flex-basis 0.45s ease;
+  min-height: 360px;
+}
+
+.services-panel:hover {
+  flex: 1.8;
+}
+
+.services-panel:first-child {
+  flex: 1.6;
+}
+
+.services-accordion:hover .services-panel:first-child:not(:hover) {
+  flex: 0.75;
+}
+
+.service-card {
+  height: 100%;
+  border-radius: 1.75rem;
+  overflow: hidden;
+  border: 0;
+  color: #ffffff;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  display: block;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.15));
+  opacity: 0.95;
+  transition: opacity 0.4s ease;
+}
+
+.services-panel:hover .service-card::before {
+  opacity: 1;
+}
+
+.service-card-body {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  padding: 1.5rem 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.service-tag {
+  font-size: 0.7rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background-color: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+}
+
+.service-arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #f8f4ea;
+  color: #1f4734;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.service-title {
+  font-size: clamp(1.5rem, 3vw, 2.6rem);
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.service-desc {
+  font-size: 0.85rem;
+  max-width: 18rem;
+  opacity: 0.9;
+}
+
+.service-long {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.4s ease;
+}
+
+.services-panel:first-child .service-long {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.services-panel:hover .service-long {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.services-accordion:hover .services-panel:first-child:not(:hover) .service-long {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (max-width: 992px) {
+  .services-accordion {
+    flex-direction: column;
+  }
+
+  .services-panel,
+  .services-accordion:hover .services-panel,
+  .services-panel:hover {
+    flex: 1;
+    min-height: 320px;
+  }
+}
