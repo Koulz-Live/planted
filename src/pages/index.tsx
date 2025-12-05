@@ -1,4 +1,5 @@
 export { default as HomePage } from './HomePage';
+export { default as AboutPage } from './About';
 export { default as PlantCarePage } from './PlantCarePage';
 export { default as RecipesPage } from './RecipesPage';
 export { default as NutritionPage } from './NutritionPage';

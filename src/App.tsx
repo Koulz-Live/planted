@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
-import { HomePage, PlantCarePage, RecipesPage, NutritionPage, LearningPage, StorytellingPage, CommunityPage, ChallengesPage, SOCPage } from './pages';
+import { HomePage, AboutPage, PlantCarePage, RecipesPage, NutritionPage, LearningPage, StorytellingPage, CommunityPage, ChallengesPage, SOCPage } from './pages';
 import './App.css';
 
 function App() {
@@ -11,6 +11,7 @@ function App() {
       <main className="container">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/plant-care" element={<PlantCarePage />} />
           <Route path="/recipes" element={<RecipesPage />} />
           <Route path="/nutrition" element={<NutritionPage />} />

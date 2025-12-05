@@ -37,6 +37,7 @@ export function Navigation() {
       <div className="nav-scroller py-1 mb-3 border-bottom">
         <nav className="nav nav-underline justify-content-between">
           <Link className={`nav-item nav-link link-body-emphasis ${isActive('/')}`} to="/">Home</Link>
+          <Link className={`nav-item nav-link link-body-emphasis ${isActive('/about')}`} to="/about">About</Link>
           <Link className={`nav-item nav-link link-body-emphasis ${isActive('/plant-care')}`} to="/plant-care">Plant Care</Link>
           <Link className={`nav-item nav-link link-body-emphasis ${isActive('/recipes')}`} to="/recipes">Recipes</Link>
           <Link className={`nav-item nav-link link-body-emphasis ${isActive('/nutrition')}`} to="/nutrition">Nutrition</Link>
