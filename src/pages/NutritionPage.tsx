@@ -174,15 +174,23 @@ export default function NutritionPage() {
   return (
     <div className="nutrition-page">
       {/* Hero Section */}
-      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+      <div 
+        className="p-4 p-md-5 mb-4 rounded text-body-emphasis" 
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white'
+        }}
+      >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic">🍽️ Nutrition AI</h1>
-          <p className="lead my-3">
+          <h1 className="display-4 fst-italic text-white">🍽️ Nutrition AI</h1>
+          <p className="lead my-3 text-white">
             Get personalized meal prep plans tailored to your household size, health goals, 
             and available time. Upload meal photos for AI nutritional analysis and expert recommendations.
           </p>
           <p className="lead mb-0">
-            <span className="text-body-emphasis fw-bold">Start planning below →</span>
+            <span className="text-white fw-bold" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>Start planning below →</span>
           </p>
         </div>
       </div>

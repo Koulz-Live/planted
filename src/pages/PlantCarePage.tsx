@@ -173,15 +173,23 @@ export default function PlantCarePage() {
   return (
     <div className="plant-care-page">
       {/* Hero Section */}
-      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+      <div 
+        className="p-4 p-md-5 mb-4 rounded text-body-emphasis" 
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.pexels.com/photos/1022922/pexels-photo-1022922.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white'
+        }}
+      >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic">🌱 Plant Care AI</h1>
-          <p className="lead my-3">
+          <h1 className="display-4 fst-italic text-white">🌱 Plant Care AI</h1>
+          <p className="lead my-3 text-white">
             Share a few details about your plant and receive a personalized, climate-aware care plan 
             with watering schedules, soil health tips, and regenerative growing practices tailored to your location.
           </p>
           <p className="lead mb-0">
-            <span className="text-body-emphasis fw-bold">Get started below →</span>
+            <span className="text-white fw-bold" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>Get started below →</span>
           </p>
         </div>
       </div>

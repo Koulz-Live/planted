@@ -193,15 +193,23 @@ export default function RecipesPage() {
   return (
     <div className="recipes-page">
       {/* Hero Section */}
-      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+      <div 
+        className="p-4 p-md-5 mb-4 rounded text-body-emphasis" 
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white'
+        }}
+      >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic">🍽️ Recipe AI</h1>
-          <p className="lead my-3">
+          <h1 className="display-4 fst-italic text-white">🍽️ Recipe AI</h1>
+          <p className="lead my-3 text-white">
             Share your dietary preferences, available ingredients, and cultural tastes to receive 
             personalized, culturally-respectful recipes powered by AI. From pantry staples to gourmet creations.
           </p>
           <p className="lead mb-0">
-            <span className="text-body-emphasis fw-bold">Start creating below →</span>
+            <span className="text-white fw-bold" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>Start creating below →</span>
           </p>
         </div>
       </div>

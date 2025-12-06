@@ -127,10 +127,18 @@ export default function CommunityPage() {
   return (
     <div className="community-page container">
       {/* Hero Section */}
-      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+      <div 
+        className="p-4 p-md-5 mb-4 rounded text-body-emphasis" 
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.pexels.com/photos/3184192/pexels-photo-3184192.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white'
+        }}
+      >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic">🌍 Global Food Community</h1>
-          <p className="lead my-3">
+          <h1 className="display-4 fst-italic text-white">🌍 Global Food Community</h1>
+          <p className="lead my-3 text-white">
             Share recipes, meal prep strategies, and participate in Peace Table challenges 
             with a global community centered around food and cultural learning. Connect with 
             others passionate about sustainable cooking, cultural respect, and ethical food systems.

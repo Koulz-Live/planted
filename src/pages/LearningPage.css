@@ -8,13 +8,13 @@
   min-height: 100vh;
   background: radial-gradient(
     circle at top right,
-    rgba(255, 200, 124, 0.15),
-    rgba(255, 154, 67, 0.12),
+    rgba(250, 235, 214, 0.25),
+    rgba(215, 154, 72, 0.12),
     transparent 70%
   ),
   radial-gradient(
     circle at bottom left,
-    rgba(255, 183, 77, 0.1),
+    rgba(215, 154, 72, 0.1),
     transparent 60%
   );
   animation: lpFadeIn 0.6s ease-in;
@@ -36,8 +36,8 @@
    =========================== */
 
 .lp-nav {
-  background: linear-gradient(135deg, #ff9a56 0%, #ff6a43 100%);
-  box-shadow: 0 4px 20px rgba(255, 154, 86, 0.2);
+  background: var(--gradient-learning);
+  box-shadow: 0 4px 20px rgba(215, 154, 43, 0.18);
   padding: 1rem 0;
   position: sticky;
   top: 0;
@@ -131,14 +131,14 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1.25rem;
-  background: linear-gradient(135deg, #ff9a56 0%, #ff6a43 100%);
+  background: var(--gradient-learning);
   color: white;
   border-radius: 50px;
   font-family: 'Alegreya', serif;
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  box-shadow: 0 4px 12px rgba(255, 154, 86, 0.3);
+  box-shadow: 0 4px 12px rgba(215, 154, 43, 0.28);
 }
 
 .lp-eyebrow span {
@@ -149,7 +149,7 @@
   font-family: 'Belleza', sans-serif;
   font-size: 2.75rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff9a56 0%, #ff6a43 100%);
+  background: var(--gradient-learning);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -176,9 +176,9 @@
   gap: 1.5rem;
   margin-bottom: 3rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #ff9a56 0%, #ff6a43 100%);
+  background: var(--gradient-learning);
   border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(255, 154, 86, 0.25);
+  box-shadow: 0 8px 30px rgba(215, 154, 43, 0.22);
 }
 
 .lp-stat {
@@ -307,21 +307,21 @@
   font-size: 0.95rem;
   line-height: 1.5;
   color: var(--text-main);
-  background: rgba(255, 154, 86, 0.08);
+  background: rgba(215, 154, 43, 0.12);
   padding: 0.875rem;
   border-radius: 8px;
-  border-left: 3px solid #ff9a56;
+  border-left: 3px solid var(--color-warning);
   margin-bottom: 1.5rem;
 }
 
 .lp-ethical-focus strong {
-  color: #ff6a43;
+  color: var(--color-warning);
 }
 
 .lp-module-btn {
   width: 100%;
   padding: 0.875rem 2rem;
-  background: linear-gradient(135deg, #ff9a56 0%, #ff6a43 100%);
+  background: var(--gradient-learning);
   color: white;
   border: none;
   border-radius: 50px;
@@ -330,12 +330,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 154, 86, 0.3);
+  box-shadow: 0 4px 15px rgba(215, 154, 43, 0.28);
 }
 
 .lp-module-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(255, 154, 86, 0.4);
+  box-shadow: 0 6px 25px rgba(215, 154, 43, 0.36);
 }
 
 /* ===========================
@@ -441,7 +441,7 @@
   gap: 1rem;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: rgba(255, 154, 86, 0.05);
+  background: rgba(215, 154, 43, 0.08);
   border-radius: 12px;
 }
 
@@ -491,9 +491,9 @@
   line-height: 1.6;
   color: var(--text-main);
   padding: 1rem;
-  background: rgba(255, 154, 86, 0.05);
+  background: rgba(215, 154, 43, 0.1);
   border-radius: 8px;
-  border-left: 3px solid #ff9a56;
+  border-left: 3px solid var(--color-warning);
 }
 
 .lp-milestone-number {
@@ -503,7 +503,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #ff9a56 0%, #ff6a43 100%);
+  background: var(--gradient-learning);
   color: white;
   border-radius: 50%;
   font-family: 'Belleza', sans-serif;
@@ -522,7 +522,7 @@
 .lp-btn-start,
 .lp-btn-complete {
   padding: 1rem 3rem;
-  background: linear-gradient(135deg, #ff9a56 0%, #ff6a43 100%);
+  background: var(--gradient-learning);
   color: white;
   border: none;
   border-radius: 50px;
@@ -531,32 +531,32 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(255, 154, 86, 0.3);
+  box-shadow: 0 4px 20px rgba(215, 154, 43, 0.28);
 }
 
 .lp-btn-start:hover,
 .lp-btn-complete:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(255, 154, 86, 0.4);
+  box-shadow: 0 6px 30px rgba(215, 154, 43, 0.36);
 }
 
 .lp-btn-complete {
-  background: linear-gradient(135deg, #8FBC8F 0%, #669966 100%);
-  box-shadow: 0 4px 20px rgba(143, 188, 143, 0.3);
+  background: linear-gradient(135deg, var(--color-brand-secondary), var(--color-brand-primary));
+  box-shadow: 0 4px 20px rgba(47, 107, 79, 0.28);
 }
 
 .lp-btn-complete:hover {
-  box-shadow: 0 6px 30px rgba(143, 188, 143, 0.4);
+  box-shadow: 0 6px 30px rgba(47, 107, 79, 0.36);
 }
 
 .lp-completed-message {
   font-family: 'Alegreya', serif;
   font-size: 1.1rem;
-  color: #669966;
+  color: var(--color-brand-secondary);
   font-weight: 600;
   text-align: center;
   padding: 1rem 2rem;
-  background: rgba(143, 188, 143, 0.1);
+  background: rgba(95, 175, 115, 0.12);
   border-radius: 50px;
 }
 

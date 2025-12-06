@@ -7,26 +7,26 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.75rem;
-  color: #9d927a;
+  color: var(--color-text-muted);
 }
 
 .quick-links-heading {
   font-size: clamp(2rem, 2.6vw, 2.6rem);
   font-weight: 500;
-  color: #26231d;
+  color: var(--color-text-primary);
   margin-bottom: 0;
 }
 
 .quick-links-heading span {
-  color: #78a344;
+  color: var(--color-brand-secondary);
   font-weight: 600;
 }
 
 .quick-link-card {
   border-radius: 1.25rem;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background-color: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(4px);
+  border: 1px solid rgba(46, 50, 38, 0.05);
+  background-color: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(6px);
   transition: all 0.4s ease;
   min-height: 190px;
 }
@@ -38,15 +38,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #f0f4e2;
-  color: #7a8d4b;
+  background: var(--color-brand-tint);
+  color: var(--color-brand-primary);
   font-size: 1.35rem;
   transition: all 0.4s ease;
 }
 
 .quick-link-label {
   font-size: 0.7rem;
-  color: #b0a58c;
+  color: var(--color-text-muted);
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
@@ -54,19 +54,19 @@
 .quick-link-title {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #2b2821;
+  color: var(--color-text-primary);
 }
 
 .quick-link-text {
   font-size: 0.85rem;
-  color: #a0957f;
+  color: var(--color-text-secondary);
 }
 
 .quick-link-card:hover {
   transform: translateY(-4px);
-  background: radial-gradient(circle at 30% 20%, #d0e9b0, #5d7f33);
+  background: linear-gradient(135deg, rgba(47, 107, 79, 0.92), rgba(95, 175, 115, 0.92));
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(47, 107, 79, 0.35);
 }
 
 .quick-link-card:hover .quick-link-title,
@@ -76,8 +76,8 @@
 }
 
 .quick-link-card:hover .quick-link-badge {
-  background: radial-gradient(circle at 30% 20%, #ffffff, #b9d892);
-  color: #3f6e30;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--color-brand-primary);
 }
 
 .services-section {
@@ -88,21 +88,21 @@
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: #8c8676;
+  color: var(--color-text-muted);
 }
 
 .services-link {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: #3b3a32;
-  border-bottom: 1px solid #3b3a32;
+  color: var(--color-brand-primary);
+  border-bottom: 1px solid rgba(47, 107, 79, 0.7);
   padding-bottom: 0.2rem;
 }
 
 .services-link:hover {
-  color: #1f4734;
-  border-color: #1f4734;
+  color: var(--color-cta-primary);
+  border-color: var(--color-cta-primary);
 }
 
 .services-accordion {
@@ -185,8 +185,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: #f8f4ea;
-  color: #1f4734;
+  background-color: rgba(250, 248, 244, 0.9);
+  color: var(--color-brand-primary);
   display: flex;
   align-items: center;
   justify-content: center;

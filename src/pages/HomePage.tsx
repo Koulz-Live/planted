@@ -91,15 +91,23 @@ export default function HomePage() {
   return (
     <>
       {/* Featured Hero Section */}
-      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+      <div 
+        className="p-4 p-md-5 mb-4 rounded text-body-emphasis" 
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.pexels.com/photos/1414651/pexels-photo-1414651.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white'
+        }}
+      >
         <div className="col-lg-6 px-0">
-          <h1 className="display-4 fst-italic">Growing Together for a Sustainable Future</h1>
+          <h1 className="display-4 fst-italic text-white">Growing Together for a Sustainable Future</h1>
           <p className="lead my-3">
             Discover plant-based recipes, learn sustainable practices, and join a global community 
             working toward food security, environmental health, and peace through conscious living.
           </p>
           <p className="lead mb-0">
-            <Link to="/learning" className="text-body-emphasis fw-bold text-decoration-none">
+            <Link to="/learning" className="text-white fw-bold text-decoration-none" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
               Start learning →
             </Link>
           </p>

@@ -140,10 +140,18 @@ export default function StorytellingPage() {
   return (
     <div className="storytelling-page container">
       {/* Hero Section */}
-      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+      <div 
+        className="p-4 p-md-5 mb-4 rounded text-body-emphasis" 
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.pexels.com/photos/6646296/pexels-photo-6646296.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white'
+        }}
+      >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic">📖 Food Storytelling</h1>
-          <p className="lead my-3">
+          <h1 className="display-4 fst-italic text-white">📖 Food Storytelling</h1>
+          <p className="lead my-3 text-white">
             Discover the rich cultural heritage, historical origins, and scientific wisdom 
             behind traditional dishes from around the world. Explore how food connects us to 
             our past, shapes our identity, and carries forward ancient knowledge.

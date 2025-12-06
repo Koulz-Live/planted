@@ -9,8 +9,8 @@
   top: 0;
   z-index: 20;
   backdrop-filter: blur(12px);
-  background: linear-gradient(to right, rgba(244, 250, 244, 0.94), rgba(231, 245, 236, 0.96));
-  border-bottom: 1px solid rgba(211, 227, 215, 0.7);
+  background: linear-gradient(to right, rgba(250, 248, 244, 0.94), rgba(229, 243, 236, 0.96));
+  border-bottom: 1px solid rgba(231, 226, 218, 0.75);
 }
 
 .rc-nav-inner {
@@ -35,11 +35,11 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: radial-gradient(circle at 20% 0, #ffd89b, #f4a460);
+  background: radial-gradient(circle at 20% 0, #FFF5EB, #E07A3F);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: #FFFFFF;
   font-size: 18px;
   box-shadow: var(--shadow-soft);
 }
@@ -129,7 +129,7 @@
   position: absolute;
   inset: -40%;
   opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='80' cy='80' r='60' fill='%23f4a460'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='80' cy='80' r='60' fill='%23E07A3F'/%3E%3C/svg%3E");
   pointer-events: none;
 }
 
@@ -154,9 +154,9 @@
   display: inline-flex;
   padding: 0.12rem 0.45rem;
   border-radius: 999px;
-  background: rgba(244, 164, 96, 0.15);
+  background: rgba(224, 122, 63, 0.15);
   font-size: 0.7rem;
-  color: var(--accent-dark);
+  color: var(--color-brand-primary);
   gap: 0.25rem;
   align-items: center;
 }
@@ -165,7 +165,7 @@
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: var(--accent-yellow);
+  background: var(--color-tag-cuisine);
 }
 
 /* Form layout */
@@ -213,8 +213,8 @@
 
 .rc-select:focus,
 .rc-textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px rgba(31, 139, 77, 0.15);
+  border-color: var(--color-brand-secondary);
+  box-shadow: 0 0 0 1px rgba(47, 107, 79, 0.18);
 }
 
 .rc-textarea {
@@ -235,16 +235,16 @@
   gap: 0.4rem;
   padding: 0.4rem 0.6rem;
   border-radius: 8px;
-  background: #f5fbf6;
-  border: 1px solid var(--border);
+  background: var(--color-surface-alt);
+  border: 1px solid rgba(47, 107, 79, 0.15);
   cursor: pointer;
   font-size: 0.8rem;
   transition: all 0.2s ease;
 }
 
 .rc-checkbox-label:hover {
-  background: var(--accent-soft);
-  border-color: var(--accent);
+  background: rgba(95, 175, 115, 0.12);
+  border-color: rgba(47, 107, 79, 0.3);
 }
 
 .rc-checkbox-label input[type="checkbox"] {
@@ -284,8 +284,8 @@
   border: none;
   font-size: 0.88rem;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: #f7fff8;
+  background: linear-gradient(135deg, var(--color-cta-primary), var(--color-cta-hover));
+  color: #FFFFFF;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -331,11 +331,11 @@
   width: 90px;
   height: 90px;
   border-radius: 24px;
-  background: radial-gradient(circle at 30% 0%, #ffd89b, #f4a460);
+  background: var(--gradient-recipe);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: #FFFFFF;
   font-size: 38px;
   box-shadow: var(--shadow-soft);
 }
@@ -375,7 +375,7 @@
 }
 
 .rc-pill.muted {
-  background: #edf3ef;
+  background: var(--color-surface-alt);
   color: var(--text-muted);
 }
 
@@ -390,8 +390,8 @@
 .rc-recipe-card {
   padding: 1rem;
   border-radius: 12px;
-  background: #f9fcfa;
-  border: 1px solid rgba(211, 227, 215, 0.6);
+  background: var(--color-surface-card);
+  border: 1px solid rgba(47, 107, 79, 0.08);
 }
 
 .rc-recipe-header {
@@ -457,8 +457,8 @@
   margin-top: 0.75rem;
   padding: 0.6rem 0.75rem;
   border-radius: 8px;
-  background: rgba(244, 164, 96, 0.08);
-  border: 1px solid rgba(244, 164, 96, 0.2);
+  background: rgba(224, 122, 63, 0.08);
+  border: 1px solid rgba(224, 122, 63, 0.24);
   font-size: 0.8rem;
   color: var(--text-main);
 }
@@ -486,8 +486,8 @@
   margin-top: 0.75rem;
   padding: 1rem;
   border-radius: 12px;
-  background: #f9fcfa;
-  border: 1px solid rgba(211, 227, 215, 0.6);
+  background: var(--color-surface-card);
+  border: 1px solid rgba(47, 107, 79, 0.08);
 }
 
 .rc-preview-sample h4 {

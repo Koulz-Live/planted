@@ -231,10 +231,18 @@ export default function LearningPage() {
   return (
     <div className="learning-page container">
       {/* Hero Section */}
-      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+      <div 
+        className="p-4 p-md-5 mb-4 rounded text-body-emphasis" 
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white'
+        }}
+      >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic">📚 Learning Pathways</h1>
-          <p className="lead my-3">
+          <h1 className="display-4 fst-italic text-white">📚 Learning Pathways</h1>
+          <p className="lead my-3 text-white">
             Explore structured learning modules on nutrition, cultural respect, sustainable cooking, 
             and ethical food systems. Track your progress and earn certificates as you advance through 
             each pathway.

@@ -1,39 +1,113 @@
 :root {
-  /* Planted Brand Colors */
-  --primary-green: #8FBC8F;
-  --background-light: #F0F8F0;
-  --accent-yellow: #DEB887;
-  
-  /* Extended Palette */
-  --bg: #f4faf4;
-  --bg-alt: #e3f1e5;
-  --card: #ffffff;
-  --accent: #1f8b4d;
-  --accent-soft: #e0f5e8;
-  --accent-dark: #145e34;
-  --text-main: #143019;
-  --text-muted: #5a7a63;
-  --danger: #e86b5c;
-  --border: #d3e3d7;
-  --radius-lg: 18px;
-  --radius-md: 12px;
-  --shadow-soft: 0 22px 30px rgba(9, 55, 23, 0.08);
-  --shadow-subtle: 0 10px 20px rgba(9, 55, 23, 0.06);
+  /* Base palette from reference
+     Moss:      #414224
+     Sage:      #80744A
+     Mist:      #EFEAE4
+     Quartz:    #C5A47E
+     Terracotta (approx): #B86846
+  */
+
+  /* Brand Core */
+  --color-brand-primary: #414224; /* Moss */
+  --color-brand-secondary: #80744A; /* Sage */
+  --color-brand-tint: #EFEAE4; /* Mist */
+
+  /* Neutral System */
+  --color-surface-base: #EFEAE4; /* Mist as page background */
+  --color-surface-card: #FFFFFF;
+  --color-surface-alt: #F5EDE4;  /* slightly deeper Mist */
+  --color-divider: #E0D4C5;      /* soft warm divider */
 
   /* Typography */
+  --color-text-primary: #2A261F;   /* warm charcoal */
+  --color-text-secondary: #4F4638;
+  --color-text-muted: #7B6E5D;
+
+  /* Interaction & Status */
+  --color-cta-primary: #B86846;  /* Terracotta */
+  --color-cta-hover: #9E5135;   /* Darker Terracotta */
+  --color-success: #5E7246;     /* green success between Moss & Sage */
+  --color-warning: #C5A47E;     /* Quartz */
+  --color-critical: #7A3527;    /* deep brick red */
+
+  /* Tags & Chips */
+  --color-tag-growth: #80744A;  /* Sage */
+  --color-tag-indoor: #F6EEE4;  /* light chip background */
+  --color-tag-drought: #C5A47E; /* Quartz */
+  --color-tag-cuisine: #B86846; /* Terracotta */
+  --color-tag-fresh: #D6C8B5;   /* soft neutral mix */
+
+  /* Gradient Tokens */
+  --gradient-plant: linear-gradient(
+    135deg,
+    #EFEAE4 0%,   /* Mist */
+    #80744A 55%,  /* Sage */
+    #414224 100%  /* Moss */
+  );
+  --gradient-recipe: linear-gradient(
+    135deg,
+    #FFF4EA 0%,
+    #C5A47E 55%,  /* Quartz */
+    #B86846 100%  /* Terracotta */
+  );
+  --gradient-nutrition: linear-gradient(
+    135deg,
+    #EFEAE4 0%,   /* Mist */
+    #D8CBB7 55%,
+    #5E7246 100%  /* Success green */
+  );
+  --gradient-learning: linear-gradient(
+    135deg,
+    #FFF1E3 0%,
+    #E4BC86 55%,
+    #C5A47E 100%  /* Quartz / warm accent */
+  );
+  --gradient-story: linear-gradient(
+    135deg,
+    #F5E3D0 0%,
+    #C5A47E 100%  /* Quartz */
+  );
+  --gradient-community: linear-gradient(
+    135deg,
+    #D6C8B5 0%,
+    #80744A 100%  /* Sage */
+  );
+  --gradient-challenges: linear-gradient(
+    135deg,
+    #414224 0%,   /* Moss */
+    #B86846 100%  /* Terracotta */
+  );
+
+  /* Legacy variable compatibility */
+  --accent: var(--color-brand-primary);
+  --accent-dark: #303121;
+  --accent-soft: var(--color-brand-tint);
+  --accent-yellow: var(--color-warning);
+  --bg: var(--color-surface-base);
+  --bg-alt: var(--color-brand-tint);
+  --card: var(--color-surface-card);
+  --text-main: var(--color-text-primary);
+  --danger: var(--color-critical);
+  --border: var(--color-divider);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --shadow-soft: 0 22px 30px rgba(65, 66, 36, 0.18);
+  --shadow-subtle: 0 10px 20px rgba(65, 66, 36, 0.12);
+
   font-family: 'Alegreya', serif;
   line-height: 1.6;
   font-weight: 400;
 
   color-scheme: light;
-  color: var(--text-main);
-  background-color: var(--background-light);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-base);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Belleza', sans-serif;
@@ -42,19 +116,19 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
   font-weight: 500;
-  color: var(--accent);
+  color: var(--color-brand-primary);
   text-decoration: inherit;
   transition: color 0.2s ease;
 }
 a:hover {
-  color: var(--accent-dark);
+  color: var(--color-brand-secondary);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: radial-gradient(circle at top left, #e6f4ea 0%, var(--bg) 45%, #eaf7ee 100%);
+  background: linear-gradient(180deg, var(--color-surface-base) 0%, var(--color-brand-tint) 45%, #F1F6F0 100%);
 }
 
 h1 {
@@ -67,21 +141,22 @@ button {
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
+  font-weight: 600;
   font-family: inherit;
-  background-color: var(--accent);
-  color: white;
+  background-color: var(--color-cta-primary);
+  color: #FFFFFF;
   cursor: pointer;
+  box-shadow: var(--shadow-subtle);
   transition: all 0.25s ease;
 }
 button:hover {
-  background-color: var(--accent-dark);
+  background-color: var(--color-cta-hover);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-subtle);
+  box-shadow: var(--shadow-soft);
 }
 button:focus,
 button:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 3px solid rgba(20, 124, 228, 0.35);
   outline-offset: 2px;
 }
 
@@ -124,16 +199,16 @@ input, select, textarea {
   padding-top: .75rem;
   padding-bottom: .75rem;
   font-size: .875rem;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
 }
 
 .nav-scroller .nav-link:hover {
-  color: var(--accent);
+  color: var(--color-brand-primary);
 }
 
 .nav-scroller .nav-link.active {
-  color: var(--accent);
-  border-bottom: 2px solid var(--accent);
+  color: var(--color-brand-primary);
+  border-bottom: 2px solid var(--color-brand-primary);
 }
 
 .bd-placeholder-img {
@@ -156,7 +231,7 @@ input, select, textarea {
 
 .blog-post-meta {
   margin-bottom: 1.25rem;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   font-size: 0.875rem;
 }
 
@@ -165,12 +240,12 @@ input, select, textarea {
   align-items: center;
   gap: 0.25rem;
   text-decoration: none;
-  color: var(--accent);
+  color: var(--color-brand-primary);
   font-weight: 500;
 }
 
 .icon-link:hover {
-  color: var(--accent-dark);
+  color: var(--color-brand-secondary);
   text-decoration: underline;
 }
 
@@ -222,7 +297,7 @@ main {
 .card {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--card);
+  background: var(--color-surface-card);
 }
 
 .card-body {

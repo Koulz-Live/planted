@@ -35,11 +35,11 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: radial-gradient(circle at 20% 0, #c9f3cc, #4fa86d);
+  background: radial-gradient(circle at 20% 0, rgba(229, 243, 236, 0.95), #5FAF73);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #f6fff8;
+  color: #F6FFF8;
   font-size: 18px;
   box-shadow: var(--shadow-soft);
 }
@@ -129,7 +129,7 @@
   position: absolute;
   inset: -40%;
   opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M80 10C50 40 40 80 80 150C120 80 110 40 80 10Z' fill='%231f8b4d'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M80 10C50 40 40 80 80 150C120 80 110 40 80 10Z' fill='%232f6b4f'/%3E%3C/svg%3E");
   pointer-events: none;
 }
 
@@ -318,7 +318,7 @@
   width: 90px;
   height: 90px;
   border-radius: 24px;
-  background: radial-gradient(circle at 30% 0%, #d9f5dd, #4fa86d);
+  background: radial-gradient(circle at 30% 0%, rgba(229, 243, 236, 0.95), #5FAF73);
   display: flex;
   align-items: center;
   justify-content: center;

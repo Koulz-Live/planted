@@ -8,13 +8,13 @@
   min-height: 100vh;
   background: radial-gradient(
     circle at top right,
-    rgba(142, 158, 255, 0.15),
-    rgba(167, 119, 227, 0.12),
+    rgba(197, 216, 192, 0.2),
+    rgba(95, 175, 115, 0.12),
     transparent 70%
   ),
   radial-gradient(
     circle at bottom left,
-    rgba(103, 152, 255, 0.1),
+    rgba(20, 124, 228, 0.08),
     transparent 60%
   );
   animation: cmFadeIn 0.6s ease-in;
@@ -36,8 +36,8 @@
    =========================== */
 
 .cm-nav {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+  background: var(--gradient-community);
+  box-shadow: 0 4px 20px rgba(47, 107, 79, 0.18);
   padding: 1rem 0;
   position: sticky;
   top: 0;
@@ -130,19 +130,20 @@
   text-align: left;
 }
 
+/* Updated gradient accents */
 .cm-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1.25rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-community);
   color: white;
   border-radius: 50px;
   font-family: 'Alegreya', serif;
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(47, 107, 79, 0.26);
 }
 
 .cm-eyebrow span {
@@ -153,7 +154,7 @@
   font-family: 'Belleza', sans-serif;
   font-size: 2.75rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-community);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -192,11 +193,11 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-community);
 }
 
 .cm-card:hover {
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+  box-shadow: 0 8px 30px rgba(47, 107, 79, 0.18);
   transform: translateY(-2px);
 }
 
@@ -223,7 +224,7 @@
    =========================== */
 
 .cm-create-post {
-  border: 2px solid rgba(102, 126, 234, 0.2);
+  border: 2px solid rgba(95, 175, 115, 0.25);
 }
 
 .cm-textarea {
@@ -242,8 +243,8 @@
 
 .cm-textarea:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--color-brand-secondary);
+  box-shadow: 0 0 0 3px rgba(95, 175, 115, 0.18);
   background: white;
 }
 
@@ -282,12 +283,12 @@
 .cm-category-chip.active {
   color: white;
   border-color: transparent !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(47, 107, 79, 0.22);
 }
 
 .cm-btn-primary {
   padding: 0.75rem 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-community);
   color: white;
   border: none;
   border-radius: 50px;
@@ -296,12 +297,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(47, 107, 79, 0.24);
 }
 
 .cm-btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 25px rgba(47, 107, 79, 0.32);
 }
 
 .cm-btn-primary:disabled {
@@ -340,7 +341,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-community);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -372,7 +373,8 @@
   font-family: 'Alegreya', serif;
   font-size: 0.85rem;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, var(--color-cta-primary), var(--color-cta-hover));
+  box-shadow: 0 2px 8px rgba(20, 124, 228, 0.25);
 }
 
 .cm-post-content {
@@ -402,8 +404,8 @@
 
 .cm-action-btn {
   padding: 0.5rem 1rem;
-  background: rgba(102, 126, 234, 0.1);
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  background: rgba(95, 175, 115, 0.12);
+  border: 1px solid rgba(95, 175, 115, 0.24);
   border-radius: 50px;
   font-family: 'Alegreya', serif;
   font-size: 0.9rem;
@@ -414,8 +416,8 @@
 }
 
 .cm-action-btn:hover {
-  background: rgba(102, 126, 234, 0.2);
-  border-color: rgba(102, 126, 234, 0.3);
+  background: rgba(95, 175, 115, 0.2);
+  border-color: rgba(95, 175, 115, 0.32);
   transform: translateY(-2px);
 }
 
@@ -426,9 +428,9 @@
 .cm-empty-state {
   text-align: center;
   padding: 4rem 2rem;
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(95, 175, 115, 0.08);
   border-radius: 12px;
-  border: 2px dashed rgba(102, 126, 234, 0.3);
+  border: 2px dashed rgba(95, 175, 115, 0.28);
 }
 
 .cm-empty-icon {
@@ -461,7 +463,7 @@
 }
 
 .cm-challenges-card {
-  border: 2px solid rgba(102, 126, 234, 0.2);
+  border: 2px solid rgba(95, 175, 115, 0.25);
 }
 
 .cm-challenges-subtitle {
@@ -479,15 +481,15 @@
 
 .cm-challenge-item {
   padding: 1.25rem;
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(95, 175, 115, 0.08);
   border-radius: 12px;
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(95, 175, 115, 0.18);
   transition: all 0.3s ease;
 }
 
 .cm-challenge-item:hover {
-  background: rgba(102, 126, 234, 0.08);
-  border-color: rgba(102, 126, 234, 0.2);
+  background: rgba(95, 175, 115, 0.12);
+  border-color: rgba(95, 175, 115, 0.28);
   transform: translateX(4px);
 }
 
@@ -509,7 +511,7 @@
 
 .cm-challenge-badge {
   padding: 0.25rem 0.75rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-community);
   color: white;
   border-radius: 50px;
   font-family: 'Alegreya', serif;
@@ -540,7 +542,7 @@
 .cm-btn-join {
   width: 100%;
   padding: 0.625rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-community);
   color: white;
   border: none;
   border-radius: 50px;
@@ -549,12 +551,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 3px 12px rgba(47, 107, 79, 0.28);
 }
 
 .cm-btn-join:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 20px rgba(47, 107, 79, 0.36);
 }
 
 /* ===========================
@@ -562,7 +564,7 @@
    =========================== */
 
 .cm-stats-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-community);
   color: white;
 }
 

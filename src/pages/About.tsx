@@ -2,14 +2,28 @@ import { Link } from 'react-router-dom';
 
 export default function About() {
   return (
-    <div className="about-page py-5">
-      <div className="col-lg-10 mx-auto">
-        <h1 className="display-4 fw-bold mb-3">About Planted</h1>
-        <p className="lead text-body-secondary mb-5">
-          Learn more about our mission, values, and the ways we serve communities pursuing sustainable, plant-forward futures.
-        </p>
+    <>
+      {/* Hero Section */}
+      <div 
+        className="p-4 p-md-5 mb-4 rounded text-body-emphasis" 
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.pexels.com/photos/1458671/pexels-photo-1458671.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white'
+        }}
+      >
+        <div className="col-lg-8 px-0">
+          <h1 className="display-4 fst-italic text-white">About Planted</h1>
+          <p className="lead my-3 text-white">
+            Learn more about our mission, values, and the ways we serve communities pursuing sustainable, plant-forward futures.
+          </p>
+        </div>
+      </div>
 
-        <h3 className="pb-4 mb-4 fst-italic border-bottom">Recent Updates</h3>
+      <div className="about-page py-5">
+        <div className="col-lg-10 mx-auto">
+          <h3 className="pb-4 mb-4 fst-italic border-bottom">Recent Updates</h3>
 
         <article className="blog-post">
           <h2 className="display-5 link-body-emphasis mb-1">Welcome to Planted</h2>
@@ -61,7 +75,8 @@ export default function About() {
             join our <Link to="/community">community</Link> to connect with like-minded individuals.
           </p>
         </article>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

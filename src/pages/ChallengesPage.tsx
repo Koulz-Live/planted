@@ -266,10 +266,18 @@ export default function ChallengesPage() {
   return (
     <div className="challenges-page container">
       {/* Hero Section */}
-      <div className="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+      <div 
+        className="p-4 p-md-5 mb-4 rounded text-body-emphasis" 
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.pexels.com/photos/1310533/pexels-photo-1310533.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white'
+        }}
+      >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic">🏆 Food Challenges</h1>
-          <p className="lead my-3">
+          <h1 className="display-4 fst-italic text-white">🏆 Food Challenges</h1>
+          <p className="lead my-3 text-white">
             Take on food-related challenges focused on sustainability, cultural exploration, 
             nutrition goals, and community building. Track your progress, earn points, and climb the leaderboard!
           </p>
