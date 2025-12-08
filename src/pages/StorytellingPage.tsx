@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
+import { Icon } from '../components/Icon';
 import './StorytellingPage.css';
 
 interface StorytellingFormData {
@@ -150,7 +151,10 @@ export default function StorytellingPage() {
         }}
       >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic text-white">📖 Food Storytelling</h1>
+          <h1 className="display-4 fst-italic text-white">
+            <Icon name="journal" className="icon-inline me-2" />
+            Food Storytelling
+          </h1>
           <p className="lead my-3 text-white">
             Discover the rich cultural heritage, historical origins, and scientific wisdom 
             behind traditional dishes from around the world. Explore how food connects us to 
@@ -274,7 +278,10 @@ export default function StorytellingPage() {
 
               {story.scienceInsights.length > 0 && (
                 <div className="p-4 mb-4 bg-body-tertiary rounded">
-                  <h3 className="h4 mb-3">🔬 Science & Nutrition Insights</h3>
+                  <h3 className="h4 mb-3 d-flex align-items-center gap-2">
+                    <Icon name="clipboardData" className="icon-inline" />
+                    Science & Nutrition Insights
+                  </h3>
                   <ul className="list-unstyled mb-0">
                     {story.scienceInsights.map((insight, index) => (
                       <li key={index} className="mb-2">
@@ -330,7 +337,10 @@ export default function StorytellingPage() {
 
             {/* Discovery Tips */}
             <div className="p-4 mb-3 bg-body-tertiary rounded">
-              <h4 className="fst-italic">💡 Discovery Tips</h4>
+              <h4 className="fst-italic d-flex align-items-center gap-2">
+                <Icon name="lightbulb" className="icon-inline" />
+                Discovery Tips
+              </h4>
               <ul className="list-unstyled mb-0">
                 <li className="mb-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check2 me-2" viewBox="0 0 16 16">

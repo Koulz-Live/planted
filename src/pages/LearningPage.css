@@ -231,17 +231,6 @@
   background: linear-gradient(to bottom, rgba(143, 188, 143, 0.05), var(--card));
 }
 
-.lp-module-card.completed::after {
-  content: '✓';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 3rem;
-  color: #8FBC8F;
-  opacity: 0.1;
-  font-weight: bold;
-}
-
 .lp-module-header {
   display: flex;
   justify-content: space-between;
@@ -320,22 +309,23 @@
 
 .lp-module-btn {
   width: 100%;
-  padding: 0.875rem 2rem;
-  background: var(--gradient-learning);
-  color: white;
-  border: none;
-  border-radius: 50px;
+  padding: 0.9rem 2.1rem;
+  background: var(--gradient-button-primary);
+  color: #ffffff;
+  border: 1px solid var(--button-border);
+  border-radius: 999px;
   font-family: 'Alegreya', serif;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(215, 154, 43, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: var(--button-gloss), var(--button-shadow);
 }
 
 .lp-module-btn:hover {
+  background: var(--gradient-button-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(215, 154, 43, 0.36);
+  box-shadow: var(--button-gloss), 0 24px 46px rgba(41, 42, 22, 0.22);
 }
 
 /* ===========================
@@ -503,8 +493,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--gradient-learning);
-  color: white;
+  background: linear-gradient(135deg, var(--color-olive-700), var(--color-olive-500));
+  color: #ffffff;
   border-radius: 50%;
   font-family: 'Belleza', sans-serif;
   font-size: 0.875rem;
@@ -522,31 +512,27 @@
 .lp-btn-start,
 .lp-btn-complete {
   padding: 1rem 3rem;
-  background: var(--gradient-learning);
-  color: white;
-  border: none;
-  border-radius: 50px;
+  background: var(--gradient-button-primary);
+  color: #ffffff;
+  border: 1px solid var(--button-border);
+  border-radius: 999px;
   font-family: 'Alegreya', serif;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(215, 154, 43, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: var(--button-gloss), var(--button-shadow);
 }
 
 .lp-btn-start:hover,
 .lp-btn-complete:hover {
+  background: var(--gradient-button-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(215, 154, 43, 0.36);
+  box-shadow: var(--button-gloss), 0 28px 46px rgba(41, 42, 22, 0.22);
 }
 
 .lp-btn-complete {
-  background: linear-gradient(135deg, var(--color-brand-secondary), var(--color-brand-primary));
-  box-shadow: 0 4px 20px rgba(47, 107, 79, 0.28);
-}
-
-.lp-btn-complete:hover {
-  box-shadow: 0 6px 30px rgba(47, 107, 79, 0.36);
+  background: var(--gradient-button-primary);
 }
 
 .lp-completed-message {

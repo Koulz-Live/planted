@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
-import { HomePage, AboutPage, PlantCarePage, RecipesPage, NutritionPage, LearningPage, StorytellingPage, CommunityPage, ChallengesPage, SOCPage } from './pages';
+import { HomePage, AboutPage, PlantCarePage, RecipesPage, NutritionPage, LearningPage, StorytellingPage, CommunityPage, ChallengesPage, SOCPage, SOCManagementPage } from './pages';
 import './App.css';
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/soc" element={<SOCPage />} />
+          <Route path="/soc-management" element={<SOCManagementPage />} />
         </Routes>
       </main>
       <Footer />

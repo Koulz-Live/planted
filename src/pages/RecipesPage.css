@@ -198,13 +198,14 @@
 .rc-select,
 .rc-textarea {
   width: 100%;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  padding: 0.55rem 0.85rem;
-  font-size: 0.85rem;
-  outline: none;
-  background: rgba(255, 255, 255, 0.96);
-  transition: all 0.2s ease;
+  border-radius: 16px;
+  border: 1px solid var(--form-control-border);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  background: var(--form-control-bg);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .rc-select {
@@ -213,48 +214,43 @@
 
 .rc-select:focus,
 .rc-textarea:focus {
-  border-color: var(--color-brand-secondary);
-  box-shadow: 0 0 0 1px rgba(47, 107, 79, 0.18);
+  border-color: var(--form-control-border-active);
+  box-shadow: 0 0 0 4px rgba(135, 136, 74, 0.18), var(--form-control-shadow);
+  transform: translateY(-1px);
 }
 
 .rc-textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 90px;
 }
 
 /* Checkbox grid */
 .rc-checkbox-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.9rem;
 }
 
-.rc-checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.6rem;
-  border-radius: 8px;
-  background: var(--color-surface-alt);
-  border: 1px solid rgba(47, 107, 79, 0.15);
-  cursor: pointer;
-  font-size: 0.8rem;
-  transition: all 0.2s ease;
+.rc-checkbox-item {
+  height: 100%;
 }
 
-.rc-checkbox-label:hover {
-  background: rgba(95, 175, 115, 0.12);
-  border-color: rgba(47, 107, 79, 0.3);
+.rc-checkbox-card {
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
 }
 
-.rc-checkbox-label input[type="checkbox"] {
-  margin: 0;
-  cursor: pointer;
+.rc-checkbox-card .card-checkbox-text {
+  font-size: 0.85rem;
 }
 
-.rc-checkbox-label input[type="checkbox"]:checked + span {
-  font-weight: 600;
-  color: var(--accent-dark);
+.rc-checkbox-card .card-checkbox-icon {
+  font-size: 1.2rem;
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.rc-checkbox-card.checked {
+  box-shadow: var(--button-gloss), 0 24px 38px rgba(41, 42, 22, 0.22);
 }
 
 .rc-form-footer {
@@ -280,32 +276,33 @@
 
 .rc-btn-primary {
   border-radius: 999px;
-  padding: 0.6rem 1.6rem;
-  border: none;
-  font-size: 0.88rem;
+  padding: 0.65rem 1.8rem;
+  border: 1px solid var(--button-border);
+  font-size: 0.9rem;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--color-cta-primary), var(--color-cta-hover));
-  color: #FFFFFF;
+  background: var(--gradient-button-primary);
+  color: #ffffff;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  box-shadow: var(--shadow-soft);
-  transition: all 0.25s ease;
+  gap: 0.5rem;
+  box-shadow: var(--button-gloss), var(--button-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .rc-btn-primary:hover:not(:disabled) {
+  background: var(--gradient-button-hover);
   transform: translateY(-2px);
-  box-shadow: 0 26px 40px rgba(9, 55, 23, 0.12);
+  box-shadow: var(--button-gloss), 0 24px 46px rgba(41, 42, 22, 0.22);
 }
 
 .rc-btn-primary:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
 .rc-btn-primary span.icon {
-  font-size: 1rem;
+  font-size: 1.05rem;
 }
 
 .rc-error-message {
@@ -331,13 +328,13 @@
   width: 90px;
   height: 90px;
   border-radius: 24px;
-  background: var(--gradient-recipe);
+  background: radial-gradient(circle at 30% 12%, rgba(200, 194, 150, 0.3), rgba(65, 66, 36, 0.92));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+  color: #f5f1e7;
   font-size: 38px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--button-shadow);
 }
 
 .rc-preview-card-top {
@@ -611,4 +608,233 @@
 
 .rc-recipes-mobile .card-slider-indicators {
   bottom: 1rem;
+}
+
+/* ===========================
+   Recipe Tabs
+   =========================== */
+
+.recipe-tabs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.recipe-tabs {
+  border-bottom: 2px solid #dee2e6;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.recipe-tabs .nav-item {
+  margin-bottom: -2px;
+}
+
+.recipe-tabs .nav-link {
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #6c757d;
+  font-weight: 500;
+  padding: 1rem 1.5rem;
+  transition: all 0.3s ease;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.recipe-tabs .nav-link:hover {
+  color: var(--accent-dark);
+  border-bottom-color: var(--accent);
+}
+
+.recipe-tabs .nav-link.active {
+  color: var(--accent-dark);
+  border-bottom-color: var(--accent-dark);
+  font-weight: 600;
+}
+
+.recipe-tabs .icon-inline {
+  font-size: 1.2rem;
+}
+
+.tab-content {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* ===========================
+   Recipe Masonry Gallery
+   =========================== */
+
+.recipe-gallery-container {
+  padding: 2rem 1rem;
+}
+
+.recipe-masonry {
+  column-count: 3;
+  column-gap: 1.5rem;
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+.recipe-masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: inline-block;
+  width: 100%;
+}
+
+.recipe-masonry-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-gallery-image {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.recipe-gallery-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.recipe-masonry-item:hover .recipe-gallery-image img {
+  transform: scale(1.05);
+}
+
+.recipe-category-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-dark);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-gallery-content {
+  padding: 1.5rem;
+}
+
+.recipe-gallery-content h4 {
+  font-family: 'Belleza', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  color: var(--text-primary);
+}
+
+.recipe-gallery-description {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+}
+
+.recipe-gallery-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.recipe-gallery-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.recipe-gallery-meta .icon-inline {
+  font-size: 1rem;
+}
+
+/* ===========================
+   Recipe Requests
+   =========================== */
+
+.recipe-requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.recipe-request-card {
+  transition: all 0.3s ease;
+}
+
+.recipe-request-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===========================
+   Responsive Design for New Features
+   =========================== */
+
+@media (max-width: 992px) {
+  .recipe-masonry {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .recipe-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .recipe-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .recipe-tabs .nav-link {
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+
+  .recipe-masonry {
+    column-count: 1;
+  }
+
+  .recipe-gallery-container {
+    padding: 1rem 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .recipe-tabs .nav-link {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .recipe-tabs .icon-inline {
+    font-size: 1rem;
+  }
+
+  .recipe-gallery-content {
+    padding: 1rem;
+  }
+
+  .recipe-gallery-content h4 {
+    font-size: 1.1rem;
+  }
 }

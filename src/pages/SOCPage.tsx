@@ -211,7 +211,7 @@ export default function SOCPage() {
             <ShieldIcon className="soc-hero-icon" />
             <span>Security Operations &amp; ISMS</span>
           </div>
-          <h1 className="soc-hero-title">AI	1Augmented Security Operations Center</h1>
+          <h1 className="soc-hero-title">AI-Augmented Security Operations Center</h1>
           <p className="soc-hero-subtitle">
             A modern SOC that continuously monitors, detects, and responds to threats while providing
             ISO/IEC 27001:2022-aligned evidence and feeding insights back into your Information
@@ -221,6 +221,36 @@ export default function SOCPage() {
             <span className="soc-tag">ISO/IEC 27001:2022</span>
             <span className="soc-tag">AI-augmented SOC</span>
             <span className="soc-tag">Continuous monitoring</span>
+          </div>
+          <div style={{ marginTop: '1.5rem' }}>
+            <a 
+              href="/soc-management" 
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.75rem 1.5rem',
+                background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                color: 'white',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(34, 197, 94, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(34, 197, 94, 0.3)';
+              }}
+            >
+              <ShieldIcon />
+              <span>Access SOC Management Dashboard</span>
+            </a>
           </div>
         </div>
         <div className="soc-hero-aside">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
+import { Icon, type IconName } from '../components/Icon';
 import './NutritionPage.css';
 
 interface NutritionFormData {
@@ -23,16 +24,24 @@ interface NutritionPlan {
   shoppingList: string[];
 }
 
-const focusAreaOptions = [
-  'Weight Management',
-  'Heart Health',
-  'Diabetes Management',
-  'Muscle Building',
-  'Energy Boost',
-  'Digestive Health',
-  'Kids Nutrition',
-  'Senior Nutrition'
+type CardOption = {
+  value: string;
+  icon: IconName;
+};
+
+const focusAreaOptions: CardOption[] = [
+  { value: 'Weight Management', icon: 'speedometer' },
+  { value: 'Heart Health', icon: 'heartPulse' },
+  { value: 'Diabetes Management', icon: 'droplet' },
+  { value: 'Muscle Building', icon: 'lightning' },
+  { value: 'Energy Boost', icon: 'lightbulbFill' },
+  { value: 'Digestive Health', icon: 'hotDrinkFill' },
+  { value: 'Kids Nutrition', icon: 'personBadge' },
+  { value: 'Senior Nutrition', icon: 'personLines' }
 ];
+
+const toOptionId = (prefix: string, label: string) =>
+  `${prefix}-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`.replace(/-+/g, '-').replace(/^-|-$/g, '');
 
 export default function NutritionPage() {
   const [formData, setFormData] = useState<NutritionFormData>({
@@ -184,7 +193,10 @@ export default function NutritionPage() {
         }}
       >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic text-white">🍽️ Nutrition AI</h1>
+          <h1 className="display-4 fst-italic text-white">
+            <Icon name="dish" className="icon-inline me-2" />
+            Nutrition AI
+          </h1>
           <p className="lead my-3 text-white">
             Get personalized meal prep plans tailored to your household size, health goals, 
             and available time. Upload meal photos for AI nutritional analysis and expert recommendations.
@@ -249,23 +261,32 @@ export default function NutritionPage() {
 
                 <div className="mb-3">
                   <label className="form-label fw-bold">Focus Areas *</label>
-                  <div className="row g-2">
-                    {focusAreaOptions.map(area => (
-                      <div key={area} className="col-6 col-md-4 col-lg-3">
-                        <div className="form-check">
+                  <div
+                    className="card-checkbox-grid nt-checkbox-grid"
+                    role="group"
+                    aria-label="Focus areas for meal planning"
+                  >
+                    {focusAreaOptions.map(option => {
+                      const optionId = toOptionId('focus', option.value);
+                      const isChecked = formData.focusAreas.includes(option.value);
+                      return (
+                        <div key={option.value} className="card-checkbox-item nt-checkbox-item">
                           <input
-                            className="form-check-input"
+                            className="card-checkbox-input"
                             type="checkbox"
-                            id={`focus-${area.replace(/\s+/g, '-')}`}
-                            checked={formData.focusAreas.includes(area)}
-                            onChange={() => toggleFocusArea(area)}
+                            id={optionId}
+                            checked={isChecked}
+                            onChange={() => toggleFocusArea(option.value)}
                           />
-                          <label className="form-check-label" htmlFor={`focus-${area.replace(/\s+/g, '-')}`}>
-                            {area}
+                          <label className={`card-checkbox nt-checkbox-card${isChecked ? ' checked' : ''}`} htmlFor={optionId}>
+                            <span className="card-checkbox-icon" aria-hidden="true">
+                              <Icon name={option.icon} />
+                            </span>
+                            <span className="card-checkbox-text">{option.value}</span>
                           </label>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -336,7 +357,7 @@ export default function NutritionPage() {
                         <div className="mb-2">
                           {dayPlan.meals.map((meal, mealIndex) => (
                             <div key={mealIndex} className="d-flex align-items-start mb-1">
-                              <span className="me-2">🍽️</span>
+                              <Icon name="dish" className="icon-inline me-2 mt-1" aria-hidden />
                               <span className="small">{meal}</span>
                             </div>
                           ))}
@@ -381,7 +402,7 @@ export default function NutritionPage() {
           <div className="position-sticky" style={{ top: '2rem' }}>
             <div className="p-4 mb-3 bg-body-tertiary rounded">
               <div className="d-flex align-items-center mb-3">
-                <span style={{ fontSize: '2rem' }} aria-hidden="true">📅</span>
+                <Icon name="calendar" className="icon-inline" style={{ fontSize: '2rem' }} aria-hidden />
                 <div className="ms-3">
                   <h4 className="fst-italic mb-0">
                     {nutritionPlan ? 'Meal Plan Ready' : 'Meal Plan Preview'}
@@ -414,15 +435,27 @@ export default function NutritionPage() {
                 </div>
                 <div className="small">
                   <p className="mb-2"><strong>Monday Sample:</strong></p>
-                  <p className="mb-1 text-body-secondary">🌅 Breakfast: Overnight oats with berries</p>
-                  <p className="mb-1 text-body-secondary">☀️ Lunch: Mediterranean chickpea salad</p>
-                  <p className="mb-0 text-body-secondary">🌙 Dinner: Baked salmon with roasted vegetables</p>
+                  <p className="mb-1 text-body-secondary">
+                    <Icon name="sunrise" className="icon-inline me-2" />
+                    Breakfast: Overnight oats with berries
+                  </p>
+                  <p className="mb-1 text-body-secondary">
+                    <Icon name="sun" className="icon-inline me-2" />
+                    Lunch: Mediterranean chickpea salad
+                  </p>
+                  <p className="mb-0 text-body-secondary">
+                    <Icon name="moonStars" className="icon-inline me-2" />
+                    Dinner: Baked salmon with roasted vegetables
+                  </p>
                 </div>
               </div>
             )}
 
             <div className="p-4 mb-3 bg-body-tertiary rounded">
-              <h4 className="fst-italic mb-3">💡 Nutrition Tips</h4>
+              <h4 className="fst-italic mb-3">
+                <Icon name="lightbulb" className="icon-inline me-2" />
+                Nutrition Tips
+              </h4>
               <ul className="list-unstyled">
                 <li className="mb-2">
                   <strong>Batch cooking saves time</strong> – Prepare multiple meals at once for the week

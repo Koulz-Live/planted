@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { CardSlider } from '../components/CardSlider';
+import { Icon, type IconName } from '../components/Icon';
 import './LearningPage.css';
 
 interface Module {
@@ -121,10 +122,10 @@ const categoryColors = {
   cooking: '#f4a460'
 };
 
-const difficultyLabels = {
-  beginner: '🌱 Beginner',
-  intermediate: '🌿 Intermediate',
-  advanced: '🌳 Advanced'
+const difficultyMeta: Record<Module['difficulty'], { label: string; icon: IconName }> = {
+  beginner: { label: 'Beginner', icon: 'sprout' },
+  intermediate: { label: 'Intermediate', icon: 'foliage' },
+  advanced: { label: 'Advanced', icon: 'tree' }
 };
 
 export default function LearningPage() {
@@ -241,7 +242,10 @@ export default function LearningPage() {
         }}
       >
         <div className="col-lg-8 px-0">
-          <h1 className="display-4 fst-italic text-white">📚 Learning Pathways</h1>
+          <h1 className="display-4 fst-italic text-white">
+            <Icon name="book" className="icon-inline me-2" />
+            Learning Pathways
+          </h1>
           <p className="lead my-3 text-white">
             Explore structured learning modules on nutrition, cultural respect, sustainable cooking, 
             and ethical food systems. Track your progress and earn certificates as you advance through 
@@ -274,20 +278,28 @@ export default function LearningPage() {
                     >
                       {module.category}
                     </span>
-                    {module.completed && <span className="badge bg-success">✓ Completed</span>}
+                    {module.completed && (
+                      <span className="badge bg-success d-inline-flex align-items-center gap-1">
+                        <Icon name="checkCircle" className="icon-inline" />
+                        Completed
+                      </span>
+                    )}
                   </div>
                   
                   <h3 className="h4 mb-3">{module.title}</h3>
                   <p className="text-muted">{module.description}</p>
 
                   <div className="d-flex gap-3 mb-3 flex-wrap">
-                    <span className="text-muted">
+                    <span className="text-muted d-inline-flex align-items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
                       </svg>
                       {module.duration}
                     </span>
-                    <span className="text-muted">{difficultyLabels[module.difficulty]}</span>
+                    <span className="text-muted d-inline-flex align-items-center gap-2">
+                      <Icon name={difficultyMeta[module.difficulty].icon} className="icon-inline" />
+                      {difficultyMeta[module.difficulty].label}
+                    </span>
                   </div>
 
                   <div className="mb-3 p-3 bg-body rounded border">
@@ -321,20 +333,28 @@ export default function LearningPage() {
                     >
                       {module.category}
                     </span>
-                    {module.completed && <span className="badge bg-success">✓ Completed</span>}
+                    {module.completed && (
+                      <span className="badge bg-success d-inline-flex align-items-center gap-1">
+                        <Icon name="checkCircle" className="icon-inline" />
+                        Completed
+                      </span>
+                    )}
                   </div>
                   
                   <h3 className="h4 mb-3">{module.title}</h3>
                   <p className="text-muted">{module.description}</p>
 
                   <div className="d-flex gap-3 mb-3 flex-wrap">
-                    <span className="text-muted">
+                    <span className="text-muted d-inline-flex align-items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style={{ marginRight: '4px', verticalAlign: 'middle' }}>
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
                       </svg>
                       {module.duration}
                     </span>
-                    <span className="text-muted">{difficultyLabels[module.difficulty]}</span>
+                    <span className="text-muted d-inline-flex align-items-center gap-2">
+                      <Icon name={difficultyMeta[module.difficulty].icon} className="icon-inline" />
+                      {difficultyMeta[module.difficulty].label}
+                    </span>
                   </div>
 
                   <div className="mb-3 p-3 bg-body rounded border">
@@ -428,19 +448,28 @@ export default function LearningPage() {
               <h4 className="fst-italic">Difficulty Levels</h4>
               <ul className="list-unstyled mb-0">
                 <li className="mb-2">
-                  <span>🌱 Beginner</span>
+                  <span className="d-inline-flex align-items-center gap-2">
+                    <Icon name="sprout" className="icon-inline" />
+                    Beginner
+                  </span>
                   <span className="text-muted ms-2">
                     {modules.filter(m => m.difficulty === 'beginner').length} modules
                   </span>
                 </li>
                 <li className="mb-2">
-                  <span>🌿 Intermediate</span>
+                  <span className="d-inline-flex align-items-center gap-2">
+                    <Icon name="foliage" className="icon-inline" />
+                    Intermediate
+                  </span>
                   <span className="text-muted ms-2">
                     {modules.filter(m => m.difficulty === 'intermediate').length} modules
                   </span>
                 </li>
                 <li className="mb-2">
-                  <span>🌳 Advanced</span>
+                  <span className="d-inline-flex align-items-center gap-2">
+                    <Icon name="tree" className="icon-inline" />
+                    Advanced
+                  </span>
                   <span className="text-muted ms-2">
                     {modules.filter(m => m.difficulty === 'advanced').length} modules
                   </span>
@@ -522,7 +551,10 @@ export default function LearningPage() {
                       </svg>
                       Difficulty
                     </span>
-                    <strong>{difficultyLabels[selectedModule.difficulty]}</strong>
+                    <strong className="d-inline-flex align-items-center gap-2">
+                      <Icon name={difficultyMeta[selectedModule.difficulty].icon} className="icon-inline" />
+                      {difficultyMeta[selectedModule.difficulty].label}
+                    </strong>
                   </div>
                   <div className="d-flex justify-content-between pb-2">
                     <span className="text-muted">

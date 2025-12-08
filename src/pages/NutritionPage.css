@@ -198,53 +198,46 @@
 
 .nt-input {
   width: 100%;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  padding: 0.55rem 0.85rem;
-  font-size: 0.85rem;
-  outline: none;
-  background: rgba(255, 255, 255, 0.96);
-  transition: all 0.2s ease;
+  border-radius: 16px;
+  border: 1px solid var(--form-control-border);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  background: var(--form-control-bg);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-subtle);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .nt-input:focus {
-  border-color: var(--color-brand-secondary);
-  box-shadow: 0 0 0 1px rgba(47, 107, 79, 0.18);
+  border-color: var(--form-control-border-active);
+  box-shadow: 0 0 0 4px rgba(135, 136, 74, 0.18), var(--form-control-shadow);
+  transform: translateY(-1px);
 }
 
 /* Checkbox grid */
 .nt-checkbox-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.9rem;
 }
 
-.nt-checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.6rem;
-  border-radius: 8px;
-  background: var(--color-surface-alt);
-  border: 1px solid rgba(47, 107, 79, 0.15);
-  cursor: pointer;
-  font-size: 0.8rem;
-  transition: all 0.2s ease;
+.nt-checkbox-item {
+  height: 100%;
 }
 
-.nt-checkbox-label:hover {
-  background: rgba(95, 175, 115, 0.12);
-  border-color: rgba(47, 107, 79, 0.3);
+.nt-checkbox-card {
+  font-size: 0.85rem;
 }
 
-.nt-checkbox-label input[type="checkbox"] {
-  margin: 0;
-  cursor: pointer;
+.nt-checkbox-card .card-checkbox-icon {
+  font-size: 1.15rem;
 }
 
-.nt-checkbox-label input[type="checkbox"]:checked + span {
-  font-weight: 600;
-  color: var(--accent-dark);
+.nt-checkbox-card .card-checkbox-text {
+  font-size: 0.86rem;
+}
+
+.nt-checkbox-card.checked {
+  box-shadow: var(--button-gloss), 0 24px 38px rgba(41, 42, 22, 0.22);
 }
 
 .nt-form-footer {
@@ -270,32 +263,33 @@
 
 .nt-btn-primary {
   border-radius: 999px;
-  padding: 0.6rem 1.6rem;
-  border: none;
-  font-size: 0.88rem;
+  padding: 0.65rem 1.8rem;
+  border: 1px solid var(--button-border);
+  font-size: 0.9rem;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--color-cta-primary), var(--color-cta-hover));
-  color: #FFFFFF;
+  background: var(--gradient-button-primary);
+  color: #ffffff;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  box-shadow: var(--shadow-soft);
-  transition: all 0.25s ease;
+  gap: 0.5rem;
+  box-shadow: var(--button-gloss), var(--button-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .nt-btn-primary:hover:not(:disabled) {
+  background: var(--gradient-button-hover);
   transform: translateY(-2px);
-  box-shadow: 0 26px 40px rgba(9, 55, 23, 0.12);
+  box-shadow: var(--button-gloss), 0 24px 46px rgba(41, 42, 22, 0.22);
 }
 
 .nt-btn-primary:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
 .nt-btn-primary span.icon {
-  font-size: 1rem;
+  font-size: 1.05rem;
 }
 
 .nt-error-message {

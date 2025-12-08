@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { Icon } from './Icon';
 
 export function Navigation() {
   const location = useLocation();
@@ -16,8 +17,9 @@ export function Navigation() {
             <Link className="link-secondary text-decoration-none" to="/community">Subscribe</Link>
           </div>
           <div className="col-4 text-center">
-            <Link className="blog-header-logo text-body-emphasis text-decoration-none fs-2 fw-bold" to="/">
-              🌱 Planted
+            <Link className="blog-header-logo text-body-emphasis text-decoration-none fs-2 fw-bold d-inline-flex align-items-center gap-2" to="/">
+              <Icon name="sprout" className="icon-inline" aria-hidden />
+              Planted
             </Link>
           </div>
           <div className="col-4 d-flex justify-content-end align-items-center">
