@@ -5,6 +5,45 @@
  */
 
 require('dotenv').config();
+
+// ===== FIREBASE PRIVATE KEY HANDLER =====
+// Handles Base64 encoded keys (recommended for Afrihost)
+function initializeFirebaseCredentials() {
+  // Method 1: Base64 encoded (recommended for Afrihost hosting)
+  if (process.env.FIREBASE_PRIVATE_KEY_BASE64) {
+    console.log('[Planted] Using Base64 encoded Firebase private key');
+    process.env.FIREBASE_PRIVATE_KEY = Buffer.from(
+      process.env.FIREBASE_PRIVATE_KEY_BASE64,
+      'base64'
+    ).toString('utf-8');
+    return;
+  }
+  
+  // Method 2: Direct key with \n literals
+  if (process.env.FIREBASE_PRIVATE_KEY) {
+    console.log('[Planted] Using direct Firebase private key');
+    // Replace literal \n with actual newlines if needed
+    if (process.env.FIREBASE_PRIVATE_KEY.includes('\\n')) {
+      process.env.FIREBASE_PRIVATE_KEY = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
+    }
+    return;
+  }
+  
+  console.error('[Planted] ERROR: No Firebase private key found!');
+  console.error('[Planted] Set either FIREBASE_PRIVATE_KEY_BASE64 or FIREBASE_PRIVATE_KEY');
+  throw new Error('Firebase credentials not configured');
+}
+
+// Initialize Firebase credentials
+try {
+  initializeFirebaseCredentials();
+  console.log('[Planted] ✓ Firebase credentials initialized successfully');
+} catch (error) {
+  console.error('[Planted] ✗ Firebase initialization failed:', error.message);
+  console.error('[Planted] Please check your environment variables configuration');
+  process.exit(1);
+}
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');

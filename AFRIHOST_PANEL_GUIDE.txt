@@ -94,19 +94,30 @@
   └─────────────────────────────────────────────────────────────────────┘
 
   ┌─────────────────────────────────────────────────────────────────────┐
-  │ Variable 5: FIREBASE_PRIVATE_KEY                                    │
+  │ Variable 5: FIREBASE_PRIVATE_KEY_BASE64 (RECOMMENDED)              │
   ├─────────────────────────────────────────────────────────────────────┤
-  │ Name:  FIREBASE_PRIVATE_KEY                                         │
-  │ Value: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBg...\n-----END... │
+  │ Name:  FIREBASE_PRIVATE_KEY_BASE64                                  │
+  │ Value: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUVW...            │
   │                                                                     │
-  │ 📍 Get from: Same Firebase JSON file → "private_key"                │
-  │ ⚠️  MUST include quotes around the entire key                       │
-  │ ⚠️  MUST include \n characters (they represent newlines)            │
-  │ ⚠️  Include -----BEGIN PRIVATE KEY----- and -----END PRIVATE KEY----|
+  │ 📍 Get from: Encode your private key to Base64                      │
   │                                                                     │
-  │ 💡 The value should look like this (copy entire key):               │
-  │    "-----BEGIN PRIVATE KEY-----\nMIIEvQI...very long...\n-----END  │
-  │     PRIVATE KEY-----\n"                                             │
+  │ 💡 HOW TO ENCODE (on your Mac):                                     │
+  │    cat firebase-service-account.json | jq -r '.private_key' | base64│
+  │                                                                     │
+  │    This creates a SINGLE LINE string (no newlines)                 │
+  │    Copy the entire Base64 output and paste as the value            │
+  │                                                                     │
+  │ ⚠️  WHY USE BASE64?                                                 │
+  │    Multi-line private keys break Afrihost's environment variables  │
+  │    Base64 encoding converts it to a single line                    │
+  │    The app.js will automatically decode it                         │
+  │                                                                     │
+  │ ❌ COMMON ERROR WITHOUT BASE64:                                     │
+  │    export: `KEY-----nMIIEvQIBADANBg... (shell syntax error)        │
+  │                                                                     │
+  │ ✅ ALTERNATIVE (if Base64 doesn't work):                            │
+  │    Use FIREBASE_PRIVATE_KEY with literal \n on ONE line           │
+  │    Value: "-----BEGIN PRIVATE KEY-----\nMIIE...\n-----END..."     │
   └─────────────────────────────────────────────────────────────────────┘
 
   ┌─────────────────────────────────────────────────────────────────────┐
@@ -159,7 +170,7 @@
     • ALLOWED_ORIGINS
     • FIREBASE_PROJECT_ID
     • FIREBASE_CLIENT_EMAIL
-    • FIREBASE_PRIVATE_KEY
+    • FIREBASE_PRIVATE_KEY_BASE64 (or FIREBASE_PRIVATE_KEY)
     • OPENAI_API_KEY
 
 
