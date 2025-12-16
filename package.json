@@ -8,8 +8,11 @@
     "dev:frontend": "vite",
     "dev:backend": "cd server && npm run dev",
     "build": "tsc -b && vite build",
+    "build:production": "npm run build && cd server && npm install --production",
+    "start": "node app.js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:afrihost": "npm run build:production && echo 'Build complete! Ready for Afrihost deployment.'"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",

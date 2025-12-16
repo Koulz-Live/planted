@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
-import { CardSlider } from '../components/CardSlider';
 import { Icon, type IconName } from '../components/Icon';
 import './RecipesPage.css';
 
