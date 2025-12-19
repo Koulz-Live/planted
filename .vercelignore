@@ -1,0 +1,60 @@
+# Vercel Ignore - Files not needed in deployment
+
+# Development
+node_modules
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+dist
+build
+.vite
+.vercel
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage
+.nyc_output
+
+# Deployment archives (for Afrihost)
+*.zip
+afrihost-deploy-*.zip
+
+# Documentation (already in repo)
+*.md
+!README.md
+
+# Scripts not needed on Vercel
+deploy.mjs
+post-deploy.sh
+build-for-afrihost.sh
+regenerate.sh
+create_stubs.sh
+restore_pages.sh
+generate_src_files.py
+
+# Firebase local
+.firebase
+firebase-debug.log
+
+# Temporary
+tmp
+temp
+.cache
