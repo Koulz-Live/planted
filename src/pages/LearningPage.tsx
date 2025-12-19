@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, Timestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { getDb } from '../lib/firebase';
 import { CardSlider } from '../components/CardSlider';
 import { Icon, type IconName } from '../components/Icon';
 import './LearningPage.css';
@@ -141,7 +141,7 @@ export default function LearningPage() {
   const loadUserProgress = async () => {
     try {
       const q = query(
-        collection(db, 'learningProgress'),
+        collection(getDb(), 'learningProgress'),
         where('userId', '==', 'demo-user')
       );
       const snapshot = await getDocs(q);
@@ -186,7 +186,7 @@ export default function LearningPage() {
 
   const startModule = async (module: Module) => {
     try {
-      await addDoc(collection(db, 'learningProgress'), {
+      await addDoc(collection(getDb(), 'learningProgress'), {
         userId: 'demo-user',
         moduleId: module.id,
         startedAt: Timestamp.now(),
@@ -202,7 +202,7 @@ export default function LearningPage() {
     try {
       const progress = userProgress.get(module.id);
       if (progress) {
-        await updateDoc(doc(db, 'learningProgress', progress.id), {
+        await updateDoc(doc(getDb(), 'learningProgress', progress.id), {
           completedAt: Timestamp.now(),
           progress: 100
         });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { getDb } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
 import './PlantCarePage.css';
 
@@ -49,7 +49,7 @@ export default function PlantCarePage() {
     const loadHistory = async () => {
       try {
         const q = query(
-          collection(db, 'plantCares'),
+          collection(getDb(), 'plantCares'),
           where('userId', '==', 'demo-user'),
           orderBy('timestamp', 'desc'),
           limit(5)
@@ -131,7 +131,7 @@ export default function PlantCarePage() {
 
         // Save to Firestore
         try {
-          await addDoc(collection(db, 'plantCares'), {
+          await addDoc(collection(getDb(), 'plantCares'), {
             userId: 'demo-user',
             plantName: formData.plantName,
             growthStage: formData.growthStage,
@@ -143,7 +143,7 @@ export default function PlantCarePage() {
 
           // Refresh history
           const q = query(
-            collection(db, 'plantCares'),
+            collection(getDb(), 'plantCares'),
             where('userId', '==', 'demo-user'),
             orderBy('timestamp', 'desc'),
             limit(5)

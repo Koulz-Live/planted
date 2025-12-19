@@ -42,4 +42,12 @@ if (isFirebaseConfigured) {
   console.warn('⚠️ Firebase not configured - user features disabled. Add VITE_FIREBASE_* environment variables to enable.');
 }
 
+// Helper function to get db or throw error
+export function getDb(): Firestore {
+  if (!db) {
+    throw new Error('Firebase is not configured. User features are disabled.');
+  }
+  return db;
+}
+
 export { app, analytics, db, isFirebaseConfigured };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { getDb } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
 import { Icon } from '../components/Icon';
 import './StorytellingPage.css';
@@ -33,7 +33,7 @@ export default function StorytellingPage() {
     const loadHistory = async () => {
       try {
         const q = query(
-          collection(db, 'foodStories'),
+          collection(getDb(), 'foodStories'),
           where('userId', '==', 'demo-user'),
           orderBy('timestamp', 'desc'),
           limit(5)
@@ -97,7 +97,7 @@ export default function StorytellingPage() {
 
         // Save to Firestore
         try {
-          await addDoc(collection(db, 'foodStories'), {
+          await addDoc(collection(getDb(), 'foodStories'), {
             userId: 'demo-user',
             dishName: formData.dishName,
             region: formData.region,
@@ -108,7 +108,7 @@ export default function StorytellingPage() {
 
           // Refresh history
           const q = query(
-            collection(db, 'foodStories'),
+            collection(getDb(), 'foodStories'),
             where('userId', '==', 'demo-user'),
             orderBy('timestamp', 'desc'),
             limit(5)

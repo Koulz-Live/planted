@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { getDb } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
 import { Icon, type IconName } from '../components/Icon';
 import './RecipesPage.css';
@@ -235,7 +235,7 @@ export default function RecipesPage() {
     const loadHistory = async () => {
       try {
         const q = query(
-          collection(db, 'recipes'),
+          collection(getDb(), 'recipes'),
           where('userId', '==', 'demo-user'),
           orderBy('timestamp', 'desc'),
           limit(5)
@@ -360,7 +360,7 @@ export default function RecipesPage() {
         setRecipes(recipesArray);
 
         try {
-          await addDoc(collection(db, 'recipes'), {
+          await addDoc(collection(getDb(), 'recipes'), {
             userId: 'demo-user',
             formData: formData,
             recipes: recipesArray,
@@ -368,7 +368,7 @@ export default function RecipesPage() {
           });
 
           const q = query(
-            collection(db, 'recipes'),
+            collection(getDb(), 'recipes'),
             where('userId', '==', 'demo-user'),
             orderBy('timestamp', 'desc'),
             limit(5)

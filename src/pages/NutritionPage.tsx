@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { getDb } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
 import { Icon, type IconName } from '../components/Icon';
 import './NutritionPage.css';
@@ -61,7 +61,7 @@ export default function NutritionPage() {
     const loadHistory = async () => {
       try {
         const q = query(
-          collection(db, 'nutritionPlans'),
+          collection(getDb(), 'nutritionPlans'),
           where('userId', '==', 'demo-user'),
           orderBy('timestamp', 'desc'),
           limit(5)
@@ -140,7 +140,7 @@ export default function NutritionPage() {
 
         // Save to Firestore
         try {
-          await addDoc(collection(db, 'nutritionPlans'), {
+          await addDoc(collection(getDb(), 'nutritionPlans'), {
             userId: 'demo-user',
             householdSize: formData.householdSize,
             focusAreas: formData.focusAreas,
@@ -151,7 +151,7 @@ export default function NutritionPage() {
 
           // Refresh history
           const q = query(
-            collection(db, 'nutritionPlans'),
+            collection(getDb(), 'nutritionPlans'),
             where('userId', '==', 'demo-user'),
             orderBy('timestamp', 'desc'),
             limit(5)

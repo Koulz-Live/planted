@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, getDocs, updateDoc, doc, Timestamp, deleteDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { getDb } from '../lib/firebase';
 import './ChallengesPage.css';
 
 interface Challenge {
@@ -152,7 +152,7 @@ export default function ChallengesPage() {
   const loadUserChallenges = async () => {
     try {
       const q = query(
-        collection(db, 'userChallenges'),
+        collection(getDb(), 'userChallenges'),
         where('userId', '==', 'demo-user')
       );
       const snapshot = await getDocs(q);
@@ -181,7 +181,7 @@ export default function ChallengesPage() {
 
   const joinChallenge = async (challenge: Challenge) => {
     try {
-      await addDoc(collection(db, 'userChallenges'), {
+      await addDoc(collection(getDb(), 'userChallenges'), {
         userId: 'demo-user',
         challengeId: challenge.id,
         joinedAt: Timestamp.now(),
@@ -198,7 +198,7 @@ export default function ChallengesPage() {
     try {
       const userChallenge = userChallenges.get(challengeId);
       if (userChallenge) {
-        await updateDoc(doc(db, 'userChallenges', userChallenge.id), {
+        await updateDoc(doc(getDb(), 'userChallenges', userChallenge.id), {
           status: 'completed',
           progress: 100,
           completedAt: Timestamp.now()
@@ -214,7 +214,7 @@ export default function ChallengesPage() {
     try {
       const userChallenge = userChallenges.get(challengeId);
       if (userChallenge) {
-        await deleteDoc(doc(db, 'userChallenges', userChallenge.id));
+        await deleteDoc(doc(getDb(), 'userChallenges', userChallenge.id));
         await loadUserChallenges();
       }
     } catch (err) {

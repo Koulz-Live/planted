@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, addDoc, query, orderBy, limit, Timestamp, onSnapshot } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { getDb } from '../lib/firebase';
 import { CardSlider } from '../components/CardSlider';
 import './CommunityPage.css';
 
@@ -75,7 +75,7 @@ export default function CommunityPage() {
   // Real-time posts listener
   useEffect(() => {
     const q = query(
-      collection(db, 'communityPosts'),
+      collection(getDb(), 'communityPosts'),
       orderBy('timestamp', 'desc'),
       limit(20)
     );
@@ -107,7 +107,7 @@ export default function CommunityPage() {
 
     setLoading(true);
     try {
-      await addDoc(collection(db, 'communityPosts'), {
+      await addDoc(collection(getDb(), 'communityPosts'), {
         userId: 'demo-user',
         userName: 'Community Member',
         content: newPost.content,
