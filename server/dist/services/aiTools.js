@@ -33,9 +33,15 @@ const PlantPlanSchema = zod_2.z.object({
 const RecipeIdeaSchema = zod_2.z.object({
     title: zod_2.z.string().describe('Recipe name'),
     description: zod_2.z.string().describe('Brief description of the dish'),
-    ingredients: zod_2.z.array(zod_2.z.string()).describe('List of ingredients needed'),
-    steps: zod_2.z.array(zod_2.z.string()).describe('Step-by-step cooking instructions'),
-    culturalNotes: zod_2.z.string().optional().describe('Cultural context or traditions')
+    ingredients: zod_2.z.array(zod_2.z.string()).describe('List of ingredients with specific measurements (e.g., "2 cups diced tomatoes", "1 tbsp olive oil")'),
+    steps: zod_2.z.array(zod_2.z.string()).describe('Detailed step-by-step cooking instructions with temperatures and times'),
+    prepTime: zod_2.z.string().describe('Preparation time (e.g., "15 minutes")'),
+    cookTime: zod_2.z.string().describe('Cooking time (e.g., "30 minutes")'),
+    servings: zod_2.z.string().describe('Number of servings (e.g., "4-6 servings")'),
+    difficulty: zod_2.z.enum(['Easy', 'Medium', 'Advanced']).describe('Recipe difficulty level'),
+    nutritionHighlights: zod_2.z.array(zod_2.z.string()).describe('3-5 key nutritional benefits or highlights'),
+    culturalNotes: zod_2.z.string().optional().describe('Cultural context, traditions, or historical significance'),
+    tips: zod_2.z.array(zod_2.z.string()).optional().describe('2-3 cooking tips or variations')
 });
 const RecipeResponseSchema = zod_2.z.object({
     spotlight: RecipeIdeaSchema.describe('Featured recipe highlighting user ingredients'),
@@ -162,22 +168,47 @@ Provide a detailed, practical assessment that helps the gardener understand what
 async function analyzePantryIngredients(imageUrls) {
     if (imageUrls.length === 0)
         return [];
-    const analysisPrompt = `Identify all visible food ingredients in this image. List them clearly, one per line. Include:
-- Fresh produce (vegetables, fruits, herbs)
-- Proteins (meats, fish, eggs, tofu, beans)
-- Grains and carbs (rice, pasta, bread, etc.)
-- Dairy products
-- Pantry staples (oils, spices, condiments)
-- Any other recognizable ingredients
+    const analysisPrompt = `Analyze this pantry/food image and identify ALL visible ingredients with detailed information.
 
-Be specific with varieties when possible (e.g., "red bell peppers" not just "peppers").`;
+For each ingredient, provide:
+1. Specific name and variety (e.g., "Roma tomatoes" not just "tomatoes")
+2. Estimated quantity or condition visible
+3. Freshness indicators (fresh, ripe, needs use soon)
+
+Categories to look for:
+- Fresh produce: vegetables, fruits, herbs (note colors, varieties)
+- Proteins: meats, fish, eggs, tofu, legumes, nuts
+- Grains & starches: rice, pasta, bread, flour, potatoes
+- Dairy & alternatives: milk, cheese, yogurt, plant milks
+- Oils & fats: cooking oils, butter, ghee
+- Condiments & sauces: soy sauce, vinegar, tomato paste
+- Spices & seasonings: dried herbs, spices, salt, pepper
+- Canned/jarred goods: beans, tomatoes, pickles
+- Other ingredients visible
+
+Format your response as a simple list of ingredients, one per line, being as specific as possible about varieties and types.
+Focus on ingredients that could be used in recipes.`;
+    
     const analyses = await Promise.all(imageUrls.map(url => analyzeImage(url, analysisPrompt)));
-    // Combine and deduplicate ingredients
+    
+    // Combine and deduplicate ingredients with better parsing
     const allIngredients = analyses
         .flatMap(text => text.split('\n'))
         .map(line => line.trim())
-        .filter(line => line.length > 0 && !line.startsWith('-'))
-        .map(line => line.replace(/^[•\-*]\s*/, ''));
+        .filter(line => line.length > 0 && line.length < 100) // Filter out headers and long explanations
+        .filter(line => !line.toLowerCase().startsWith('categories') && 
+                       !line.toLowerCase().startsWith('for each') &&
+                       !line.includes(':') ||
+                       line.split(':').length === 2) // Keep simple ingredient descriptions
+        .map(line => {
+            // Clean up bullets, numbers, and formatting
+            line = line.replace(/^[\d\.\)]+\s*/, ''); // Remove numbering
+            line = line.replace(/^[•\-*]\s*/, ''); // Remove bullets
+            line = line.split(':')[0].trim(); // Take first part if there's a colon
+            return line;
+        })
+        .filter(line => line.length > 2 && line.length < 80); // Reasonable ingredient name length
+    
     return [...new Set(allIngredients)];
 }
 // Specialized vision analysis for meal nutrition
@@ -291,21 +322,71 @@ async function generateRecipes(request, userId = 'default') {
     const fallback = {
         spotlight: {
             title: 'Heritage Garden Bowl',
-            description: 'A vibrant, zero-waste meal built from seasonal produce.',
-            ingredients: request.availableIngredients.slice(0, 6),
-            steps: [
-                'Roast hearty vegetables with earthy spices.',
-                'Build a citrus-herb dressing with pantry staples.',
-                'Layer grains, veg, and leafy greens; top with toasted seeds.'
+            description: 'A vibrant, zero-waste meal built from seasonal produce, featuring roasted vegetables, whole grains, and a zesty herb dressing.',
+            ingredients: [
+                '2 cups mixed seasonal vegetables, chopped',
+                '1 cup cooked quinoa or brown rice',
+                '2 tablespoons olive oil',
+                '1 teaspoon mixed dried herbs',
+                '2 tablespoons lemon juice',
+                '1/4 cup toasted seeds',
+                'Salt and pepper to taste'
             ],
-            culturalNotes: `Celebrates ${request.culturalPreferences[0] ?? 'regional'} flavors.`
+            steps: [
+                'Preheat oven to 400°F (200°C)',
+                'Toss vegetables with oil and herbs',
+                'Roast for 20-25 minutes until golden',
+                'Prepare citrus-herb dressing',
+                'Layer grains, vegetables, and greens',
+                'Drizzle with dressing and top with seeds'
+            ],
+            prepTime: '15 minutes',
+            cookTime: '25 minutes',
+            servings: '4 servings',
+            difficulty: 'Easy',
+            nutritionHighlights: [
+                'High in fiber from whole grains',
+                'Rich in vitamins from seasonal produce',
+                'Healthy fats from olive oil and seeds'
+            ],
+            culturalNotes: `Celebrates ${request.culturalPreferences[0] ?? 'regional'} flavors while promoting zero-waste cooking.`,
+            tips: [
+                'Use any vegetables you have available',
+                'Meal prep by roasting vegetables in advance'
+            ]
         },
         alternates: [
             {
-                title: 'Faith-friendly Stew',
-                description: 'Slow-simmered legumes with warming aromatics.',
-                ingredients: ['lentils', 'alliums', 'roots', 'seasonal greens'],
-                steps: ['Sauté aromatics', 'Add legumes + stock', 'Finish with greens and acid']
+                title: 'Comforting Lentil Stew',
+                description: 'Slow-simmered red lentils with warming aromatics.',
+                ingredients: [
+                    '1 cup red lentils',
+                    '1 onion, diced',
+                    '3 cloves garlic',
+                    '4 cups vegetable broth',
+                    '2 teaspoons cumin',
+                    'Salt and pepper to taste'
+                ],
+                steps: [
+                    'Sauté onion until softened',
+                    'Add garlic and spices',
+                    'Add lentils and broth',
+                    'Simmer for 25 minutes',
+                    'Season and serve'
+                ],
+                prepTime: '10 minutes',
+                cookTime: '30 minutes',
+                servings: '6 servings',
+                difficulty: 'Easy',
+                nutritionHighlights: [
+                    'Excellent plant-based protein',
+                    'High in iron and folate',
+                    'Rich in fiber'
+                ],
+                tips: [
+                    'Add greens in the last few minutes',
+                    'Top with yogurt for extra creaminess'
+                ]
             }
         ]
     };
@@ -323,26 +404,78 @@ async function generateRecipes(request, userId = 'default') {
     const enhancedContext = `
     Available Ingredients: ${uniqueIngredients.join(', ')}
     ${detectedIngredients.length > 0 ? `\n    AI-Detected from Photos: ${detectedIngredients.join(', ')}` : ''}
-    Dietary Needs: ${request.dietaryNeeds.join(', ')}
-    Cultural Preferences: ${request.culturalPreferences.join(', ')}
-    ${request.season ? `Season: ${request.season}` : ''}
+    Dietary Needs: ${request.dietaryNeeds.join(', ') || 'None specified'}
+    Cultural Preferences: ${request.culturalPreferences.join(', ') || 'Open to all cuisines'}
+    ${request.season ? `Season: ${request.season}` : 'Season: Any'}
     
-    Please create:
-    1. One SPOTLIGHT recipe that highlights the available ingredients creatively
-    2. 2-3 ALTERNATE recipes that offer variety
+    Please create COMPREHENSIVE, DETAILED recipes:
     
-    Requirements:
-    - Use primarily the listed ingredients
-    - Honor the specified dietary restrictions
-    - Incorporate cultural traditions respectfully
-    - Provide clear, step-by-step instructions
-    - Include cultural context or food history
-    - Focus on plant-based, sustainable choices
-    - Make recipes accessible and practical
+    1. One SPOTLIGHT recipe that creatively showcases the available ingredients
+    2. 2-3 ALTERNATE recipes offering variety in cuisine styles, cooking methods, and meal types
+    
+    CRITICAL Requirements for EACH recipe:
+    
+    INGREDIENTS:
+    - List EXACT measurements (e.g., "2 cups diced tomatoes", "1 tablespoon olive oil", "1 medium onion, chopped")
+    - Specify preparation method in ingredient (e.g., "diced", "minced", "julienned")
+    - Include optional garnishes and finishing touches
+    - Prioritize the available ingredients listed above
+    
+    INSTRUCTIONS:
+    - Provide DETAILED step-by-step instructions (at least 5-8 steps)
+    - Include specific cooking temperatures (e.g., "350°F/175°C")
+    - Mention exact timing for each step (e.g., "sauté for 3-4 minutes until translucent")
+    - Describe visual and sensory cues (e.g., "until golden brown and fragrant")
+    - Include techniques (e.g., "deglaze with wine", "fold gently", "season to taste")
+    
+    TIMES & SERVINGS:
+    - Specify realistic prep time
+    - Specify realistic cook time
+    - Indicate servings clearly (e.g., "4-6 servings")
+    - Mark difficulty level appropriately
+    
+    NUTRITION & BENEFITS:
+    - List 3-5 specific nutritional highlights (e.g., "High in vitamin C from bell peppers", "Rich in plant-based protein from chickpeas")
+    - Mention health benefits when relevant
+    - Note any superfoods or particularly nutritious ingredients
+    
+    CULTURAL CONTEXT:
+    - Provide rich cultural background or food history
+    - Explain regional variations or traditional preparation methods
+    - Mention ceremonial or seasonal significance if applicable
+    - Be respectful and educational about food traditions
+    
+    COOKING TIPS:
+    - Include 2-3 practical tips for success
+    - Suggest variations or substitutions
+    - Provide storage and reheating guidance when relevant
+    
+    Additional Guidelines:
+    - Honor specified dietary restrictions strictly
+    - Focus on sustainable, plant-forward choices
+    - Minimize food waste by using whole ingredients
+    - Make recipes accessible for home cooks
+    - Celebrate global flavors and techniques
+    - Ensure recipes are actually cookable and delicious
   `;
-    const systemPrompt = `You are a skilled culinary anthropologist and chef specializing in plant-based, culturally-diverse cuisine.
-You create delicious, sustainable recipes that honor food traditions, minimize waste, and celebrate biodiversity.
-Your recipes are creative yet practical, respecting dietary needs while exploring global flavors.`;
+    const systemPrompt = `You are a world-class culinary anthropologist, professional chef, and nutrition educator specializing in plant-based, culturally-diverse cuisine.
+
+Your expertise includes:
+- Global cooking techniques and flavor profiles
+- Food history and cultural traditions
+- Nutritional science and health benefits
+- Sustainable cooking and zero-waste practices
+- Dietary accommodations and allergies
+- Recipe development and food writing
+
+You create comprehensive, detailed recipes that are:
+- Professionally written with exact measurements and techniques
+- Culturally respectful and educational
+- Nutritionally balanced and health-conscious
+- Practical for home cooks of varying skill levels
+- Delicious, creative, and inspiring
+
+Your recipes honor food traditions, minimize waste, celebrate biodiversity, and empower people to cook confidently.`;
     return runStructuredPrompt(systemPrompt, enhancedContext, RecipeResponseSchema, 'RecipeResponse', fallback, userId);
 }
 async function generateNutritionCoachPlan(request, userId = 'default') {
