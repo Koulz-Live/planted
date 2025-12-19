@@ -1,0 +1,20 @@
+# CloudLinux Node.js Configuration
+# Minimal .htaccess - CloudLinux NodeJS Selector manages proxying automatically
+
+# Allow CloudLinux to inject Node.js proxy rules
+# DO NOT add RewriteRule directives - they interfere with Node.js proxy
+
+# Security headers only
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Prevent directory browsing
+Options -Indexes
