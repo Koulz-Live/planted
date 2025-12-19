@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, FirebaseApp } from "firebase/app";
+import { Analytics, getAnalytics } from "firebase/analytics";
+import { Firestore, getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,16 +14,32 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Check if Firebase is configured
+const isFirebaseConfigured = firebaseConfig.projectId && firebaseConfig.apiKey && firebaseConfig.appId;
 
-// Initialize Analytics (only in browser environment)
-let analytics;
-if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app);
+// Initialize Firebase only if configured
+let app: FirebaseApp | undefined;
+let analytics: Analytics | undefined;
+let db: Firestore | undefined;
+
+if (isFirebaseConfigured) {
+  try {
+    app = initializeApp(firebaseConfig);
+    
+    // Initialize Analytics (only in browser environment)
+    if (typeof window !== 'undefined') {
+      analytics = getAnalytics(app);
+    }
+    
+    // Initialize Firestore
+    db = getFirestore(app);
+    
+    console.log('✅ Firebase initialized successfully');
+  } catch (error) {
+    console.warn('⚠️ Firebase initialization failed:', error);
+  }
+} else {
+  console.warn('⚠️ Firebase not configured - user features disabled. Add VITE_FIREBASE_* environment variables to enable.');
 }
 
-// Initialize Firestore
-const db = getFirestore(app);
-
-export { app, analytics, db };
+export { app, analytics, db, isFirebaseConfigured };
