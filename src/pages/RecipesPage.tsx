@@ -345,18 +345,63 @@ export default function RecipesPage() {
       const result = await response.json();
 
       if (result.ok && result.data) {
-        const recipeData = Array.isArray(result.data) ? result.data : [result.data];
-        const recipesArray = recipeData.map((r: any) => ({
-          title: r.title || r.name || 'Delicious Recipe',
-          description: r.description || r.summary || '',
-          ingredients: r.ingredients || [],
-          instructions: r.instructions || r.steps || [],
-          prepTime: r.prepTime || r.prep_time,
-          cookTime: r.cookTime || r.cook_time,
-          servings: r.servings,
-          culturalNotes: r.culturalNotes || r.cultural_notes,
-          nutritionHighlights: r.nutritionHighlights || r.nutrition_highlights || []
-        }));
+        // Handle new enhanced recipe format with spotlight and alternates
+        const recipesArray: Recipe[] = [];
+        
+        if (result.data.spotlight) {
+          // Add the spotlight recipe
+          recipesArray.push({
+            title: result.data.spotlight.title || 'Spotlight Recipe',
+            description: result.data.spotlight.description || '',
+            ingredients: result.data.spotlight.ingredients || [],
+            instructions: result.data.spotlight.steps || result.data.spotlight.instructions || [],
+            prepTime: result.data.spotlight.prepTime,
+            cookTime: result.data.spotlight.cookTime,
+            servings: result.data.spotlight.servings,
+            culturalNotes: result.data.spotlight.culturalNotes,
+            nutritionHighlights: result.data.spotlight.nutritionHighlights || [],
+            imageUrl: result.data.spotlight.imageUrl,
+            category: result.data.spotlight.difficulty || result.data.spotlight.category
+          });
+        }
+        
+        // Add alternate recipes if they exist
+        if (result.data.alternates && Array.isArray(result.data.alternates)) {
+          result.data.alternates.forEach((r: any) => {
+            recipesArray.push({
+              title: r.title || 'Recipe',
+              description: r.description || '',
+              ingredients: r.ingredients || [],
+              instructions: r.steps || r.instructions || [],
+              prepTime: r.prepTime,
+              cookTime: r.cookTime,
+              servings: r.servings,
+              culturalNotes: r.culturalNotes,
+              nutritionHighlights: r.nutritionHighlights || [],
+              imageUrl: r.imageUrl,
+              category: r.difficulty || r.category
+            });
+          });
+        }
+        
+        // Fallback: if no spotlight/alternates structure, try to parse as before
+        if (recipesArray.length === 0) {
+          const recipeData = Array.isArray(result.data) ? result.data : [result.data];
+          recipeData.forEach((r: any) => {
+            recipesArray.push({
+              title: r.title || r.name || 'Delicious Recipe',
+              description: r.description || r.summary || '',
+              ingredients: r.ingredients || [],
+              instructions: r.instructions || r.steps || [],
+              prepTime: r.prepTime || r.prep_time,
+              cookTime: r.cookTime || r.cook_time,
+              servings: r.servings,
+              culturalNotes: r.culturalNotes || r.cultural_notes,
+              nutritionHighlights: r.nutritionHighlights || r.nutrition_highlights || []
+            });
+          });
+        }
+        
         setRecipes(recipesArray);
 
         try {
@@ -615,24 +660,121 @@ export default function RecipesPage() {
               <div className="position-sticky" style={{ top: '2rem' }}>
                 {recipes.length > 0 ? (
                   <div>
-                    <h4 className="fst-italic mb-3">Generated Recipes ({recipes.length})</h4>
+                    <h4 className="fst-italic mb-3">
+                      <Icon name="dish" className="icon-inline me-2" />
+                      Your Recipes ({recipes.length})
+                    </h4>
                     {recipes.map((recipe, index) => (
-                      <div key={index} className="rc-recipe-card mb-3">
-                        <h5>{recipe.title}</h5>
-                        <p className="small">{recipe.description}</p>
-                        {(recipe.prepTime || recipe.cookTime) && (
-                          <div className="small text-muted">
-                            {recipe.prepTime && <span>⏱️ {recipe.prepTime}</span>}
-                            {recipe.cookTime && <span className="ms-2">🔥 {recipe.cookTime}</span>}
+                      <div key={index} className="card mb-3 shadow-sm">
+                        <div className="card-body">
+                          <div className="d-flex justify-content-between align-items-start mb-2">
+                            <h5 className="card-title mb-0">{recipe.title}</h5>
+                            {index === 0 && (
+                              <span className="badge bg-primary">Spotlight</span>
+                            )}
                           </div>
-                        )}
+                          
+                          <p className="card-text small text-muted mb-2">{recipe.description}</p>
+                          
+                          {/* Quick Info */}
+                          <div className="d-flex flex-wrap gap-2 mb-2 small">
+                            {recipe.prepTime && (
+                              <span className="badge bg-light text-dark">
+                                ⏱️ {recipe.prepTime}
+                              </span>
+                            )}
+                            {recipe.cookTime && (
+                              <span className="badge bg-light text-dark">
+                                🔥 {recipe.cookTime}
+                              </span>
+                            )}
+                            {recipe.servings && (
+                              <span className="badge bg-light text-dark">
+                                👥 {recipe.servings}
+                              </span>
+                            )}
+                            {recipe.category && (
+                              <span className="badge bg-success">
+                                {recipe.category}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Collapsible Details */}
+                          <details className="mt-2">
+                            <summary className="btn btn-sm btn-outline-primary w-100 mb-2" style={{cursor: 'pointer'}}>
+                              View Full Recipe
+                            </summary>
+                            
+                            <div className="mt-3">
+                              {/* Ingredients */}
+                              {recipe.ingredients && recipe.ingredients.length > 0 && (
+                                <div className="mb-3">
+                                  <h6 className="fw-bold">
+                                    <Icon name="basket" className="icon-inline me-1" />
+                                    Ingredients:
+                                  </h6>
+                                  <ul className="small mb-0" style={{paddingLeft: '1.2rem'}}>
+                                    {recipe.ingredients.map((ing, i) => (
+                                      <li key={i}>{ing}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                              
+                              {/* Instructions */}
+                              {recipe.instructions && recipe.instructions.length > 0 && (
+                                <div className="mb-3">
+                                  <h6 className="fw-bold">
+                                    <Icon name="clipboard" className="icon-inline me-1" />
+                                    Instructions:
+                                  </h6>
+                                  <ol className="small mb-0" style={{paddingLeft: '1.2rem'}}>
+                                    {recipe.instructions.map((step, i) => (
+                                      <li key={i} className="mb-1">{step}</li>
+                                    ))}
+                                  </ol>
+                                </div>
+                              )}
+                              
+                              {/* Nutrition Highlights */}
+                              {recipe.nutritionHighlights && recipe.nutritionHighlights.length > 0 && (
+                                <div className="mb-3">
+                                  <h6 className="fw-bold">
+                                    <Icon name="heart" className="icon-inline me-1" />
+                                    Nutrition:
+                                  </h6>
+                                  <ul className="small mb-0" style={{paddingLeft: '1.2rem'}}>
+                                    {recipe.nutritionHighlights.map((highlight, i) => (
+                                      <li key={i}>{highlight}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                              
+                              {/* Cultural Notes */}
+                              {recipe.culturalNotes && (
+                                <div className="mb-3">
+                                  <h6 className="fw-bold">
+                                    <Icon name="globe" className="icon-inline me-1" />
+                                    Cultural Context:
+                                  </h6>
+                                  <p className="small text-muted mb-0">{recipe.culturalNotes}</p>
+                                </div>
+                              )}
+                            </div>
+                          </details>
+                        </div>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="p-4 bg-body-tertiary rounded">
-                    <h4 className="fst-italic mb-3">No recipes yet</h4>
-                    <p>Fill out the form to generate personalized recipes!</p>
+                    <h4 className="fst-italic mb-3">
+                      <Icon name="dish" className="icon-inline me-2" />
+                      No recipes yet
+                    </h4>
+                    <p className="mb-0">Fill out the form and click "Generate Recipes" to get personalized recipe recommendations!</p>
                   </div>
                 )}
 
