@@ -50,7 +50,24 @@ if (!rootElement) {
 - **Module not found**: Import path incorrect
 - **Failed to fetch**: API endpoint missing
 - **Hydration mismatch**: SSR issue (unlikely with Vite)
-- **Firebase error**: Missing env vars
+- **Firebase error**: ✅ FIXED - Firebase now optional
+
+## ✅ Firebase Error Fixed
+
+**Error**: `Missing App configuration value: "projectId"`
+
+**Fix Applied**: Made Firebase optional
+- App works without Firebase now
+- User features disabled until Firebase env vars added
+- Console shows: "⚠️ Firebase not configured" (this is OK!)
+
+**To Enable Firebase** (optional):
+Add these in Vercel → Environment Variables:
+```
+VITE_FIREBASE_PROJECT_ID=planted-dea3b
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_APP_ID=...
+```
 
 ## 🚀 Deployed!
 
