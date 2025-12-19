@@ -27,6 +27,17 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+env.txt
+
+# Deployment archives and backups
+*.zip
+app-simple*.js
+app-test.js
+
+# Documentation with sensitive info (keep locally only)
+*FIX*.md
+*DEPLOY*.md
+*DIAGNOSTIC*.md
 
 # Build files
 .cache
