@@ -79,3 +79,17 @@ If error boundary shows, you'll see:
 [Error Details]
 [Reload Page button]
 ```
+
+## ✅ TypeScript Build Errors Fixed
+
+**Error**: `Type 'Firestore | undefined' is not assignable to parameter`
+
+**Fix Applied**: Created `getDb()` helper function
+- Replaces all `collection(db, ...)` with `collection(getDb(), ...)`
+- Replaces all `doc(db, ...)` with `doc(getDb(), ...)`
+- Throws clear error if Firebase not configured
+- Type-safe: TypeScript knows it returns `Firestore` not `undefined`
+
+**Files Updated**: All page components (PlantCarePage, RecipesPage, etc.)
+
+**Result**: ✅ Build passes! Ready for deployment!
