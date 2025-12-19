@@ -324,7 +324,7 @@ export default function RecipesPage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/recipes', {
+      const response = await fetch('/api/ai/recipes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

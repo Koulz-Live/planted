@@ -73,7 +73,7 @@ export default function StorytellingPage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/storytelling', {
+      const response = await fetch('/api/ai/storytelling', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

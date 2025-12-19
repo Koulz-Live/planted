@@ -92,7 +92,7 @@ export default function PlantCarePage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/plant-plan', {
+      const response = await fetch('/api/ai/plant-plan', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

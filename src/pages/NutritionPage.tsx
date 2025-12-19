@@ -114,7 +114,7 @@ export default function NutritionPage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/nutrition', {
+      const response = await fetch('/api/ai/nutrition', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
