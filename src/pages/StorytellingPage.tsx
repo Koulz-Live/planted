@@ -73,7 +73,7 @@ export default function StorytellingPage() {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/api/storytelling', {
+      const response = await fetch('/api/storytelling', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
