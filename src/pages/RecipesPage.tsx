@@ -220,6 +220,7 @@ export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<Array<{ id: string; title: string; timestamp: Date; }>>([]);
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
   
   // Recipe Request State
   const [recipeRequests, setRecipeRequests] = useState<RecipeRequest[]>([]);
@@ -237,6 +238,7 @@ export default function RecipesPage() {
         const q = query(
           collection(getDb(), 'recipes'),
           where('userId', '==', 'demo-user'),
+          where('type', '==', 'generation-session'),
           orderBy('timestamp', 'desc'),
           limit(5)
         );
@@ -256,6 +258,32 @@ export default function RecipesPage() {
     };
     loadHistory();
   }, []);
+
+  // Save individual recipe to favorites
+  const saveRecipeToFavorites = async (recipe: Recipe) => {
+    try {
+      await addDoc(collection(getDb(), 'favorite-recipes'), {
+        userId: 'demo-user',
+        recipe: recipe,
+        timestamp: Timestamp.now(),
+        tags: [
+          ...(formData.dietaryNeeds || []),
+          ...(formData.culturalPreferences || []),
+          recipe.category
+        ].filter(Boolean)
+      });
+      
+      setSavedMessage(`✅ "${recipe.title}" saved to favorites!`);
+      console.log('✅ Recipe saved to favorites:', recipe.title);
+      
+      // Clear message after 3 seconds
+      setTimeout(() => setSavedMessage(null), 3000);
+    } catch (err) {
+      console.error('Error saving recipe to favorites:', err);
+      setSavedMessage('❌ Failed to save recipe. Please try again.');
+      setTimeout(() => setSavedMessage(null), 3000);
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -404,17 +432,48 @@ export default function RecipesPage() {
         
         setRecipes(recipesArray);
 
+        // Save to Firebase Firestore
         try {
-          await addDoc(collection(getDb(), 'recipes'), {
+          // Save the recipe generation session
+          const sessionDoc = await addDoc(collection(getDb(), 'recipes'), {
             userId: 'demo-user',
             formData: formData,
             recipes: recipesArray,
-            timestamp: Timestamp.now()
+            timestamp: Timestamp.now(),
+            type: 'generation-session'
+          });
+          
+          console.log('✅ Recipe session saved to Firebase:', sessionDoc.id);
+
+          // Save each individual recipe for easier querying
+          const savePromises = recipesArray.map(async (recipe) => {
+            return addDoc(collection(getDb(), 'user-recipes'), {
+              userId: 'demo-user',
+              sessionId: sessionDoc.id,
+              recipe: recipe,
+              formData: {
+                dietaryNeeds: formData.dietaryNeeds,
+                culturalPreferences: formData.culturalPreferences,
+                season: formData.season
+              },
+              timestamp: Timestamp.now(),
+              isFavorite: false,
+              tags: [
+                ...formData.dietaryNeeds,
+                ...formData.culturalPreferences,
+                formData.season
+              ].filter(Boolean)
+            });
           });
 
+          await Promise.all(savePromises);
+          console.log(`✅ ${recipesArray.length} individual recipes saved to Firebase`);
+
+          // Update history from Firestore
           const q = query(
             collection(getDb(), 'recipes'),
             where('userId', '==', 'demo-user'),
+            where('type', '==', 'generation-session'),
             orderBy('timestamp', 'desc'),
             limit(5)
           );
@@ -428,8 +487,12 @@ export default function RecipesPage() {
             };
           });
           setHistory(historyData);
-        } catch (firestoreErr) {
+        } catch (firestoreErr: any) {
           console.error('Error saving to Firestore:', firestoreErr);
+          // Don't throw - recipes are still usable even if save fails
+          if (firestoreErr.message?.includes('requires an index')) {
+            console.warn('💡 Firestore index required. Check console for index creation link.');
+          }
         }
       } else {
         setError(result.message || 'Failed to generate recipes');
@@ -629,6 +692,12 @@ export default function RecipesPage() {
                       />
                     </div>
 
+                    {savedMessage && (
+                      <div className={`alert ${savedMessage.includes('✅') ? 'alert-success' : 'alert-danger'} d-flex align-items-center mb-3`} role="alert">
+                        <div>{savedMessage}</div>
+                      </div>
+                    )}
+
                     {error && (
                       <div className="alert alert-danger d-flex align-items-center mb-3" role="alert">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="me-2" viewBox="0 0 16 16">
@@ -669,9 +738,18 @@ export default function RecipesPage() {
                         <div className="card-body">
                           <div className="d-flex justify-content-between align-items-start mb-2">
                             <h5 className="card-title mb-0">{recipe.title}</h5>
-                            {index === 0 && (
-                              <span className="badge bg-primary">Spotlight</span>
-                            )}
+                            <div className="d-flex gap-2 align-items-center">
+                              {index === 0 && (
+                                <span className="badge bg-primary">Spotlight</span>
+                              )}
+                              <button
+                                className="btn btn-sm btn-outline-danger"
+                                onClick={() => saveRecipeToFavorites(recipe)}
+                                title="Save to favorites"
+                              >
+                                ❤️
+                              </button>
+                            </div>
                           </div>
                           
                           <p className="card-text small text-muted mb-2">{recipe.description}</p>
