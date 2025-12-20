@@ -32,8 +32,12 @@ export default async function handler(req, res) {
       season = 'Any'
     } = req.body;
 
-    console.log('📝 Request data:', {
+    console.log('📝 Request body received:', JSON.stringify(req.body, null, 2));
+    console.log('📝 Parsed data:', {
       ingredients: availableIngredients,
+      ingredientsType: typeof availableIngredients,
+      ingredientsIsArray: Array.isArray(availableIngredients),
+      ingredientsLength: availableIngredients.length,
       dietary: dietaryNeeds,
       cultural: culturalPreferences,
       season
@@ -41,10 +45,10 @@ export default async function handler(req, res) {
 
     // Validate ingredients
     if (!availableIngredients || availableIngredients.length === 0) {
-      console.warn('⚠️ No ingredients provided');
+      console.warn('⚠️ No ingredients provided - returning 400');
       return res.status(400).json({
         ok: false,
-        message: 'Please enter at least one ingredient to generate recipes.'
+        message: 'Please enter at least one ingredient to generate recipes. Example: tomatoes, pasta, basil, garlic'
       });
     }
 

@@ -372,14 +372,22 @@ export default function RecipesPage() {
     setError(null);
 
     try {
+      // Debug: Log raw form data
+      console.log('📝 Raw form data:', {
+        availableIngredients: formData.availableIngredients,
+        length: formData.availableIngredients.length
+      });
+
       // Validate ingredients before making API call
       const ingredients = formData.availableIngredients
         .split(',')
         .map(s => s.trim())
         .filter(Boolean);
 
+      console.log('📝 Parsed ingredients:', ingredients);
+
       if (ingredients.length === 0) {
-        setError('Please enter at least one ingredient.');
+        setError('❌ Please enter at least one ingredient in the "Available Ingredients" field. Example: tomatoes, pasta, basil');
         setLoading(false);
         return;
       }
@@ -387,7 +395,8 @@ export default function RecipesPage() {
       console.log('🔄 Generating recipes with:', { 
         ingredients, 
         dietary: formData.dietaryNeeds,
-        cultural: formData.culturalPreferences 
+        cultural: formData.culturalPreferences,
+        season: formData.season
       });
 
       const response = await fetch('/api/ai/recipes', {
@@ -684,7 +693,10 @@ export default function RecipesPage() {
                     </div>
 
                     <div className="mb-3">
-                      <label htmlFor="ingredients" className="form-label fw-bold">Available Ingredients *</label>
+                      <label htmlFor="ingredients" className="form-label fw-bold">
+                        Available Ingredients * 
+                        <span className="badge bg-danger ms-2">Required</span>
+                      </label>
                       <textarea
                         id="ingredients"
                         name="availableIngredients"
@@ -696,7 +708,7 @@ export default function RecipesPage() {
                         required
                       ></textarea>
                       <small className="form-text text-body-secondary">
-                        List ingredients you have available, separated by commas
+                        📝 List ingredients you have available, separated by commas. At least one ingredient is required.
                       </small>
                     </div>
 
