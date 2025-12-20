@@ -37,6 +37,14 @@ interface CareLogEntry {
   photoUrls?: string[];
 }
 
+interface PlantIdentification {
+  scientificName: string;
+  commonName: string;
+  confidence: number;
+  suggestions?: string[];
+  warnings?: string[];
+}
+
 export default function PlantCarePage() {
   const [formData, setFormData] = useState<PlantCareFormData>({
     plantName: '',
@@ -57,6 +65,12 @@ export default function PlantCarePage() {
   
   // Tab state
   const [activeTab, setActiveTab] = useState<'generate' | 'log'>('generate');
+  
+  // Plant identification state
+  const [identifyingPlant, setIdentifyingPlant] = useState(false);
+  const [plantIdentification, setPlantIdentification] = useState<PlantIdentification | null>(null);
+  const [identificationPhotoUrl, setIdentificationPhotoUrl] = useState<string | null>(null);
+  const [showIdentificationFlow, setShowIdentificationFlow] = useState(false);
   
   // Care log state
   const [careLog, setCareLog] = useState<CareLogEntry[]>([]);
@@ -230,6 +244,69 @@ export default function PlantCarePage() {
       ...prev,
       [name]: value
     }));
+  };
+
+  // Plant identification from photo
+  const identifyPlantFromPhoto = async (photoUrl: string) => {
+    setIdentifyingPlant(true);
+    setIdentificationPhotoUrl(photoUrl);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/ai/identify-plant', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': 'demo-user'
+        },
+        body: JSON.stringify({ photoUrl })
+      });
+
+      const result = await response.json();
+
+      if (result.ok && result.data) {
+        const identification: PlantIdentification = {
+          scientificName: result.data.scientificName || '',
+          commonName: result.data.commonName || '',
+          confidence: result.data.confidence || 0,
+          suggestions: result.data.suggestions || []
+        };
+        
+        setPlantIdentification(identification);
+        setShowIdentificationFlow(true);
+        
+        // If high confidence, pre-fill plant name
+        if (identification.confidence >= 70 && identification.commonName) {
+          setFormData(prev => ({ ...prev, plantName: identification.commonName }));
+        }
+      } else {
+        setError(result.message || 'Failed to identify plant. Please enter name manually.');
+      }
+    } catch (err) {
+      console.error('Error identifying plant:', err);
+      setError('Network error during plant identification. Please try again or enter name manually.');
+    } finally {
+      setIdentifyingPlant(false);
+    }
+  };
+
+  const confirmPlantIdentification = () => {
+    if (plantIdentification) {
+      setFormData(prev => ({ 
+        ...prev, 
+        plantName: plantIdentification.commonName || plantIdentification.scientificName 
+      }));
+      setShowIdentificationFlow(false);
+      setPlantIdentification(null);
+      setIdentificationPhotoUrl(null);
+    }
+  };
+
+  const rejectPlantIdentification = () => {
+    setShowIdentificationFlow(false);
+    setPlantIdentification(null);
+    setIdentificationPhotoUrl(null);
+    setFormData(prev => ({ ...prev, plantName: '' }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -479,16 +556,149 @@ export default function PlantCarePage() {
                     Plant Name *
                     <span className="badge bg-primary ms-2" style={{ fontSize: '0.7rem' }}>Step 1</span>
                   </label>
-                  <input
-                    id="plant-name"
-                    name="plantName"
-                    className="form-control"
-                    type="text"
-                    placeholder="e.g. Monstera, Basil, Tomato Vine"
-                    value={formData.plantName}
-                    onChange={handleInputChange}
-                    required
-                  />
+                  
+                  {/* Plant Identification Flow */}
+                  {showIdentificationFlow && plantIdentification ? (
+                    <div className="alert alert-info mb-3">
+                      <div className="d-flex align-items-start">
+                        {identificationPhotoUrl && (
+                          <img 
+                            src={identificationPhotoUrl} 
+                            alt="Plant" 
+                            style={{ 
+                              width: '80px', 
+                              height: '80px', 
+                              objectFit: 'cover', 
+                              borderRadius: '8px',
+                              marginRight: '15px'
+                            }} 
+                          />
+                        )}
+                        <div className="flex-grow-1">
+                          <h6 className="mb-2">
+                            {plantIdentification.confidence >= 70 ? '✅' : '⚠️'} 
+                            {' '}We think this is:
+                          </h6>
+                          <p className="mb-1 fw-bold">{plantIdentification.commonName || plantIdentification.scientificName}</p>
+                          {plantIdentification.scientificName && plantIdentification.commonName && (
+                            <p className="mb-1 small text-muted fst-italic">{plantIdentification.scientificName}</p>
+                          )}
+                          <p className="mb-2 small">
+                            Confidence: {plantIdentification.confidence}%
+                          </p>
+                          
+                          {/* Display warnings if present */}
+                          {plantIdentification.warnings && plantIdentification.warnings.length > 0 && (
+                            <div className="alert alert-warning small mb-2 py-2">
+                              {plantIdentification.warnings.map((warning, idx) => (
+                                <p key={idx} className="mb-1">
+                                  ⚠️ {warning}
+                                </p>
+                              ))}
+                            </div>
+                          )}
+                          
+                          {/* Fallback: Show generic tips for low confidence if no warnings */}
+                          {plantIdentification.confidence < 50 && (!plantIdentification.warnings || plantIdentification.warnings.length === 0) && (
+                            <div className="alert alert-warning small mb-2 py-2">
+                              <strong>Low confidence.</strong> Try another photo:
+                              <ul className="mb-0 mt-1">
+                                <li>Take a close-up of leaves</li>
+                                <li>Show the full plant</li>
+                                <li>Include stems or flowers</li>
+                              </ul>
+                            </div>
+                          )}
+                          
+                          {/* Show suggestions for moderate/low confidence */}
+                          {plantIdentification.suggestions && plantIdentification.suggestions.length > 0 && (
+                            <div className="small text-muted mb-2">
+                              <strong>Other possibilities:</strong> {plantIdentification.suggestions.join(', ')}
+                            </div>
+                          )}
+                          
+                          <div className="btn-group btn-group-sm">
+                            <button 
+                              type="button"
+                              className="btn btn-success"
+                              onClick={confirmPlantIdentification}
+                            >
+                              ✓ Confirm
+                            </button>
+                            <button 
+                              type="button"
+                              className="btn btn-outline-secondary"
+                              onClick={rejectPlantIdentification}
+                            >
+                              Change
+                            </button>
+                            <button 
+                              type="button"
+                              className="btn btn-outline-primary"
+                              onClick={() => {
+                                setShowIdentificationFlow(false);
+                                setPlantIdentification(null);
+                              }}
+                            >
+                              📸 Try Another Photo
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : identifyingPlant ? (
+                    <div className="alert alert-light mb-3">
+                      <div className="d-flex align-items-center">
+                        <span className="spinner-border spinner-border-sm me-3" role="status" aria-hidden="true"></span>
+                        <div>
+                          <strong>Identifying plant...</strong>
+                          <p className="mb-0 small text-muted">Analyzing photo with AI</p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                  
+                  <div className="input-group">
+                    <input
+                      id="plant-name"
+                      name="plantName"
+                      className="form-control"
+                      type="text"
+                      placeholder="e.g. Monstera, Basil, Tomato Vine"
+                      value={formData.plantName}
+                      onChange={handleInputChange}
+                      required
+                      disabled={identifyingPlant}
+                    />
+                    <label 
+                      className="btn btn-outline-primary"
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <input
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        style={{ display: 'none' }}
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            // Convert to base64 for API call
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              const base64 = reader.result as string;
+                              identifyPlantFromPhoto(base64);
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        disabled={identifyingPlant}
+                      />
+                      📸 Take Photo
+                    </label>
+                  </div>
+                  <div className="form-text">
+                    Take a photo to identify your plant automatically, or type the name manually
+                  </div>
                 </div>
 
                 <div className="mb-3">
