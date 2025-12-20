@@ -54,6 +54,7 @@ export default function NutritionPage() {
   const [loading, setLoading] = useState(false);
   const [nutritionPlan, setNutritionPlan] = useState<NutritionPlan | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
   const [history, setHistory] = useState<Array<{ id: string; householdSize: number; timestamp: Date; }>>([]);
 
   // Load history from Firestore
@@ -61,8 +62,9 @@ export default function NutritionPage() {
     const loadHistory = async () => {
       try {
         const q = query(
-          collection(getDb(), 'nutritionPlans'),
+          collection(getDb(), 'nutrition-plans'),
           where('userId', '==', 'demo-user'),
+          where('type', '==', 'nutrition-plan'),
           orderBy('timestamp', 'desc'),
           limit(5)
         );
@@ -71,7 +73,7 @@ export default function NutritionPage() {
           const data = doc.data();
           return {
             id: doc.id,
-            householdSize: data.householdSize || 1,
+            householdSize: data.householdSize || data.formData?.householdSize || 1,
             timestamp: data.timestamp.toDate()
           };
         });
@@ -82,6 +84,35 @@ export default function NutritionPage() {
     };
     loadHistory();
   }, []);
+
+  // Save nutrition plan to favorites
+  const savePlanToFavorites = async (plan: NutritionPlan) => {
+    try {
+      await addDoc(collection(getDb(), 'favorite-nutrition-plans'), {
+        userId: 'demo-user',
+        householdSize: formData.householdSize,
+        focusAreas: formData.focusAreas,
+        nutritionPlan: plan,
+        formData: formData,
+        timestamp: Timestamp.now(),
+        tags: [
+          `household-${formData.householdSize}`,
+          ...formData.focusAreas,
+          `time-${formData.timeAvailablePerDay}min`
+        ].filter(Boolean)
+      });
+      
+      setSavedMessage(`✅ Nutrition plan saved to favorites!`);
+      console.log('✅ Nutrition plan saved to favorites');
+      
+      // Clear message after 3 seconds
+      setTimeout(() => setSavedMessage(null), 3000);
+    } catch (err) {
+      console.error('Error saving plan to favorites:', err);
+      setSavedMessage('❌ Failed to save plan. Please try again.');
+      setTimeout(() => setSavedMessage(null), 3000);
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -140,19 +171,47 @@ export default function NutritionPage() {
 
         // Save to Firestore
         try {
-          await addDoc(collection(getDb(), 'nutritionPlans'), {
+          // Save the nutrition plan session
+          const sessionDoc = await addDoc(collection(getDb(), 'nutrition-plans'), {
             userId: 'demo-user',
             householdSize: formData.householdSize,
             focusAreas: formData.focusAreas,
             formData: formData,
             nutritionPlan: plan,
-            timestamp: Timestamp.now()
+            timestamp: Timestamp.now(),
+            type: 'nutrition-plan'
           });
+
+          console.log('✅ Nutrition plan session saved to Firebase:', sessionDoc.id);
+
+          // Save individual plan for easier querying
+          await addDoc(collection(getDb(), 'user-nutrition-plans'), {
+            userId: 'demo-user',
+            sessionId: sessionDoc.id,
+            householdSize: formData.householdSize,
+            focusAreas: formData.focusAreas,
+            nutritionPlan: plan,
+            formData: {
+              householdSize: formData.householdSize,
+              focusAreas: formData.focusAreas,
+              timeAvailablePerDay: formData.timeAvailablePerDay
+            },
+            timestamp: Timestamp.now(),
+            isFavorite: false,
+            tags: [
+              `household-${formData.householdSize}`,
+              ...formData.focusAreas,
+              `time-${formData.timeAvailablePerDay}min`
+            ].filter(Boolean)
+          });
+
+          console.log('✅ Individual nutrition plan saved to Firebase');
 
           // Refresh history
           const q = query(
-            collection(getDb(), 'nutritionPlans'),
+            collection(getDb(), 'nutrition-plans'),
             where('userId', '==', 'demo-user'),
+            where('type', '==', 'nutrition-plan'),
             orderBy('timestamp', 'desc'),
             limit(5)
           );
@@ -161,13 +220,17 @@ export default function NutritionPage() {
             const data = doc.data();
             return {
               id: doc.id,
-              householdSize: data.householdSize || 1,
+              householdSize: data.householdSize || data.formData?.householdSize || 1,
               timestamp: data.timestamp.toDate()
             };
           });
           setHistory(historyData);
-        } catch (firestoreErr) {
+        } catch (firestoreErr: any) {
           console.error('Error saving to Firestore:', firestoreErr);
+          // Don't throw - nutrition plan is still usable
+          if (firestoreErr.message?.includes('requires an index')) {
+            console.warn('💡 Firestore index required. Check console for index creation link.');
+          }
         }
       } else {
         setError(result.message || 'Failed to generate nutrition plan');
@@ -299,6 +362,12 @@ export default function NutritionPage() {
                   />
                 </div>
 
+                {savedMessage && (
+                  <div className={`alert ${savedMessage.includes('✅') ? 'alert-success' : 'alert-danger'} d-flex align-items-center mb-3`} role="alert">
+                    <div>{savedMessage}</div>
+                  </div>
+                )}
+
                 {error && (
                   <div className="alert alert-danger d-flex align-items-center mb-3" role="alert">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="me-2" viewBox="0 0 16 16">
@@ -340,8 +409,19 @@ export default function NutritionPage() {
             <article className="blog-post mt-4">
               <div className="p-4 mb-3 bg-body-tertiary rounded">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                  <h2 className="h4 mb-0">Your 7-Day Meal Plan</h2>
-                  <span className="badge bg-success">Personalized</span>
+                  <div>
+                    <h2 className="h4 mb-0">Your 7-Day Meal Plan</h2>
+                  </div>
+                  <div className="d-flex gap-2 align-items-center">
+                    <span className="badge bg-success">Personalized</span>
+                    <button
+                      className="btn btn-sm btn-outline-danger"
+                      onClick={() => savePlanToFavorites(nutritionPlan)}
+                      title="Save to favorites"
+                    >
+                      ❤️
+                    </button>
+                  </div>
                 </div>
 
                 <div className="mb-4">
