@@ -42,6 +42,7 @@ export default function PlantCarePage() {
   const [loading, setLoading] = useState(false);
   const [carePlan, setCarePlan] = useState<PlantCarePlan | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
   const [history, setHistory] = useState<Array<{ id: string; plantName: string; timestamp: Date; }>>([]);
 
   // Load history from Firestore
@@ -49,15 +50,16 @@ export default function PlantCarePage() {
     const loadHistory = async () => {
       try {
         const q = query(
-          collection(getDb(), 'plantCares'),
+          collection(getDb(), 'plant-plans'),
           where('userId', '==', 'demo-user'),
+          where('type', '==', 'care-plan'),
           orderBy('timestamp', 'desc'),
           limit(5)
         );
         const querySnapshot = await getDocs(q);
         const historyData = querySnapshot.docs.map(doc => ({
           id: doc.id,
-          plantName: doc.data().plantName,
+          plantName: doc.data().plantName || doc.data().formData?.plantName || 'Plant',
           timestamp: doc.data().timestamp.toDate()
         }));
         setHistory(historyData);
@@ -67,6 +69,35 @@ export default function PlantCarePage() {
     };
     loadHistory();
   }, []);
+
+  // Save care plan to favorites
+  const savePlanToFavorites = async (plan: PlantCarePlan) => {
+    try {
+      await addDoc(collection(getDb(), 'favorite-plant-plans'), {
+        userId: 'demo-user',
+        plantName: formData.plantName,
+        growthStage: formData.growthStage,
+        carePlan: plan,
+        formData: formData,
+        timestamp: Timestamp.now(),
+        tags: [
+          formData.growthStage,
+          formData.country,
+          formData.hardinessZone
+        ].filter(Boolean)
+      });
+      
+      setSavedMessage(`✅ "${plan.title}" saved to favorites!`);
+      console.log('✅ Plant care plan saved to favorites');
+      
+      // Clear message after 3 seconds
+      setTimeout(() => setSavedMessage(null), 3000);
+    } catch (err) {
+      console.error('Error saving plan to favorites:', err);
+      setSavedMessage('❌ Failed to save plan. Please try again.');
+      setTimeout(() => setSavedMessage(null), 3000);
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -131,33 +162,64 @@ export default function PlantCarePage() {
 
         // Save to Firestore
         try {
-          await addDoc(collection(getDb(), 'plantCares'), {
+          // Save the care plan session
+          const sessionDoc = await addDoc(collection(getDb(), 'plant-plans'), {
             userId: 'demo-user',
             plantName: formData.plantName,
             growthStage: formData.growthStage,
             country: formData.country,
             formData: formData,
             carePlan: plan,
-            timestamp: Timestamp.now()
+            timestamp: Timestamp.now(),
+            type: 'care-plan'
           });
+
+          console.log('✅ Plant care plan saved to Firebase:', sessionDoc.id);
+
+          // Save individual plan for easier querying
+          await addDoc(collection(getDb(), 'user-plant-plans'), {
+            userId: 'demo-user',
+            sessionId: sessionDoc.id,
+            plantName: formData.plantName,
+            growthStage: formData.growthStage,
+            carePlan: plan,
+            formData: {
+              country: formData.country,
+              hardinessZone: formData.hardinessZone,
+              growthStage: formData.growthStage
+            },
+            timestamp: Timestamp.now(),
+            isFavorite: false,
+            tags: [
+              formData.growthStage,
+              formData.country,
+              formData.hardinessZone
+            ].filter(Boolean)
+          });
+
+          console.log('✅ Individual plant care plan saved to Firebase');
 
           // Refresh history
           const q = query(
-            collection(getDb(), 'plantCares'),
+            collection(getDb(), 'plant-plans'),
             where('userId', '==', 'demo-user'),
+            where('type', '==', 'care-plan'),
             orderBy('timestamp', 'desc'),
             limit(5)
           );
           const querySnapshot = await getDocs(q);
           const historyData = querySnapshot.docs.map(doc => ({
             id: doc.id,
-            plantName: doc.data().plantName,
+            plantName: doc.data().plantName || doc.data().formData?.plantName || 'Plant',
             timestamp: doc.data().timestamp.toDate()
           }));
           setHistory(historyData);
-        } catch (firestoreErr) {
+        } catch (firestoreErr: any) {
           console.error('Error saving to Firestore:', firestoreErr);
-          // Don't show error to user, just log it
+          // Don't throw - care plan is still usable
+          if (firestoreErr.message?.includes('requires an index')) {
+            console.warn('💡 Firestore index required. Check console for index creation link.');
+          }
         }
       } else {
         setError(result.message || 'Failed to generate care plan');
@@ -333,6 +395,12 @@ export default function PlantCarePage() {
                   />
                 </div>
 
+                {savedMessage && (
+                  <div className={`alert ${savedMessage.includes('✅') ? 'alert-success' : 'alert-danger'} d-flex align-items-center mb-3`} role="alert">
+                    <div>{savedMessage}</div>
+                  </div>
+                )}
+
                 {error && (
                   <div className="alert alert-danger d-flex align-items-center mb-3" role="alert">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="me-2" viewBox="0 0 16 16">
@@ -391,9 +459,18 @@ export default function PlantCarePage() {
 
             {carePlan ? (
               <div className="p-4 mb-3 bg-body-tertiary rounded">
-                <div className="mb-3">
-                  <span className="badge bg-success me-2">{formData.plantName}</span>
-                  <span className="badge bg-secondary">{formData.growthStage} · {formData.country}</span>
+                <div className="mb-3 d-flex justify-content-between align-items-start">
+                  <div>
+                    <span className="badge bg-success me-2">{formData.plantName}</span>
+                    <span className="badge bg-secondary">{formData.growthStage} · {formData.country}</span>
+                  </div>
+                  <button
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => savePlanToFavorites(carePlan)}
+                    title="Save to favorites"
+                  >
+                    ❤️
+                  </button>
                 </div>
 
                 <div>
