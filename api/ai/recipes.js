@@ -5,6 +5,8 @@
  */
 
 export default async function handler(req, res) {
+  console.log('🔄 Recipe API called:', req.method, new Date().toISOString());
+  
   // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,10 +14,12 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-id');
 
   if (req.method === 'OPTIONS') {
+    console.log('✅ CORS preflight handled');
     return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
+    console.warn('⚠️ Invalid method:', req.method);
     return res.status(405).json({ ok: false, message: 'Method not allowed' });
   }
 
@@ -28,17 +32,25 @@ export default async function handler(req, res) {
       season = 'Any'
     } = req.body;
 
+    console.log('📝 Request data:', {
+      ingredients: availableIngredients,
+      dietary: dietaryNeeds,
+      cultural: culturalPreferences,
+      season
+    });
+
     // Validate ingredients
     if (!availableIngredients || availableIngredients.length === 0) {
+      console.warn('⚠️ No ingredients provided');
       return res.status(400).json({
         ok: false,
-        message: 'availableIngredients array is required and must not be empty'
+        message: 'Please enter at least one ingredient to generate recipes.'
       });
     }
 
     const openaiKey = process.env.OPENAI_API_KEY;
     if (!openaiKey) {
-      console.warn('OpenAI API key not configured, returning fallback');
+      console.warn('⚠️ OpenAI API key not configured, returning fallback recipes');
       return res.status(200).json({
         ok: true,
         data: getFallbackRecipes(availableIngredients, dietaryNeeds, culturalPreferences)
@@ -97,7 +109,8 @@ Your recipes honor food traditions, minimize waste, celebrate biodiversity, and 
 
     if (!response.ok) {
       const error = await response.json();
-      console.error('OpenAI API error:', error);
+      console.error('❌ OpenAI API error:', response.status, error);
+      console.log('⚡ Returning fallback recipes instead');
       return res.status(200).json({
         ok: true,
         data: getFallbackRecipes(availableIngredients, dietaryNeeds, culturalPreferences)
@@ -107,25 +120,31 @@ Your recipes honor food traditions, minimize waste, celebrate biodiversity, and 
     const data = await response.json();
     const content = data.choices[0].message.content;
     
+    console.log('✅ OpenAI response received, parsing...');
+    
     // Parse JSON response
     let recipes;
     try {
       recipes = JSON.parse(content);
+      console.log('✅ Recipes parsed successfully');
     } catch (parseError) {
-      console.error('Failed to parse OpenAI response:', parseError);
+      console.error('❌ Failed to parse OpenAI response:', parseError);
+      console.log('⚡ Returning fallback recipes instead');
       return res.status(200).json({
         ok: true,
         data: getFallbackRecipes(availableIngredients, dietaryNeeds, culturalPreferences)
       });
     }
 
+    console.log('✅ Returning AI-generated recipes');
     res.status(200).json({
       ok: true,
       data: recipes
     });
 
   } catch (error) {
-    console.error('Recipe generation error:', error);
+    console.error('❌ Recipe generation error:', error.message || error);
+    console.log('⚡ Returning fallback recipes');
     return res.status(200).json({
       ok: true,
       data: getFallbackRecipes(

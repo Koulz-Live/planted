@@ -372,6 +372,24 @@ export default function RecipesPage() {
     setError(null);
 
     try {
+      // Validate ingredients before making API call
+      const ingredients = formData.availableIngredients
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      if (ingredients.length === 0) {
+        setError('Please enter at least one ingredient.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('🔄 Generating recipes with:', { 
+        ingredients, 
+        dietary: formData.dietaryNeeds,
+        cultural: formData.culturalPreferences 
+      });
+
       const response = await fetch('/api/ai/recipes', {
         method: 'POST',
         headers: {
@@ -380,17 +398,23 @@ export default function RecipesPage() {
         },
         body: JSON.stringify({
           dietaryNeeds: formData.dietaryNeeds,
-          availableIngredients: formData.availableIngredients
-            .split(',')
-            .map(s => s.trim())
-            .filter(Boolean),
+          availableIngredients: ingredients,
           culturalPreferences: formData.culturalPreferences,
           pantryPhotoUrls: formData.pantryPhotoUrls,
           season: formData.season
         })
       });
 
+      console.log('📡 API Response status:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ API Error Response:', errorText);
+        throw new Error(`API returned ${response.status}: ${response.statusText}`);
+      }
+
       const result = await response.json();
+      console.log('✅ API Response received:', result);
 
       if (result.ok && result.data) {
         // Handle new enhanced recipe format with spotlight and alternates
@@ -520,11 +544,26 @@ export default function RecipesPage() {
           }
         }
       } else {
-        setError(result.message || 'Failed to generate recipes');
+        console.error('❌ API returned ok:false -', result.message);
+        setError(result.message || 'Failed to generate recipes. Please try again.');
       }
     } catch (err) {
-      setError('Network error. Please ensure the backend server is running.');
-      console.error('Error generating recipes:', err);
+      console.error('❌ Error generating recipes:', err);
+      
+      // Provide specific error messages based on error type
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      
+      if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError')) {
+        setError('Network error. Please check your internet connection and try again.');
+      } else if (errorMessage.includes('API returned 4')) {
+        setError('Invalid request. Please check your ingredients and try again.');
+      } else if (errorMessage.includes('API returned 5')) {
+        setError('Server error. Please try again in a moment.');
+      } else if (errorMessage.includes('timeout')) {
+        setError('Request timed out. Please try again with fewer ingredients.');
+      } else {
+        setError(`Unable to generate recipes: ${errorMessage}`);
+      }
     } finally {
       setLoading(false);
     }
