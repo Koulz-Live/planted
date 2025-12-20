@@ -5,6 +5,7 @@ import { ImageUpload } from '../components/ImageUpload';
 import './PlantCarePage.css';
 
 type GrowthStage = 'seedling' | 'vegetative' | 'fruiting' | 'dormant';
+type CareActivity = 'watering' | 'fertilizing' | 'pruning' | 'repotting' | 'pest-control' | 'observation';
 
 interface PlantCareFormData {
   plantName: string;
@@ -27,6 +28,15 @@ interface PlantCarePlan {
   nextSteps: string[];
 }
 
+interface CareLogEntry {
+  id?: string;
+  plantName: string;
+  activity: CareActivity;
+  notes: string;
+  timestamp: Date;
+  photoUrls?: string[];
+}
+
 export default function PlantCarePage() {
   const [formData, setFormData] = useState<PlantCareFormData>({
     plantName: '',
@@ -44,6 +54,23 @@ export default function PlantCarePage() {
   const [error, setError] = useState<string | null>(null);
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
   const [history, setHistory] = useState<Array<{ id: string; plantName: string; timestamp: Date; }>>([]);
+  
+  // Tab state
+  const [activeTab, setActiveTab] = useState<'generate' | 'log'>('generate');
+  
+  // Care log state
+  const [careLog, setCareLog] = useState<CareLogEntry[]>([]);
+  const [logFormData, setLogFormData] = useState<{
+    plantName: string;
+    activity: CareActivity;
+    notes: string;
+    photoUrls: string[];
+  }>({
+    plantName: '',
+    activity: 'watering',
+    notes: '',
+    photoUrls: []
+  });
 
   // Load history from Firestore
   useEffect(() => {
@@ -68,6 +95,33 @@ export default function PlantCarePage() {
       }
     };
     loadHistory();
+  }, []);
+
+  // Load care log from Firestore
+  useEffect(() => {
+    const loadCareLog = async () => {
+      try {
+        const q = query(
+          collection(getDb(), 'plant-care-log'),
+          where('userId', '==', 'demo-user'),
+          orderBy('timestamp', 'desc'),
+          limit(20)
+        );
+        const querySnapshot = await getDocs(q);
+        const logData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          plantName: doc.data().plantName,
+          activity: doc.data().activity,
+          notes: doc.data().notes,
+          timestamp: doc.data().timestamp.toDate(),
+          photoUrls: doc.data().photoUrls || []
+        }));
+        setCareLog(logData);
+      } catch (err) {
+        console.error('Error loading care log:', err);
+      }
+    };
+    loadCareLog();
   }, []);
 
   // Save care plan to favorites
@@ -99,6 +153,53 @@ export default function PlantCarePage() {
     }
   };
 
+  // Save care log entry
+  const saveCareLogEntry = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!logFormData.plantName || !logFormData.notes) {
+      setSavedMessage('❌ Please fill in plant name and notes');
+      setTimeout(() => setSavedMessage(null), 3000);
+      return;
+    }
+
+    try {
+      const newEntry = {
+        userId: 'demo-user',
+        plantName: logFormData.plantName,
+        activity: logFormData.activity,
+        notes: logFormData.notes,
+        photoUrls: logFormData.photoUrls,
+        timestamp: Timestamp.now()
+      };
+
+      await addDoc(collection(getDb(), 'plant-care-log'), newEntry);
+      
+      setSavedMessage('✅ Care log entry saved!');
+      console.log('✅ Care log entry saved to Firebase');
+      
+      // Add to local state
+      setCareLog(prev => [{
+        ...newEntry,
+        timestamp: new Date()
+      }, ...prev]);
+      
+      // Reset form
+      setLogFormData({
+        plantName: '',
+        activity: 'watering',
+        notes: '',
+        photoUrls: []
+      });
+      
+      setTimeout(() => setSavedMessage(null), 3000);
+    } catch (err) {
+      console.error('Error saving care log entry:', err);
+      setSavedMessage('❌ Failed to save log entry. Please try again.');
+      setTimeout(() => setSavedMessage(null), 3000);
+    }
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -115,6 +216,20 @@ export default function PlantCarePage() {
 
   const handleImagesChange = (urls: string[]) => {
     setFormData(prev => ({ ...prev, photoUrls: urls }));
+  };
+
+  const handleLogImagesChange = (urls: string[]) => {
+    setLogFormData(prev => ({ ...prev, photoUrls: urls }));
+  };
+
+  const handleLogInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setLogFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -260,10 +375,42 @@ export default function PlantCarePage() {
       <div className="row g-5">
         {/* Left Column: Form */}
         <div className="col-md-8">
+          {/* Tab Navigation */}
+          <ul className="nav nav-tabs mb-4" role="tablist">
+            <li className="nav-item" role="presentation">
+              <button 
+                className={`nav-link ${activeTab === 'generate' ? 'active' : ''}`}
+                onClick={() => setActiveTab('generate')}
+                type="button"
+                role="tab"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="me-2" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                  <path d="M8 5.5a2.5 2.5 0 0 1 2.5 2.5v1a1.5 1.5 0 0 1-3 0V8a.5.5 0 0 1 1 0v1a.5.5 0 0 0 1 0V8a1.5 1.5 0 0 0-3 0v1a2.5 2.5 0 0 0 5 0V8a3.5 3.5 0 1 0-7 0v5.5a.5.5 0 0 1-1 0V8a4.5 4.5 0 1 1 9 0v5.5a.5.5 0 0 1-1 0V8a3.5 3.5 0 0 0-7 0v1a1.5 1.5 0 0 0 3 0V8a.5.5 0 0 0-1 0z"/>
+                </svg>
+                Generate Care Plan
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button 
+                className={`nav-link ${activeTab === 'log' ? 'active' : ''}`}
+                onClick={() => setActiveTab('log')}
+                type="button"
+                role="tab"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="me-2" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                  <path d="M2.5 8a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-2.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+                Care Log ({careLog.length})
+              </button>
+            </li>
+          </ul>
+
           <h3 className="pb-4 mb-4 fst-italic border-bottom">
-            Plant Care Request
+            {activeTab === 'generate' ? 'Plant Care Request' : 'Plant Care Log'}
           </h3>
 
+          {/* Generate Care Plan Tab */}
+          {activeTab === 'generate' && (
           <article className="blog-post">
             <div className="p-4 mb-3 bg-body-tertiary rounded">
               <div className="d-flex justify-content-between align-items-center mb-3">
@@ -546,6 +693,155 @@ export default function PlantCarePage() {
               </form>
             </div>
           </article>
+          )}
+          {/* End Generate Care Plan Tab */}
+
+          {/* Care Log Tab */}
+          {activeTab === 'log' && (
+          <article className="blog-post">
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h5 className="mb-3">📝 Log a Care Activity</h5>
+              
+              <form onSubmit={saveCareLogEntry}>
+                <div className="mb-3">
+                  <label htmlFor="log-plant-name" className="form-label fw-bold">Plant Name *</label>
+                  <input
+                    id="log-plant-name"
+                    name="plantName"
+                    className="form-control"
+                    type="text"
+                    placeholder="e.g. My Tomato Plant, Kitchen Basil"
+                    value={logFormData.plantName}
+                    onChange={handleLogInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="log-activity" className="form-label fw-bold">Activity Type *</label>
+                  <select
+                    id="log-activity"
+                    name="activity"
+                    className="form-select"
+                    value={logFormData.activity}
+                    onChange={handleLogInputChange}
+                    required
+                  >
+                    <option value="watering">💧 Watering</option>
+                    <option value="fertilizing">🌿 Fertilizing</option>
+                    <option value="pruning">✂️ Pruning</option>
+                    <option value="repotting">🪴 Repotting</option>
+                    <option value="pest-control">🐛 Pest Control</option>
+                    <option value="observation">👁️ General Observation</option>
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="log-notes" className="form-label fw-bold">Notes *</label>
+                  <textarea
+                    id="log-notes"
+                    name="notes"
+                    className="form-control"
+                    rows={4}
+                    placeholder="Describe what you did, what you observed, any changes in plant health, etc."
+                    value={logFormData.notes}
+                    onChange={handleLogInputChange}
+                    required
+                  ></textarea>
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label fw-bold">Photos (Optional)</label>
+                  <ImageUpload
+                    onImagesChange={handleLogImagesChange}
+                    maxImages={3}
+                    helperText="Add photos to track your plant's progress visually"
+                  />
+                </div>
+
+                {savedMessage && (
+                  <div className={`alert ${savedMessage.includes('✅') ? 'alert-success' : 'alert-danger'} d-flex align-items-center mb-3`} role="alert">
+                    <div>{savedMessage}</div>
+                  </div>
+                )}
+
+                <button className="btn btn-success w-100" type="submit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="me-2" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                  </svg>
+                  Save Care Log Entry
+                </button>
+              </form>
+            </div>
+
+            {/* Care Log History */}
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <h5 className="mb-3">📋 Recent Care Activities</h5>
+              
+              {careLog.length > 0 ? (
+                <div className="list-group">
+                  {careLog.map((entry, index) => (
+                    <div key={entry.id || index} className="list-group-item border-0 mb-2" style={{ backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                      <div className="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                          <h6 className="mb-1 fw-bold">{entry.plantName}</h6>
+                          <small className="text-body-secondary">
+                            {new Date(entry.timestamp).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </small>
+                        </div>
+                        <span className="badge bg-primary">
+                          {entry.activity === 'watering' && '💧'}
+                          {entry.activity === 'fertilizing' && '🌿'}
+                          {entry.activity === 'pruning' && '✂️'}
+                          {entry.activity === 'repotting' && '🪴'}
+                          {entry.activity === 'pest-control' && '🐛'}
+                          {entry.activity === 'observation' && '👁️'}
+                          {' '}
+                          {entry.activity.charAt(0).toUpperCase() + entry.activity.slice(1).replace('-', ' ')}
+                        </span>
+                      </div>
+                      <p className="mb-0 small">{entry.notes}</p>
+                      {entry.photoUrls && entry.photoUrls.length > 0 && (
+                        <div className="mt-2 d-flex gap-2">
+                          {entry.photoUrls.map((url, i) => (
+                            <img 
+                              key={i} 
+                              src={url} 
+                              alt={`Photo ${i + 1}`} 
+                              style={{ 
+                                width: '60px', 
+                                height: '60px', 
+                                objectFit: 'cover', 
+                                borderRadius: '4px' 
+                              }} 
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <div className="mb-2" style={{ fontSize: '2.5rem', opacity: 0.3 }}>📝</div>
+                  <p className="text-body-secondary small mb-2">
+                    No care activities logged yet.
+                  </p>
+                  <p className="text-body-secondary small mb-0">
+                    <strong>Start tracking your plant care above</strong>
+                  </p>
+                </div>
+              )}
+            </div>
+          </article>
+          )}
+          {/* End Care Log Tab */}
         </div>
 
         {/* Right Column: Sidebar */}
