@@ -235,8 +235,15 @@ export default function RecipesPage() {
   useEffect(() => {
     const loadHistory = async () => {
       try {
+        // Check if Firebase is configured before attempting to load
+        const db = getDb();
+        if (!db) {
+          console.log('📝 Firebase not configured - history feature disabled');
+          return;
+        }
+
         const q = query(
-          collection(getDb(), 'recipes'),
+          collection(db, 'recipes'),
           where('userId', '==', 'demo-user'),
           where('type', '==', 'generation-session'),
           orderBy('timestamp', 'desc'),
@@ -252,8 +259,15 @@ export default function RecipesPage() {
           };
         });
         setHistory(historyData);
+        console.log('✅ Loaded recipe history:', historyData.length, 'items');
       } catch (err) {
-        console.error('Error loading history:', err);
+        // Firebase query might fail if index doesn't exist yet
+        // This is expected on first run - log but don't break the page
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+        console.log('📝 Could not load recipe history:', errorMessage);
+        if (errorMessage.includes('index')) {
+          console.log('💡 Tip: Create a composite index in Firebase for recipes collection (userId + type + timestamp)');
+        }
       }
     };
     loadHistory();
@@ -262,7 +276,8 @@ export default function RecipesPage() {
   // Save individual recipe to favorites
   const saveRecipeToFavorites = async (recipe: Recipe) => {
     try {
-      await addDoc(collection(getDb(), 'favorite-recipes'), {
+      const db = getDb();
+      await addDoc(collection(db, 'favorite-recipes'), {
         userId: 'demo-user',
         recipe: recipe,
         timestamp: Timestamp.now(),
@@ -280,7 +295,12 @@ export default function RecipesPage() {
       setTimeout(() => setSavedMessage(null), 3000);
     } catch (err) {
       console.error('Error saving recipe to favorites:', err);
-      setSavedMessage('❌ Failed to save recipe. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      if (errorMessage.includes('Firebase is not configured')) {
+        setSavedMessage('📝 Favorites feature requires Firebase configuration');
+      } else {
+        setSavedMessage('❌ Failed to save recipe. Please try again.');
+      }
       setTimeout(() => setSavedMessage(null), 3000);
     }
   };
@@ -432,10 +452,12 @@ export default function RecipesPage() {
         
         setRecipes(recipesArray);
 
-        // Save to Firebase Firestore
+        // Save to Firebase Firestore (optional - don't block on failure)
         try {
+          const db = getDb();
+          
           // Save the recipe generation session
-          const sessionDoc = await addDoc(collection(getDb(), 'recipes'), {
+          const sessionDoc = await addDoc(collection(db, 'recipes'), {
             userId: 'demo-user',
             formData: formData,
             recipes: recipesArray,
@@ -447,7 +469,7 @@ export default function RecipesPage() {
 
           // Save each individual recipe for easier querying
           const savePromises = recipesArray.map(async (recipe) => {
-            return addDoc(collection(getDb(), 'user-recipes'), {
+            return addDoc(collection(db, 'user-recipes'), {
               userId: 'demo-user',
               sessionId: sessionDoc.id,
               recipe: recipe,
@@ -471,7 +493,7 @@ export default function RecipesPage() {
 
           // Update history from Firestore
           const q = query(
-            collection(getDb(), 'recipes'),
+            collection(db, 'recipes'),
             where('userId', '==', 'demo-user'),
             where('type', '==', 'generation-session'),
             orderBy('timestamp', 'desc'),
@@ -487,11 +509,14 @@ export default function RecipesPage() {
             };
           });
           setHistory(historyData);
-        } catch (firestoreErr: any) {
-          console.error('Error saving to Firestore:', firestoreErr);
+        } catch (firestoreErr) {
+          const errorMessage = firestoreErr instanceof Error ? firestoreErr.message : 'Unknown error';
+          console.log('📝 Could not save to Firebase:', errorMessage);
           // Don't throw - recipes are still usable even if save fails
-          if (firestoreErr.message?.includes('requires an index')) {
-            console.warn('💡 Firestore index required. Check console for index creation link.');
+          if (errorMessage.includes('requires an index')) {
+            console.log('💡 Firestore index required. Check Firebase Console for index creation link.');
+          } else if (errorMessage.includes('Firebase is not configured')) {
+            console.log('📝 Firebase not configured - recipes saved locally only');
           }
         }
       } else {
