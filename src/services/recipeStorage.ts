@@ -1,14 +1,17 @@
 /**
  * Recipe Storage Service
- * Comprehensive Firestore + Firebase Storage integration for recipe generation
+ * Comprehensive Firestore integration for recipe generation
  * 
  * Stores:
- * - Uploaded pantry/fridge photos (Firebase Storage)
+ * - Uploaded pantry/fridge photos (Base64 in Firestore)
  * - OpenAI Vision analyzed ingredients
  * - Complete form data with geolocation
  * - Generated recipes
  * - Session metadata and timestamps
  * - User analytics data
+ * 
+ * Note: Images stored as base64 directly in Firestore
+ * OpenAI Vision API can analyze base64 images directly
  */
 
 import { 
@@ -18,13 +21,7 @@ import {
   GeoPoint,
   DocumentReference 
 } from 'firebase/firestore';
-import { 
-  ref, 
-  uploadString, 
-  getDownloadURL,
-  UploadResult 
-} from 'firebase/storage';
-import { getDb, getStorage } from '../lib/firebase';
+import { getDb } from '../lib/firebase';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -41,14 +38,13 @@ export interface GeoLocation {
   timestamp?: number;
 }
 
-export interface UploadedImage {
-  originalBase64?: string;  // Base64 data URL (stored temporarily)
-  storagePath: string;       // Firebase Storage path
-  downloadUrl: string;       // Public download URL
+export interface StoredImage {
+  base64: string;            // Base64 data URL (stored in Firestore)
   fileName: string;          // Unique filename
   uploadedAt: Timestamp;     // Upload timestamp
   size?: number;             // File size in bytes
   mimeType?: string;         // e.g., 'image/jpeg'
+  index: number;             // Original upload order
 }
 
 export interface AnalyzedIngredients {
@@ -71,8 +67,8 @@ export interface RecipeFormData {
   season: string;
   
   // Photos
-  pantryPhotoUrls: string[];            // Base64 data URLs (temporary)
-  uploadedImages?: UploadedImage[];     // Firebase Storage references
+  pantryPhotoUrls: string[];            // Base64 data URLs
+  storedImages?: StoredImage[];         // Processed images with metadata
   
   // Vision analysis
   analyzedIngredients?: AnalyzedIngredients;
@@ -243,86 +239,57 @@ export function getDeviceInfo() {
 // ============================================================================
 
 /**
- * Upload base64 images to Firebase Storage
+ * Process base64 images for Firestore storage
  * @param base64Images - Array of base64 data URLs
  * @param userId - User ID for organizing storage
- * @returns Array of UploadedImage objects with storage references
+ * @returns Array of StoredImage objects with metadata
+ * 
+ * Note: OpenAI Vision API can analyze base64 images directly:
+ * const response = await openai.chat.completions.create({
+ *   model: "gpt-4o",
+ *   messages: [{
+ *     role: "user",
+ *     content: [
+ *       { type: "text", text: "What's in this image?" },
+ *       { type: "image_url", image_url: { url: `data:image/jpeg;base64,${base64}` } }
+ *     ]
+ *   }]
+ * });
  */
-export async function uploadImagesToStorage(
+export function processImagesForStorage(
   base64Images: string[],
   userId: string
-): Promise<UploadedImage[]> {
+): StoredImage[] {
   if (!base64Images || base64Images.length === 0) {
     return [];
   }
 
-  console.log(`📤 Uploading ${base64Images.length} image(s) to Firebase Storage...`);
+  console.log(`� Processing ${base64Images.length} image(s) for Firestore storage...`);
   
-  try {
-    const storage = getStorage();
-    const uploadPromises = base64Images.map(async (base64, index) => {
-      try {
-        // Generate unique filename
-        const timestamp = Date.now();
-        const fileName = `pantry-${userId}-${timestamp}-${index}.jpg`;
-        const storagePath = `pantry-photos/${userId}/${fileName}`;
-        
-        // Create storage reference
-        const storageRef = ref(storage, storagePath);
-        
-        // Upload base64 string
-        const uploadResult: UploadResult = await uploadString(
-          storageRef, 
-          base64, 
-          'data_url'
-        );
-        
-        // Get download URL
-        const downloadUrl = await getDownloadURL(uploadResult.ref);
-        
-        // Extract file size and mime type from base64
-        const sizeMatch = base64.match(/^data:([^;]+);base64,(.+)$/);
-        const mimeType = sizeMatch ? sizeMatch[1] : 'image/jpeg';
-        const base64Data = sizeMatch ? sizeMatch[2] : '';
-        const size = Math.round((base64Data.length * 3) / 4); // Approximate size
-        
-        const uploadedImage: UploadedImage = {
-          storagePath,
-          downloadUrl,
-          fileName,
-          uploadedAt: Timestamp.now(),
-          size,
-          mimeType
-        };
-        
-        console.log(`✅ Image uploaded: ${fileName}`);
-        return uploadedImage;
-        
-      } catch (error) {
-        console.error(`❌ Failed to upload image ${index}:`, error);
-        // Return null for failed uploads instead of throwing
-        return null;
-      }
-    });
-
-    const results = await Promise.all(uploadPromises);
+  const storedImages: StoredImage[] = base64Images.map((base64, index) => {
+    // Generate unique filename
+    const timestamp = Date.now();
+    const fileName = `pantry-${userId}-${timestamp}-${index}.jpg`;
     
-    // Filter out failed uploads
-    const successfulUploads = results.filter((r): r is UploadedImage => r !== null);
+    // Extract file size and mime type from base64
+    const sizeMatch = base64.match(/^data:([^;]+);base64,(.+)$/);
+    const mimeType = sizeMatch ? sizeMatch[1] : 'image/jpeg';
+    const base64Data = sizeMatch ? sizeMatch[2] : base64;
+    const size = Math.round((base64Data.length * 3) / 4); // Approximate size in bytes
     
-    if (successfulUploads.length > 0) {
-      console.log(`✅ ${successfulUploads.length} of ${results.length} images uploaded successfully`);
-    } else {
-      console.warn(`⚠️ All image uploads failed - continuing without images`);
-    }
-    
-    return successfulUploads;
-    
-  } catch (error) {
-    console.error('❌ Image upload service failed:', error);
-    // Return empty array instead of throwing - don't block on storage failure
-    return [];
-  }
+    return {
+      base64,
+      fileName,
+      uploadedAt: Timestamp.now(),
+      size,
+      mimeType,
+      index
+    };
+  });
+  
+  const totalSizeKB = Math.round(storedImages.reduce((sum, img) => sum + (img.size || 0), 0) / 1024);
+  console.log(`✅ ${storedImages.length} image(s) processed (total ~${totalSizeKB}KB)`);
+  return storedImages;
 }
 
 // ============================================================================
@@ -369,26 +336,14 @@ export async function saveRecipeGenerationSession(params: {
   
   const db = getDb();
   
-  // Step 1: Upload images to Firebase Storage (if any) - NON-BLOCKING
-  let uploadedImages: UploadedImage[] = [];
+  // Step 1: Process images for Firestore storage (base64)
+  let storedImages: StoredImage[] = [];
   if (params.formData.pantryPhotoUrls && params.formData.pantryPhotoUrls.length > 0) {
-    try {
-      console.log('📤 Attempting to upload images to Firebase Storage...');
-      uploadedImages = await uploadImagesToStorage(
-        params.formData.pantryPhotoUrls,
-        params.userId
-      );
-      
-      if (uploadedImages.length > 0) {
-        console.log(`✅ ${uploadedImages.length} images uploaded to Storage`);
-      } else {
-        console.warn('⚠️ No images uploaded - Storage may not be configured or CORS issue');
-      }
-    } catch (error) {
-      console.error('❌ Image upload failed - continuing without images:', error);
-      // Don't throw - continue with recipe save even if images fail
-      uploadedImages = [];
-    }
+    storedImages = processImagesForStorage(
+      params.formData.pantryPhotoUrls,
+      params.userId
+    );
+    console.log(`✅ ${storedImages.length} images prepared for Firestore`);
   }
   
   // Step 2: Get geolocation (non-blocking)
@@ -410,7 +365,7 @@ export async function saveRecipeGenerationSession(params: {
   // Step 4: Prepare enhanced form data
   const enhancedFormData: RecipeFormData = {
     ...params.formData,
-    uploadedImages,
+    storedImages,
     analyzedIngredients: params.analyzedIngredients,
     geolocation: geolocation ?? undefined,
     geoPoint,
@@ -453,7 +408,7 @@ export async function saveRecipeGenerationSession(params: {
         dietaryNeeds: params.formData.dietaryNeeds,
         culturalPreferences: params.formData.culturalPreferences,
         season: params.formData.season,
-        hadPhotos: uploadedImages.length > 0,
+        hadPhotos: storedImages.length > 0,
         hadVisionAnalysis: !!params.analyzedIngredients && !params.analyzedIngredients.fallbackUsed,
         ingredientCount: params.formData.parsedIngredients.length
       },
@@ -463,7 +418,7 @@ export async function saveRecipeGenerationSession(params: {
         ...params.formData.dietaryNeeds,
         ...params.formData.culturalPreferences,
         params.formData.season,
-        uploadedImages.length > 0 ? 'with-photos' : 'text-only',
+        storedImages.length > 0 ? 'with-photos' : 'text-only',
         params.analyzedIngredients && !params.analyzedIngredients.fallbackUsed ? 'vision-analyzed' : ''
       ].filter(Boolean)
     };
