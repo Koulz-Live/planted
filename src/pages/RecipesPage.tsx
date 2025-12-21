@@ -375,7 +375,8 @@ export default function RecipesPage() {
       // Debug: Log raw form data
       console.log('📝 Raw form data:', {
         availableIngredients: formData.availableIngredients,
-        length: formData.availableIngredients.length
+        length: formData.availableIngredients.length,
+        pantryPhotos: formData.pantryPhotoUrls.length
       });
 
       // Validate ingredients before making API call
@@ -386,17 +387,25 @@ export default function RecipesPage() {
 
       console.log('📝 Parsed ingredients:', ingredients);
 
-      if (ingredients.length === 0) {
-        setError('❌ Please enter at least one ingredient in the "Available Ingredients" field. Example: tomatoes, pasta, basil');
+      // Allow recipes generation if either ingredients OR photos are provided
+      if (ingredients.length === 0 && formData.pantryPhotoUrls.length === 0) {
+        setError('❌ Please enter ingredients OR upload pantry photos. Example ingredients: tomatoes, pasta, basil');
         setLoading(false);
         return;
+      }
+
+      // If only photos provided, show info message
+      if (ingredients.length === 0 && formData.pantryPhotoUrls.length > 0) {
+        console.log('📸 Using pantry photos only - AI will suggest generic recipes');
+        // For now, we'll generate generic recipes. In future, add image analysis.
       }
 
       console.log('🔄 Generating recipes with:', { 
         ingredients, 
         dietary: formData.dietaryNeeds,
         cultural: formData.culturalPreferences,
-        season: formData.season
+        season: formData.season,
+        photos: formData.pantryPhotoUrls.length
       });
 
       const response = await fetch('/api/ai/recipes', {
@@ -694,8 +703,13 @@ export default function RecipesPage() {
 
                     <div className="mb-3">
                       <label htmlFor="ingredients" className="form-label fw-bold">
-                        Available Ingredients * 
-                        <span className="badge bg-danger ms-2">Required</span>
+                        Available Ingredients
+                        {formData.pantryPhotoUrls.length === 0 && (
+                          <span className="badge bg-danger ms-2">Required</span>
+                        )}
+                        {formData.pantryPhotoUrls.length > 0 && (
+                          <span className="badge bg-info ms-2">Optional with photos</span>
+                        )}
                       </label>
                       <textarea
                         id="ingredients"
@@ -705,10 +719,14 @@ export default function RecipesPage() {
                         placeholder="e.g. Tomatoes, onions, garlic, pasta, olive oil, chickpeas"
                         value={formData.availableIngredients}
                         onChange={handleInputChange}
-                        required
+                        required={formData.pantryPhotoUrls.length === 0}
                       ></textarea>
                       <small className="form-text text-body-secondary">
-                        📝 List ingredients you have available, separated by commas. At least one ingredient is required.
+                        {formData.pantryPhotoUrls.length === 0 ? (
+                          <>📝 List ingredients you have, separated by commas. Or upload photos below.</>
+                        ) : (
+                          <>📸 {formData.pantryPhotoUrls.length} photo(s) uploaded! You can add text ingredients for better results.</>
+                        )}
                       </small>
                     </div>
 
@@ -764,8 +782,13 @@ export default function RecipesPage() {
                       <ImageUpload
                         onImagesChange={handleImagesChange}
                         maxImages={5}
-                        helperText="Drag & drop images of your fridge or pantry. AI will identify additional ingredients."
+                        helperText="📸 Upload photos to skip typing ingredients. AI will suggest recipes based on common pantry items."
                       />
+                      {formData.pantryPhotoUrls.length > 0 && (
+                        <small className="form-text text-muted d-block mt-2">
+                          💡 Tip: Image analysis coming soon! For now, AI will suggest recipes using seasonal ingredients.
+                        </small>
+                      )}
                     </div>
 
                     {savedMessage && (

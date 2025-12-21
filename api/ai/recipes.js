@@ -38,18 +38,38 @@ export default async function handler(req, res) {
       ingredientsType: typeof availableIngredients,
       ingredientsIsArray: Array.isArray(availableIngredients),
       ingredientsLength: availableIngredients.length,
+      pantryPhotos: pantryPhotoUrls?.length || 0,
       dietary: dietaryNeeds,
       cultural: culturalPreferences,
       season
     });
 
-    // Validate ingredients
-    if (!availableIngredients || availableIngredients.length === 0) {
-      console.warn('⚠️ No ingredients provided - returning 400');
+    // Validate that either ingredients OR photos are provided
+    const hasIngredients = availableIngredients && availableIngredients.length > 0;
+    const hasPhotos = pantryPhotoUrls && pantryPhotoUrls.length > 0;
+
+    if (!hasIngredients && !hasPhotos) {
+      console.warn('⚠️ No ingredients or photos provided - returning 400');
       return res.status(400).json({
         ok: false,
-        message: 'Please enter at least one ingredient to generate recipes. Example: tomatoes, pasta, basil, garlic'
+        message: 'Please enter ingredients OR upload pantry photos to generate recipes.'
       });
+    }
+
+    // If only photos provided (no text ingredients), use generic ingredients for now
+    let ingredientsToUse = availableIngredients;
+    if (!hasIngredients && hasPhotos) {
+      console.log('📸 Only photos provided - using generic seasonal ingredients');
+      // In future: Add image analysis here to extract ingredients from photos
+      // For now: Use generic seasonal ingredients
+      ingredientsToUse = [
+        'seasonal vegetables',
+        'pantry staples',
+        'fresh herbs',
+        'olive oil',
+        'garlic',
+        'onions'
+      ];
     }
 
     const openaiKey = process.env.OPENAI_API_KEY;
@@ -57,16 +77,17 @@ export default async function handler(req, res) {
       console.warn('⚠️ OpenAI API key not configured, returning fallback recipes');
       return res.status(200).json({
         ok: true,
-        data: getFallbackRecipes(availableIngredients, dietaryNeeds, culturalPreferences)
+        data: getFallbackRecipes(ingredientsToUse, dietaryNeeds, culturalPreferences)
       });
     }
 
     // Build comprehensive prompt
     const prompt = buildRecipePrompt(
-      availableIngredients,
+      ingredientsToUse,
       dietaryNeeds,
       culturalPreferences,
-      season
+      season,
+      hasPhotos ? pantryPhotoUrls.length : 0
     );
 
     // Call OpenAI
