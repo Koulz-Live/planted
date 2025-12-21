@@ -396,8 +396,8 @@ export default function RecipesPage() {
 
       // If only photos provided, show info message
       if (ingredients.length === 0 && formData.pantryPhotoUrls.length > 0) {
-        console.log('📸 Using pantry photos only - AI will suggest generic recipes');
-        // For now, we'll generate generic recipes. In future, add image analysis.
+        console.log('📸 Analyzing pantry photos with AI vision...');
+        // API will use OpenAI Vision to extract ingredients from photos
       }
 
       console.log('🔄 Generating recipes with:', { 
@@ -782,11 +782,11 @@ export default function RecipesPage() {
                       <ImageUpload
                         onImagesChange={handleImagesChange}
                         maxImages={5}
-                        helperText="📸 Upload photos to skip typing ingredients. AI will suggest recipes based on common pantry items."
+                        helperText="📸 Upload photos of your pantry/fridge. AI will identify ingredients automatically!"
                       />
                       {formData.pantryPhotoUrls.length > 0 && (
-                        <small className="form-text text-muted d-block mt-2">
-                          💡 Tip: Image analysis coming soon! For now, AI will suggest recipes using seasonal ingredients.
+                        <small className="form-text text-success d-block mt-2">
+                          ✨ AI will analyze your photos to identify available ingredients
                         </small>
                       )}
                     </div>

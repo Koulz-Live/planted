@@ -56,23 +56,42 @@ export default async function handler(req, res) {
       });
     }
 
-    // If only photos provided (no text ingredients), use generic ingredients for now
+    // If only photos provided (no text ingredients), analyze them first
     let ingredientsToUse = availableIngredients;
+    
+    const openaiKey = process.env.OPENAI_API_KEY;
+    
     if (!hasIngredients && hasPhotos) {
-      console.log('📸 Only photos provided - using generic seasonal ingredients');
-      // In future: Add image analysis here to extract ingredients from photos
-      // For now: Use generic seasonal ingredients
-      ingredientsToUse = [
-        'seasonal vegetables',
-        'pantry staples',
-        'fresh herbs',
-        'olive oil',
-        'garlic',
-        'onions'
-      ];
+      console.log('📸 Analyzing pantry photos to extract ingredients...');
+      
+      if (!openaiKey) {
+        console.warn('⚠️ No OpenAI key - using generic ingredients');
+        ingredientsToUse = [
+          'seasonal vegetables',
+          'pantry staples',
+          'fresh herbs',
+          'olive oil',
+          'garlic',
+          'onions'
+        ];
+      } else {
+        // Use OpenAI Vision to analyze pantry photos
+        try {
+          const analyzedIngredients = await analyzePantryPhotos(pantryPhotoUrls, openaiKey);
+          if (analyzedIngredients && analyzedIngredients.length > 0) {
+            ingredientsToUse = analyzedIngredients;
+            console.log('✅ Extracted ingredients from photos:', ingredientsToUse);
+          } else {
+            console.warn('⚠️ No ingredients detected - using generic fallback');
+            ingredientsToUse = ['seasonal vegetables', 'pantry staples', 'fresh herbs'];
+          }
+        } catch (error) {
+          console.error('❌ Photo analysis failed:', error.message);
+          ingredientsToUse = ['seasonal vegetables', 'pantry staples', 'fresh herbs'];
+        }
+      }
     }
 
-    const openaiKey = process.env.OPENAI_API_KEY;
     if (!openaiKey) {
       console.warn('⚠️ OpenAI API key not configured, returning fallback recipes');
       return res.status(200).json({
@@ -316,3 +335,103 @@ function getFallbackRecipes(ingredients, dietary, cultural) {
     ]
   };
 }
+
+/**
+ * Analyze pantry photos using OpenAI Vision API (GPT-4o)
+ * @param {string[]} photoUrls - Array of base64 image data URLs
+ * @param {string} apiKey - OpenAI API key
+ * @returns {Promise<string[]>} - Array of detected ingredients
+ */
+async function analyzePantryPhotos(photoUrls, apiKey) {
+  if (!photoUrls || photoUrls.length === 0) {
+    return [];
+  }
+
+  console.log(`🔍 Analyzing ${photoUrls.length} pantry photo(s) with OpenAI Vision...`);
+
+  try {
+    // Prepare content array with text prompt and images
+    const content = [
+      {
+        type: 'text',
+        text: `Analyze these pantry/fridge photos and list ALL visible food ingredients you can identify. 
+Be specific and include:
+- Fresh vegetables and fruits (with variety/type if visible)
+- Proteins (tofu, tempeh, legumes, etc.)
+- Grains and pasta
+- Canned/jarred goods
+- Condiments and sauces
+- Herbs and spices
+- Dairy alternatives
+- Any other edible ingredients
+
+Format: Return a simple comma-separated list of ingredients. Be thorough but practical.
+Example: "tomatoes, basil, garlic, olive oil, pasta, canned chickpeas, bell peppers"
+
+Only list ingredients you can clearly see. If the image is unclear or shows no food, say "no ingredients visible".`
+      }
+    ];
+
+    // Add each photo as an image input
+    for (const photoUrl of photoUrls) {
+      content.push({
+        type: 'image_url',
+        image_url: {
+          url: photoUrl,
+          detail: 'high' // Use high detail for better ingredient recognition
+        }
+      });
+    }
+
+    // Call OpenAI Vision API (using Chat Completions with gpt-4o)
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o', // gpt-4o supports vision
+        messages: [
+          {
+            role: 'user',
+            content: content
+          }
+        ],
+        max_tokens: 500,
+        temperature: 0.3 // Lower temperature for more consistent/accurate detection
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('❌ OpenAI Vision API error:', response.status, error);
+      throw new Error(`Vision API failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const analysisText = data.choices[0]?.message?.content || '';
+    
+    console.log('📸 Vision API response:', analysisText);
+
+    // Parse the response - should be comma-separated list
+    if (analysisText.toLowerCase().includes('no ingredients visible')) {
+      console.warn('⚠️ No ingredients detected in photos');
+      return [];
+    }
+
+    // Extract ingredients from the response
+    const ingredients = analysisText
+      .split(',')
+      .map(item => item.trim())
+      .filter(item => item.length > 0 && !item.toLowerCase().includes('no ingredients'));
+
+    console.log(`✅ Detected ${ingredients.length} ingredients:`, ingredients);
+    return ingredients;
+
+  } catch (error) {
+    console.error('❌ Failed to analyze pantry photos:', error);
+    throw error;
+  }
+}
+
