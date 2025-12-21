@@ -4,11 +4,8 @@ import { getDb } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
 import { Icon, type IconName } from '../components/Icon';
 import { 
-  saveRecipeGenerationSession, 
   quickSaveRecipeSession,
-  type Recipe as StorageRecipe,
-  type AnalyzedIngredients,
-  type RecipeFormData as StorageFormData
+  type AnalyzedIngredients
 } from '../services/recipeStorage';
 import './RecipesPage.css';
 
