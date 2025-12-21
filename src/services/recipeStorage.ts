@@ -179,8 +179,15 @@ export async function getUserGeolocation(): Promise<GeoLocation | null> {
   }
 
   return new Promise((resolve) => {
+    // Set a timeout to prevent hanging
+    const timeoutId = setTimeout(() => {
+      console.log('📍 Geolocation request timed out');
+      resolve(null);
+    }, 5000); // 5 second timeout
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        clearTimeout(timeoutId);
         const geo: GeoLocation = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -195,6 +202,7 @@ export async function getUserGeolocation(): Promise<GeoLocation | null> {
         resolve(geo);
       },
       (error) => {
+        clearTimeout(timeoutId);
         console.log('📍 Geolocation denied or failed:', error.message);
         resolve(null);
       },
@@ -249,54 +257,72 @@ export async function uploadImagesToStorage(
   }
 
   console.log(`📤 Uploading ${base64Images.length} image(s) to Firebase Storage...`);
-  const storage = getStorage();
-  const uploadPromises = base64Images.map(async (base64, index) => {
-    try {
-      // Generate unique filename
-      const timestamp = Date.now();
-      const fileName = `pantry-${userId}-${timestamp}-${index}.jpg`;
-      const storagePath = `pantry-photos/${userId}/${fileName}`;
-      
-      // Create storage reference
-      const storageRef = ref(storage, storagePath);
-      
-      // Upload base64 string
-      const uploadResult: UploadResult = await uploadString(
-        storageRef, 
-        base64, 
-        'data_url'
-      );
-      
-      // Get download URL
-      const downloadUrl = await getDownloadURL(uploadResult.ref);
-      
-      // Extract file size and mime type from base64
-      const sizeMatch = base64.match(/^data:([^;]+);base64,(.+)$/);
-      const mimeType = sizeMatch ? sizeMatch[1] : 'image/jpeg';
-      const base64Data = sizeMatch ? sizeMatch[2] : '';
-      const size = Math.round((base64Data.length * 3) / 4); // Approximate size
-      
-      const uploadedImage: UploadedImage = {
-        storagePath,
-        downloadUrl,
-        fileName,
-        uploadedAt: Timestamp.now(),
-        size,
-        mimeType
-      };
-      
-      console.log(`✅ Image uploaded: ${fileName}`);
-      return uploadedImage;
-      
-    } catch (error) {
-      console.error(`❌ Failed to upload image ${index}:`, error);
-      throw error;
-    }
-  });
+  
+  try {
+    const storage = getStorage();
+    const uploadPromises = base64Images.map(async (base64, index) => {
+      try {
+        // Generate unique filename
+        const timestamp = Date.now();
+        const fileName = `pantry-${userId}-${timestamp}-${index}.jpg`;
+        const storagePath = `pantry-photos/${userId}/${fileName}`;
+        
+        // Create storage reference
+        const storageRef = ref(storage, storagePath);
+        
+        // Upload base64 string
+        const uploadResult: UploadResult = await uploadString(
+          storageRef, 
+          base64, 
+          'data_url'
+        );
+        
+        // Get download URL
+        const downloadUrl = await getDownloadURL(uploadResult.ref);
+        
+        // Extract file size and mime type from base64
+        const sizeMatch = base64.match(/^data:([^;]+);base64,(.+)$/);
+        const mimeType = sizeMatch ? sizeMatch[1] : 'image/jpeg';
+        const base64Data = sizeMatch ? sizeMatch[2] : '';
+        const size = Math.round((base64Data.length * 3) / 4); // Approximate size
+        
+        const uploadedImage: UploadedImage = {
+          storagePath,
+          downloadUrl,
+          fileName,
+          uploadedAt: Timestamp.now(),
+          size,
+          mimeType
+        };
+        
+        console.log(`✅ Image uploaded: ${fileName}`);
+        return uploadedImage;
+        
+      } catch (error) {
+        console.error(`❌ Failed to upload image ${index}:`, error);
+        // Return null for failed uploads instead of throwing
+        return null;
+      }
+    });
 
-  const results = await Promise.all(uploadPromises);
-  console.log(`✅ All ${results.length} images uploaded successfully`);
-  return results;
+    const results = await Promise.all(uploadPromises);
+    
+    // Filter out failed uploads
+    const successfulUploads = results.filter((r): r is UploadedImage => r !== null);
+    
+    if (successfulUploads.length > 0) {
+      console.log(`✅ ${successfulUploads.length} of ${results.length} images uploaded successfully`);
+    } else {
+      console.warn(`⚠️ All image uploads failed - continuing without images`);
+    }
+    
+    return successfulUploads;
+    
+  } catch (error) {
+    console.error('❌ Image upload service failed:', error);
+    // Return empty array instead of throwing - don't block on storage failure
+    return [];
+  }
 }
 
 // ============================================================================
@@ -343,18 +369,25 @@ export async function saveRecipeGenerationSession(params: {
   
   const db = getDb();
   
-  // Step 1: Upload images to Firebase Storage (if any)
+  // Step 1: Upload images to Firebase Storage (if any) - NON-BLOCKING
   let uploadedImages: UploadedImage[] = [];
   if (params.formData.pantryPhotoUrls && params.formData.pantryPhotoUrls.length > 0) {
     try {
+      console.log('📤 Attempting to upload images to Firebase Storage...');
       uploadedImages = await uploadImagesToStorage(
         params.formData.pantryPhotoUrls,
         params.userId
       );
-      console.log(`✅ ${uploadedImages.length} images uploaded to Storage`);
+      
+      if (uploadedImages.length > 0) {
+        console.log(`✅ ${uploadedImages.length} images uploaded to Storage`);
+      } else {
+        console.warn('⚠️ No images uploaded - Storage may not be configured or CORS issue');
+      }
     } catch (error) {
-      console.error('❌ Image upload failed:', error);
-      // Continue anyway - don't block on image upload failure
+      console.error('❌ Image upload failed - continuing without images:', error);
+      // Don't throw - continue with recipe save even if images fail
+      uploadedImages = [];
     }
   }
   
