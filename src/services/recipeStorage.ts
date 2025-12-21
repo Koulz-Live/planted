@@ -219,6 +219,34 @@ export function geoLocationToGeoPoint(geo: GeoLocation): GeoPoint {
 }
 
 // ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+/**
+ * Remove undefined values from an object (Firestore doesn't support undefined)
+ * @param obj - Object to clean
+ * @returns New object without undefined values
+ */
+export function removeUndefined<T extends Record<string, any>>(obj: T): Partial<T> {
+  const cleaned: any = {};
+  
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === undefined) {
+      continue; // Skip undefined values
+    }
+    
+    if (value && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Timestamp) && !(value instanceof GeoPoint)) {
+      // Recursively clean nested objects
+      cleaned[key] = removeUndefined(value);
+    } else {
+      cleaned[key] = value;
+    }
+  }
+  
+  return cleaned;
+}
+
+// ============================================================================
 // DEVICE & BROWSER INFO
 // ============================================================================
 
@@ -394,11 +422,14 @@ export async function saveRecipeGenerationSession(params: {
     errorMessage: params.errorMessage
   };
   
-  // Step 6: Save to Firestore
-  const sessionRef = await addDoc(collection(db, 'recipe-sessions'), sessionData);
+  // Step 6: Remove undefined values (Firestore doesn't support them)
+  const cleanedSessionData = removeUndefined(sessionData);
+  
+  // Step 7: Save to Firestore
+  const sessionRef = await addDoc(collection(db, 'recipe-sessions'), cleanedSessionData);
   console.log(`✅ Session saved to Firestore: ${sessionRef.id}`);
   
-  // Step 7: Save individual recipes for easier querying
+  // Step 8: Save individual recipes for easier querying
   const individualRecipeSaves = params.recipes.map(async (recipe) => {
     const individualRecipe: IndividualRecipe = {
       userId: params.userId,
@@ -423,7 +454,9 @@ export async function saveRecipeGenerationSession(params: {
       ].filter(Boolean)
     };
     
-    return addDoc(collection(db, 'recipes'), individualRecipe);
+    // Clean undefined values before saving
+    const cleanedRecipe = removeUndefined(individualRecipe);
+    return addDoc(collection(db, 'recipes'), cleanedRecipe);
   });
   
   await Promise.all(individualRecipeSaves);
