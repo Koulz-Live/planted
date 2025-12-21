@@ -3,6 +3,13 @@ import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } 
 import { getDb } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
 import { Icon, type IconName } from '../components/Icon';
+import { 
+  saveRecipeGenerationSession, 
+  quickSaveRecipeSession,
+  type Recipe as StorageRecipe,
+  type AnalyzedIngredients,
+  type RecipeFormData as StorageFormData
+} from '../services/recipeStorage';
 import './RecipesPage.css';
 
 interface RecipeFormData {
@@ -494,50 +501,49 @@ export default function RecipesPage() {
         
         setRecipes(recipesArray);
 
-        // Save to Firebase Firestore (optional - don't block on failure)
+        // Save to Firebase with comprehensive data (images, geolocation, metadata)
         try {
-          const db = getDb();
+          console.log('💾 Saving to Firestore with comprehensive data...');
           
-          // Save the recipe generation session
-          const sessionDoc = await addDoc(collection(db, 'recipes'), {
-            userId: 'demo-user',
-            formData: formData,
-            recipes: recipesArray,
-            timestamp: Timestamp.now(),
-            type: 'generation-session'
-          });
+          // Prepare analyzed ingredients data if vision was used
+          let analyzedIngredients: AnalyzedIngredients | undefined;
+          if (result.metadata?.visionAnalysis) {
+            analyzedIngredients = {
+              raw: result.metadata.visionAnalysis.raw || '',
+              parsed: result.metadata.visionAnalysis.parsed || ingredients,
+              detectionConfidence: result.metadata.visionAnalysis.confidence,
+              visionModel: result.metadata.visionAnalysis.model || 'gpt-4o',
+              analysisTimestamp: Timestamp.now(),
+              analysisDurationMs: result.metadata.visionAnalysis.durationMs,
+              fallbackUsed: result.metadata.visionAnalysis.fallbackUsed || false,
+              errorMessage: result.metadata.visionAnalysis.error
+            };
+          } else if (ingredients.length === 0 && formData.pantryPhotoUrls.length > 0) {
+            // Photos were used but no vision metadata returned - assume fallback
+            analyzedIngredients = {
+              raw: 'seasonal vegetables, pantry staples, fresh herbs',
+              parsed: ['seasonal vegetables', 'pantry staples', 'fresh herbs'],
+              visionModel: 'gpt-4o',
+              analysisTimestamp: Timestamp.now(),
+              fallbackUsed: true
+            };
+          }
           
-          console.log('✅ Recipe session saved to Firebase:', sessionDoc.id);
+          // Use the new comprehensive storage service
+          const sessionRef = await quickSaveRecipeSession(
+            'demo-user',
+            formData,
+            recipesArray,
+            analyzedIngredients
+          );
+          
+          console.log(`✅ Session saved with comprehensive data: ${sessionRef.id}`);
+          console.log('📦 Saved: Images, geolocation, device info, vision analysis');
 
-          // Save each individual recipe for easier querying
-          const savePromises = recipesArray.map(async (recipe) => {
-            return addDoc(collection(db, 'user-recipes'), {
-              userId: 'demo-user',
-              sessionId: sessionDoc.id,
-              recipe: recipe,
-              formData: {
-                dietaryNeeds: formData.dietaryNeeds,
-                culturalPreferences: formData.culturalPreferences,
-                season: formData.season
-              },
-              timestamp: Timestamp.now(),
-              isFavorite: false,
-              tags: [
-                ...formData.dietaryNeeds,
-                ...formData.culturalPreferences,
-                formData.season
-              ].filter(Boolean)
-            });
-          });
-
-          await Promise.all(savePromises);
-          console.log(`✅ ${recipesArray.length} individual recipes saved to Firebase`);
-
-          // Update history from Firestore
+          // Update history from new recipe-sessions collection
           const q = query(
-            collection(db, 'recipes'),
+            collection(getDb(), 'recipe-sessions'),
             where('userId', '==', 'demo-user'),
-            where('type', '==', 'generation-session'),
             orderBy('timestamp', 'desc'),
             limit(5)
           );
@@ -546,7 +552,7 @@ export default function RecipesPage() {
             const data = doc.data();
             return {
               id: doc.id,
-              title: data.recipes?.[0]?.title || 'Recipe',
+              title: data.recipes?.[0]?.title || data.spotlightRecipe?.title || 'Recipe',
               timestamp: data.timestamp.toDate()
             };
           });

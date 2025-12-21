@@ -2,6 +2,7 @@
 import { initializeApp, FirebaseApp } from "firebase/app";
 import { Analytics, getAnalytics } from "firebase/analytics";
 import { Firestore, getFirestore } from "firebase/firestore";
+import { FirebaseStorage, getStorage as getFirebaseStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,6 +22,7 @@ const isFirebaseConfigured = firebaseConfig.projectId && firebaseConfig.apiKey &
 let app: FirebaseApp | undefined;
 let analytics: Analytics | undefined;
 let db: Firestore | undefined;
+let storage: FirebaseStorage | undefined;
 
 if (isFirebaseConfigured) {
   try {
@@ -34,7 +36,10 @@ if (isFirebaseConfigured) {
     // Initialize Firestore
     db = getFirestore(app);
     
-    console.log('✅ Firebase initialized successfully');
+    // Initialize Firebase Storage
+    storage = getFirebaseStorage(app);
+    
+    console.log('✅ Firebase initialized successfully (Firestore + Storage)');
   } catch (error) {
     console.warn('⚠️ Firebase initialization failed:', error);
   }
@@ -50,4 +55,12 @@ export function getDb(): Firestore {
   return db;
 }
 
-export { app, analytics, db, isFirebaseConfigured };
+// Helper function to get storage or throw error
+export function getStorage(): FirebaseStorage {
+  if (!storage) {
+    throw new Error('Firebase Storage is not configured.');
+  }
+  return storage;
+}
+
+export { app, analytics, db, storage, isFirebaseConfigured };

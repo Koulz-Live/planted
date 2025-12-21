@@ -61,6 +61,9 @@ export default async function handler(req, res) {
     
     const openaiKey = process.env.OPENAI_API_KEY;
     
+    // Track vision analysis metadata
+    let visionAnalysisMetadata = null;
+    
     if (!hasIngredients && hasPhotos) {
       console.log('📸 Analyzing pantry photos to extract ingredients...');
       
@@ -74,20 +77,58 @@ export default async function handler(req, res) {
           'garlic',
           'onions'
         ];
+        visionAnalysisMetadata = {
+          fallbackUsed: true,
+          error: 'OpenAI API key not configured',
+          parsed: ingredientsToUse
+        };
       } else {
         // Use OpenAI Vision to analyze pantry photos
+        const visionStartTime = Date.now();
         try {
           const analyzedIngredients = await analyzePantryPhotos(pantryPhotoUrls, openaiKey);
+          const visionDuration = Date.now() - visionStartTime;
+          
           if (analyzedIngredients && analyzedIngredients.length > 0) {
             ingredientsToUse = analyzedIngredients;
             console.log('✅ Extracted ingredients from photos:', ingredientsToUse);
+            
+            visionAnalysisMetadata = {
+              model: 'gpt-4o',
+              raw: analyzedIngredients.join(', '),
+              parsed: analyzedIngredients,
+              confidence: analyzedIngredients.length > 3 ? 'high' : 'medium',
+              durationMs: visionDuration,
+              fallbackUsed: false
+            };
           } else {
             console.warn('⚠️ No ingredients detected - using generic fallback');
             ingredientsToUse = ['seasonal vegetables', 'pantry staples', 'fresh herbs'];
+            
+            visionAnalysisMetadata = {
+              model: 'gpt-4o',
+              raw: 'no ingredients visible',
+              parsed: ingredientsToUse,
+              confidence: 'low',
+              durationMs: visionDuration,
+              fallbackUsed: true,
+              error: 'No ingredients detected in photos'
+            };
           }
         } catch (error) {
+          const visionDuration = Date.now() - visionStartTime;
           console.error('❌ Photo analysis failed:', error.message);
           ingredientsToUse = ['seasonal vegetables', 'pantry staples', 'fresh herbs'];
+          
+          visionAnalysisMetadata = {
+            model: 'gpt-4o',
+            raw: error.message,
+            parsed: ingredientsToUse,
+            confidence: 'low',
+            durationMs: visionDuration,
+            fallbackUsed: true,
+            error: error.message
+          };
         }
       }
     }
@@ -183,7 +224,13 @@ Your recipes honor food traditions, minimize waste, celebrate biodiversity, and 
     console.log('✅ Returning AI-generated recipes');
     res.status(200).json({
       ok: true,
-      data: recipes
+      data: recipes,
+      metadata: {
+        visionAnalysis: visionAnalysisMetadata,
+        ingredientsUsed: ingredientsToUse,
+        photosProvided: hasPhotos ? pantryPhotoUrls.length : 0,
+        textIngredientsProvided: hasIngredients
+      }
     });
 
   } catch (error) {
