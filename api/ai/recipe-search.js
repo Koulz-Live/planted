@@ -49,7 +49,7 @@ export default async function handler(req, res) {
 
     const startTime = Date.now();
 
-    // Use OpenAI with web search to find recipes
+    // Use OpenAI to generate recipes based on knowledge
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -63,44 +63,42 @@ export default async function handler(req, res) {
             role: 'system',
             content: `You are an expert food recipe researcher with deep knowledge of global cuisines, cooking techniques, and recipe databases.
 
-Your task is to search the web for high-quality recipes based on user queries and return ONLY a valid JSON array of recipes.
+Your task is to generate high-quality recipes based on user queries and return them as valid JSON.
 
-IMPORTANT: Return ONLY the JSON array, no additional text, explanation, or markdown formatting.
-
-Each recipe must have this exact structure:
+Return a JSON object with this exact structure:
 {
-  "title": "Recipe Name",
-  "description": "Brief appetizing description (1-2 sentences)",
-  "ingredients": ["ingredient 1", "ingredient 2", "..."],
-  "instructions": ["step 1", "step 2", "..."],
-  "prepTime": "X min",
-  "cookTime": "X min",
-  "servings": "X",
-  "category": "Main Course/Appetizer/Dessert/etc",
-  "imageUrl": "https://...",
-  "source": "Website or cookbook name"
+  "recipes": [
+    {
+      "title": "Recipe Name",
+      "description": "Brief appetizing description (1-2 sentences)",
+      "ingredients": ["ingredient 1 with measurement", "ingredient 2 with measurement"],
+      "instructions": ["detailed step 1", "detailed step 2"],
+      "prepTime": "X mins",
+      "cookTime": "X mins",
+      "servings": "X servings",
+      "category": "Main Course/Appetizer/Dessert/etc",
+      "source": "Traditional/Modern/Fusion/etc"
+    }
+  ]
 }
 
 Requirements:
-- Find ${maxResults} diverse, high-quality recipes
-- Include recipes from reputable cooking websites
-- Ensure all fields are filled
-- Include real, working image URLs
+- Create ${maxResults} diverse, high-quality recipes
+- Base recipes on real, traditional cooking techniques
+- Ensure all fields are filled with realistic values
 - Make descriptions appetizing and engaging
-- List ingredients clearly and completely
-- Provide step-by-step instructions
-- Return ONLY valid JSON array, no markdown, no explanations`
+- List ingredients with clear measurements
+- Provide detailed step-by-step instructions
+- Use authentic recipe techniques and flavors`
           },
           {
             role: 'user',
-            content: `Search for recipes: "${searchQuery}". Return ${maxResults} recipes as a JSON array.`
+            content: `Create ${maxResults} delicious recipes for: "${searchQuery}".`
           }
         ],
-        tools: [
-          { type: 'web_search' }
-        ],
-        temperature: 0.7,
-        max_tokens: 4000
+        temperature: 0.8,
+        max_tokens: 4000,
+        response_format: { type: "json_object" }
       })
     });
 
@@ -128,11 +126,16 @@ Requirements:
     // Parse recipes
     let recipes = [];
     try {
-      recipes = JSON.parse(content);
+      const parsed = JSON.parse(content);
       
-      if (!Array.isArray(recipes)) {
-        console.warn('⚠️ Response is not an array, wrapping it');
-        recipes = [recipes];
+      // Handle different response formats
+      if (Array.isArray(parsed)) {
+        recipes = parsed;
+      } else if (parsed.recipes && Array.isArray(parsed.recipes)) {
+        recipes = parsed.recipes;
+      } else if (typeof parsed === 'object') {
+        // If it's a single recipe object, wrap it
+        recipes = [parsed];
       }
 
       // Validate and clean recipes
