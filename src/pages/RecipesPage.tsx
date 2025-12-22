@@ -3,6 +3,7 @@ import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp } 
 import { getDb } from '../lib/firebase';
 import { ImageUpload } from '../components/ImageUpload';
 import { Icon, type IconName } from '../components/Icon';
+import RecipeImageCarousel from '../components/RecipeImageCarousel';
 import { 
   quickSaveRecipeSession,
   type AnalyzedIngredients
@@ -28,6 +29,7 @@ interface Recipe {
   culturalNotes?: string;
   nutritionHighlights?: string[];
   imageUrl?: string;
+  images?: string[];  // Array of 4 web-searched images
   category?: string;
 }
 
@@ -498,6 +500,41 @@ export default function RecipesPage() {
         
         setRecipes(recipesArray);
 
+        // Fetch web search images for each recipe
+        console.log('🖼️  Fetching images for recipes...');
+        const recipesWithImages = await Promise.all(
+          recipesArray.map(async (recipe) => {
+            try {
+              const imageResponse = await fetch('/api/ai/recipe-images', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  recipeTitle: recipe.title,
+                  recipeDescription: recipe.description
+                })
+              });
+
+              if (imageResponse.ok) {
+                const imageData = await imageResponse.json();
+                if (imageData.ok && imageData.images?.length > 0) {
+                  console.log(`✅ Fetched ${imageData.images.length} images for "${recipe.title}"`);
+                  return { ...recipe, images: imageData.images };
+                }
+              }
+              
+              console.warn(`⚠️ Failed to fetch images for "${recipe.title}"`);
+              return recipe;
+            } catch (error) {
+              console.error(`❌ Error fetching images for "${recipe.title}":`, error);
+              return recipe;
+            }
+          })
+        );
+
+        // Update recipes with images
+        setRecipes(recipesWithImages);
+        console.log('✅ All recipe images loaded');
+
         // Save to Firebase with comprehensive data (images, geolocation, metadata)
         try {
           console.log('💾 Saving to Firestore with comprehensive data...');
@@ -855,6 +892,14 @@ export default function RecipesPage() {
                           </div>
                           
                           <p className="card-text small text-muted mb-2">{recipe.description}</p>
+                          
+                          {/* Recipe Images Carousel */}
+                          {recipe.images && recipe.images.length > 0 && (
+                            <RecipeImageCarousel 
+                              images={recipe.images} 
+                              recipeName={recipe.title} 
+                            />
+                          )}
                           
                           {/* Quick Info */}
                           <div className="d-flex flex-wrap gap-2 mb-2 small">

@@ -100,6 +100,7 @@ export interface Recipe {
   tips?: string[];
   tags?: string[];
   imageUrl?: string;
+  images?: string[];                // Array of 4 web-searched images for carousel
 }
 
 export interface RecipeGenerationSession {
