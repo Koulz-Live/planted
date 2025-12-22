@@ -31,6 +31,7 @@ interface Recipe {
   imageUrl?: string;
   images?: string[];  // Array of 4 web-searched images
   category?: string;
+  source?: string;    // Source URL or reference for the recipe
 }
 
 interface RecipeRequest {
@@ -227,6 +228,12 @@ export default function RecipesPage() {
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<Array<{ id: string; title: string; timestamp: Date; }>>([]);
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
+  
+  // Recipe Search State (Gallery Tab)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchResults, setSearchResults] = useState<Recipe[]>([]);
+  const [searchError, setSearchError] = useState<string | null>(null);
   
   // Recipe Request State
   const [recipeRequests, setRecipeRequests] = useState<RecipeRequest[]>([]);
@@ -624,6 +631,84 @@ export default function RecipesPage() {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Recipe Search Handler
+  const handleRecipeSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!searchQuery.trim()) {
+      setSearchError('Please enter a search query');
+      return;
+    }
+
+    console.log('🔍 Searching for recipes:', searchQuery);
+    setSearchLoading(true);
+    setSearchError(null);
+    setSearchResults([]);
+
+    try {
+      const response = await fetch('/api/ai/recipe-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          searchQuery: searchQuery.trim(),
+          maxResults: 6
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Search failed with status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('✅ Search response:', result);
+
+      if (result.ok && result.recipes && result.recipes.length > 0) {
+        console.log(`✅ Found ${result.recipes.length} recipes`);
+        setSearchResults(result.recipes);
+        
+        // Fetch images for each recipe
+        console.log('🖼️  Fetching images for search results...');
+        const recipesWithImages = await Promise.all(
+          result.recipes.map(async (recipe: Recipe) => {
+            try {
+              const imageResponse = await fetch('/api/ai/recipe-images', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  recipeTitle: recipe.title,
+                  recipeDescription: recipe.description
+                })
+              });
+
+              if (imageResponse.ok) {
+                const imageData = await imageResponse.json();
+                if (imageData.ok && imageData.images?.length > 0) {
+                  return { ...recipe, images: imageData.images };
+                }
+              }
+              
+              return recipe;
+            } catch (error) {
+              console.error(`Error fetching images for "${recipe.title}":`, error);
+              return recipe;
+            }
+          })
+        );
+
+        setSearchResults(recipesWithImages);
+        console.log('✅ Search results with images ready');
+      } else {
+        setSearchError(result.message || 'No recipes found. Try a different search term.');
+      }
+
+    } catch (error) {
+      console.error('❌ Recipe search error:', error);
+      setSearchError('Failed to search recipes. Please try again.');
+    } finally {
+      setSearchLoading(false);
     }
   };
 
@@ -1030,8 +1115,95 @@ export default function RecipesPage() {
             <h3 className="text-center mb-4">Recipe Inspiration Gallery</h3>
             <p className="text-center text-muted mb-5">Explore our collection of delicious plant-based recipes</p>
             
+            {/* Recipe Search Section */}
+            <div className="search-section mb-5">
+              <h4 className="text-center mb-3">🔍 Search for Recipes</h4>
+              <form onSubmit={handleRecipeSearch} className="search-form">
+                <div className="input-group mb-3">
+                  <input 
+                    type="text"
+                    className="form-control form-control-lg"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search for recipes (e.g., 'Italian pasta', 'vegan desserts', 'quick breakfast')..."
+                    disabled={searchLoading}
+                  />
+                  <button 
+                    className="btn btn-primary btn-lg" 
+                    type="submit" 
+                    disabled={searchLoading || !searchQuery.trim()}
+                  >
+                    {searchLoading ? '🔍 Searching...' : '🔍 Search'}
+                  </button>
+                </div>
+              </form>
+              
+              {searchError && (
+                <div className="alert alert-warning text-center" role="alert">
+                  <strong>⚠️ {searchError}</strong>
+                </div>
+              )}
+              
+              {searchLoading && (
+                <div className="text-center my-4">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Searching for recipes...</span>
+                  </div>
+                  <p className="mt-2 text-muted">Searching for delicious recipes...</p>
+                </div>
+              )}
+            </div>
+            
             <div className="recipe-masonry">
-              {mockGalleryRecipes.map((recipe, index) => (
+              {/* Show search results if available, otherwise show gallery */}
+              {searchResults.length > 0 ? (
+                <>
+                  <div className="col-12 mb-4">
+                    <h5 className="text-center text-success">
+                      ✨ Found {searchResults.length} delicious recipes for "{searchQuery}"
+                    </h5>
+                  </div>
+                  {searchResults.map((recipe, index) => (
+                    <div key={index} className="recipe-masonry-item">
+                      {/* Show image carousel if images are available */}
+                      {recipe.images && recipe.images.length > 0 ? (
+                        <RecipeImageCarousel images={recipe.images} recipeName={recipe.title} />
+                      ) : recipe.imageUrl ? (
+                        <div className="recipe-gallery-image">
+                          <img src={recipe.imageUrl} alt={recipe.title} loading="lazy" />
+                          {recipe.category && (
+                            <span className="recipe-category-badge">{recipe.category}</span>
+                          )}
+                        </div>
+                      ) : null}
+                      <div className="recipe-gallery-content">
+                        <h4>{recipe.title}</h4>
+                        <p className="recipe-gallery-description">{recipe.description}</p>
+                        
+                        {(recipe.prepTime || recipe.cookTime || recipe.servings) && (
+                          <div className="recipe-gallery-meta">
+                            {recipe.prepTime && <span><Icon name="calendar" /> {recipe.prepTime}</span>}
+                            {recipe.cookTime && <span><Icon name="fire" /> {recipe.cookTime}</span>}
+                            {recipe.servings && <span><Icon name="people" /> {recipe.servings}</span>}
+                          </div>
+                        )}
+                        
+                        {recipe.source && (
+                          <p className="text-muted small mt-2">
+                            <Icon name="globe" /> Source: {recipe.source}
+                          </p>
+                        )}
+                        
+                        <button className="btn btn-sm btn-outline-primary mt-2">
+                          View Recipe
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                /* Default gallery recipes */
+                mockGalleryRecipes.map((recipe, index) => (
                 <div key={index} className="recipe-masonry-item">
                   {recipe.imageUrl && (
                     <div className="recipe-gallery-image">
@@ -1058,7 +1230,8 @@ export default function RecipesPage() {
                     </button>
                   </div>
                 </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         )}

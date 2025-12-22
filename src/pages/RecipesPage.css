@@ -672,6 +672,60 @@
   padding: 2rem 1rem;
 }
 
+/* Search Section Styles */
+.search-section {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(255, 245, 235, 0.6), rgba(224, 238, 229, 0.6));
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.search-section h4 {
+  color: var(--accent-dark);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.search-form .input-group {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.search-form .form-control {
+  border: 2px solid rgba(52, 132, 99, 0.2);
+  border-right: none;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+}
+
+.search-form .form-control:focus {
+  border-color: var(--accent-primary);
+  box-shadow: none;
+}
+
+.search-form .btn {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border: 2px solid var(--accent-primary);
+  background: var(--accent-primary);
+  transition: all 0.3s ease;
+}
+
+.search-form .btn:hover:not(:disabled) {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 132, 99, 0.3);
+}
+
+.search-form .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .recipe-masonry {
   column-count: 3;
   column-gap: 1.5rem;
