@@ -244,6 +244,9 @@ export default function RecipesPage() {
     dietaryRestrictions: [] as string[]
   });
 
+  // Expanded recipe modal state (gallery tab)
+  const [expandedRecipeIndex, setExpandedRecipeIndex] = useState<number | null>(null);
+
   // Load history from Firestore
   useEffect(() => {
     const loadHistory = async () => {
@@ -1166,16 +1169,8 @@ export default function RecipesPage() {
                   {searchResults.map((recipe, index) => (
                     <div key={index} className="recipe-masonry-item">
                       {/* Show image carousel if images are available */}
-                      {recipe.images && recipe.images.length > 0 ? (
-                        <RecipeImageCarousel images={recipe.images} recipeName={recipe.title} />
-                      ) : recipe.imageUrl ? (
-                        <div className="recipe-gallery-image">
-                          <img src={recipe.imageUrl} alt={recipe.title} loading="lazy" />
-                          {recipe.category && (
-                            <span className="recipe-category-badge">{recipe.category}</span>
-                          )}
-                        </div>
-                      ) : null}
+                      {/* Always show carousel for search results, fallback handled inside */}
+                      <RecipeImageCarousel images={recipe.images || []} recipeName={recipe.title} />
                       <div className="recipe-gallery-content">
                         <h4>{recipe.title}</h4>
                         <p className="recipe-gallery-description">{recipe.description}</p>
@@ -1194,7 +1189,10 @@ export default function RecipesPage() {
                           </p>
                         )}
                         
-                        <button className="btn btn-sm btn-outline-primary mt-2">
+                        <button
+                          className="btn btn-sm btn-outline-primary mt-2"
+                          onClick={() => setExpandedRecipeIndex(index)}
+                        >
                           View Recipe
                         </button>
                       </div>
@@ -1385,6 +1383,39 @@ export default function RecipesPage() {
           </div>
         )}
       </div>
+
+      {/* Modal for expanded recipe */}
+      {expandedRecipeIndex !== null && searchResults[expandedRecipeIndex] && (
+        <div className="modal show" tabIndex={-1} style={{ display: 'block', background: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-lg modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">{searchResults[expandedRecipeIndex].title}</h5>
+                <button type="button" className="btn-close" aria-label="Close" onClick={() => setExpandedRecipeIndex(null)}></button>
+              </div>
+              <div className="modal-body">
+                <h6>Ingredients</h6>
+                <ul>
+                  {searchResults[expandedRecipeIndex].ingredients?.map((ing, i) => (
+                    <li key={i}>{ing}</li>
+                  ))}
+                </ul>
+                <h6>Instructions</h6>
+                <ol>
+                  {searchResults[expandedRecipeIndex].instructions?.map((step, i) => (
+                    <li key={i}>{step}</li>
+                  ))}
+                </ol>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setExpandedRecipeIndex(null)}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

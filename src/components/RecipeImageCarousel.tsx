@@ -17,10 +17,16 @@ export default function RecipeImageCarousel({ images, recipeName }: RecipeImageC
   const validImages = images.filter((_, index) => !imageErrors[index]);
 
   if (validImages.length === 0) {
+    // Fallback: show a static food image
     return (
       <div className="recipe-image-placeholder">
+        <img
+          src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80"
+          alt="Fallback food"
+          style={{ width: '100%', borderRadius: 8, marginBottom: 8 }}
+        />
         <span>🍽️</span>
-        <p>No images available</p>
+        <p>No images available (fallback shown)</p>
       </div>
     );
   }
