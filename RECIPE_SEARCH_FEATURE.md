@@ -274,6 +274,25 @@ Beautiful recipe cards displayed
 4. Monitor API usage and costs
 5. Set up error tracking (optional)
 
+### Image providers and fallback keys
+
+The endpoint `POST /api/ai/recipe-images` returns 4 image URLs per recipe.
+
+It tries providers in this order:
+
+1. **Unsplash Source** (free, no key required)
+2. **Pexels** (optional, requires `PEXELS_API_KEY`)
+3. **Pixabay** (optional, requires `PIXABAY_API_KEY`)
+
+If you want a more reliable fallback (especially if Unsplash returns unusable redirects), configure one or both keys.
+
+**Environment variables**:
+
+- `PEXELS_API_KEY` — create a key in the Pexels dashboard
+- `PIXABAY_API_KEY` — create a key in the Pixabay dashboard
+
+These are read server-side only.
+
 ## Files Modified
 
 - ✅ `api/ai/recipe-search.js` - NEW (201 lines)
