@@ -233,6 +233,7 @@ export default function RecipesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResults, setSearchResults] = useState<Recipe[]>([]);
+  const [imagesLoading, setImagesLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
   
   // Recipe Request State
@@ -508,8 +509,8 @@ export default function RecipesPage() {
           });
         }
         
-        setRecipes(recipesArray);
-
+        // Set loading state for images
+        setImagesLoading(true);
         // Fetch web search images for each recipe
         console.log('🖼️  Fetching images for recipes...');
         const recipesWithImages = await Promise.all(
@@ -531,18 +532,16 @@ export default function RecipesPage() {
                   return { ...recipe, images: imageData.images };
                 }
               }
-              
               console.warn(`⚠️ Failed to fetch images for "${recipe.title}"`);
-              return recipe;
+              return { ...recipe, images: [] };
             } catch (error) {
               console.error(`❌ Error fetching images for "${recipe.title}":`, error);
-              return recipe;
+              return { ...recipe, images: [] };
             }
           })
         );
-
-        // Update recipes with images
         setRecipes(recipesWithImages);
+        setImagesLoading(false);
         console.log('✅ All recipe images loaded');
 
         // Save to Firebase with comprehensive data (images, geolocation, metadata)
@@ -1168,9 +1167,14 @@ export default function RecipesPage() {
                   </div>
                   {searchResults.map((recipe, index) => (
                     <div key={index} className="recipe-masonry-item">
-                      {/* Show image carousel if images are available */}
-                      {/* Always show carousel for search results, fallback handled inside */}
-                      <RecipeImageCarousel images={recipe.images || []} recipeName={recipe.title} />
+                      {/* Show loading indicator while images are loading */}
+                      {imagesLoading ? (
+                        <div className="recipe-image-placeholder">
+                          <span>Loading images...</span>
+                        </div>
+                      ) : (
+                        <RecipeImageCarousel images={recipe.images || []} recipeName={recipe.title} />
+                      )}
                       <div className="recipe-gallery-content">
                         <h4>{recipe.title}</h4>
                         <p className="recipe-gallery-description">{recipe.description}</p>
