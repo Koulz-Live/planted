@@ -72,6 +72,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     fileInputRef.current?.click();
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleBrowseClick();
+    }
+  };
+
   return (
     <div className="image-upload">
       <input
@@ -81,6 +88,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         multiple
         onChange={handleFileSelect}
         style={{ display: 'none' }}
+        aria-label="Upload images"
       />
 
       {images.length < maxImages && (
@@ -89,8 +97,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
+          role="button"
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+          onClick={handleBrowseClick}
+          aria-label={`Upload images. ${maxImages - images.length} slot${maxImages - images.length !== 1 ? 's' : ''} remaining`}
         >
-          <span>
+          <span aria-hidden="true">
             {helperText}
             <br />
             {maxImages - images.length} slot{maxImages - images.length !== 1 ? 's' : ''} remaining
@@ -98,7 +111,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           <button
             type="button"
             className="pc-badge-secondary"
-            onClick={handleBrowseClick}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleBrowseClick();
+            }}
+            aria-label="Browse files to upload"
           >
             Browse files
           </button>
@@ -106,15 +123,15 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       )}
 
       {images.length > 0 && (
-        <div className="image-preview-grid">
+        <div className="image-preview-grid" role="list" aria-label="Uploaded images">
           {images.map((url, index) => (
-            <div key={index} className="image-preview-item">
-              <img src={url} alt={`Upload ${index + 1}`} />
+            <div key={index} className="image-preview-item" role="listitem">
+              <img src={url} alt={`Uploaded image ${index + 1} of ${images.length}`} />
               <button
                 type="button"
                 className="image-remove-btn"
                 onClick={() => handleRemoveImage(index)}
-                aria-label="Remove image"
+                aria-label={`Remove image ${index + 1}`}
               >
                 ×
               </button>
@@ -136,6 +153,17 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           font-size: 0.8rem;
           color: var(--text-muted);
           transition: all 0.2s ease;
+          cursor: pointer;
+        }
+
+        .pc-upload-box:hover {
+          border-color: var(--accent);
+          background: var(--accent-soft);
+        }
+
+        .pc-upload-box:focus {
+          outline: 2px solid var(--accent);
+          outline-offset: 2px;
         }
 
         .pc-upload-box.dragging {
@@ -163,6 +191,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           border-color: var(--accent);
           transform: none;
           box-shadow: none;
+        }
+
+        .pc-badge-secondary:focus {
+          outline: 2px solid var(--accent);
+          outline-offset: 2px;
         }
 
         .image-preview-grid {
@@ -210,6 +243,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           background: var(--danger);
           color: white;
           transform: scale(1.1);
+        }
+
+        .image-remove-btn:focus {
+          outline: 2px solid var(--danger);
+          outline-offset: 2px;
         }
       `}</style>
     </div>

@@ -99,6 +99,8 @@ export default function HomePage() {
           backgroundPosition: 'center',
           color: 'white'
         }}
+        role="banner"
+        aria-label="Hero section"
       >
         <div className="col-lg-6 px-0">
           <h1 className="display-4 fst-italic text-white">Growing Together for a Sustainable Future</h1>
@@ -107,7 +109,7 @@ export default function HomePage() {
             working toward food security, environmental health, and peace through conscious living.
           </p>
           <p className="lead mb-0">
-            <Link to="/learning" className="text-white fw-bold text-decoration-none" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}}>
+            <Link to="/learning" className="text-white fw-bold text-decoration-none" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.8)'}} aria-label="Start learning about sustainable practices">
               Start learning →
             </Link>
           </p>
@@ -115,7 +117,7 @@ export default function HomePage() {
       </div>
 
       {/* Featured Cards Grid */}
-      <div className="row mb-2">
+      <div className="row mb-2" role="region" aria-label="Featured content">
         <div className="col-md-6">
           <div className="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div className="col p-4 d-flex flex-column position-static">
@@ -126,15 +128,15 @@ export default function HomePage() {
                 Generate culturally-respectful, nutritious recipes based on your dietary needs, 
                 available ingredients, and preferences.
               </p>
-              <Link to="/recipes" className="icon-link gap-1 icon-link-hover stretched-link text-decoration-none">
+              <Link to="/recipes" className="icon-link gap-1 icon-link-hover stretched-link text-decoration-none" aria-label="Explore recipes">
                 Explore Recipes
-                <svg className="bi" width="16" height="16" fill="currentColor">
+                <svg className="bi" width="16" height="16" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                 </svg>
               </Link>
             </div>
             <div className="col-auto d-none d-lg-block">
-              <div className="bd-placeholder-img" style={{width: '200px', height: '250px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '3rem'}}>
+              <div className="bd-placeholder-img" style={{width: '200px', height: '250px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '3rem'}} role="img" aria-label="Recipe icon">
                 🥗
               </div>
             </div>
@@ -151,15 +153,15 @@ export default function HomePage() {
                 Interactive learning paths covering nutrition, culture, sustainability, and global 
                 cuisine with progress tracking and ethical focus.
               </p>
-              <Link to="/learning" className="icon-link gap-1 icon-link-hover stretched-link text-decoration-none">
+              <Link to="/learning" className="icon-link gap-1 icon-link-hover stretched-link text-decoration-none" aria-label="Start learning">
                 Start Learning
-                <svg className="bi" width="16" height="16" fill="currentColor">
+                <svg className="bi" width="16" height="16" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                 </svg>
               </Link>
             </div>
             <div className="col-auto d-none d-lg-block">
-              <div className="bd-placeholder-img" style={{width: '200px', height: '250px', background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '3rem'}}>
+              <div className="bd-placeholder-img" style={{width: '200px', height: '250px', background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '3rem'}} role="img" aria-label="Learning icon">
                 📚
               </div>
             </div>
@@ -170,26 +172,27 @@ export default function HomePage() {
       {/* Main Content Grid */}
       <div className="row g-5">
         <div className="col-12 col-xl-12">
-          <section className="services-section mb-5">
+          <section className="services-section mb-5" aria-label="Our services">
             <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
               <div className="services-header">| Services |</div>
-              <Link to="/learning" className="services-link text-decoration-none">
+              <Link to="/learning" className="services-link text-decoration-none" aria-label="View all services">
                 See more services
               </Link>
             </div>
-            <div className="services-accordion mt-3">
+            <div className="services-accordion mt-3" role="list">
               {featuredServices.map((service) => (
-                <div className="services-panel" key={service.title.join('-')}>
+                <div className="services-panel" key={service.title.join('-')} role="listitem">
                   <Link
                     to={service.route}
                     className="service-card text-white text-decoration-none"
                     style={{ backgroundImage: `url(${service.image})` }}
+                    aria-label={`${service.title.join(' ')} - ${service.description}`}
                   >
                     <div className="service-card-body">
                       <div className="d-flex justify-content-between align-items-start mb-4">
-                        <div className="service-tags">
+                        <div className="service-tags" role="list" aria-label="Service tags">
                           {service.tags.map((tag) => (
-                            <span className="service-tag" key={`${service.route}-${tag}`}>
+                            <span className="service-tag" key={`${service.route}-${tag}`} role="listitem">
                               {tag}
                             </span>
                           ))}

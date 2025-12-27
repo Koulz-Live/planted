@@ -739,15 +739,18 @@ export default function RecipesPage() {
 
       {/* Tabs Navigation */}
       <div className="recipe-tabs-container mb-4">
-        <ul className="nav nav-tabs recipe-tabs" role="tablist">
+        <ul className="nav nav-tabs recipe-tabs" role="tablist" aria-label="Recipe section tabs">
           <li className="nav-item" role="presentation">
             <button 
               className={`nav-link ${activeTab === 'generate' ? 'active' : ''}`}
               onClick={() => setActiveTab('generate')}
               type="button"
               role="tab"
+              aria-selected={activeTab === 'generate'}
+              aria-controls="generate-panel"
+              id="generate-tab"
             >
-              <Icon name="dish" className="icon-inline me-2" />
+              <Icon name="dish" className="icon-inline me-2" aria-hidden="true" />
               Generate Recipes
             </button>
           </li>
@@ -757,8 +760,11 @@ export default function RecipesPage() {
               onClick={() => setActiveTab('gallery')}
               type="button"
               role="tab"
+              aria-selected={activeTab === 'gallery'}
+              aria-controls="gallery-panel"
+              id="gallery-tab"
             >
-              <Icon name="basket" className="icon-inline me-2" />
+              <Icon name="basket" className="icon-inline me-2" aria-hidden="true" />
               Recipe Gallery
             </button>
           </li>
@@ -768,8 +774,11 @@ export default function RecipesPage() {
               onClick={() => setActiveTab('requests')}
               type="button"
               role="tab"
+              aria-selected={activeTab === 'requests'}
+              aria-controls="requests-panel"
+              id="requests-tab"
             >
-              <Icon name="lightbulb" className="icon-inline me-2" />
+              <Icon name="lightbulb" className="icon-inline me-2" aria-hidden="true" />
               Recipe Requests
             </button>
           </li>
@@ -780,7 +789,7 @@ export default function RecipesPage() {
       <div className="tab-content">
         {/* Generate Tab - Using original layout */}
         {activeTab === 'generate' && (
-          <div className="row g-5">
+          <div className="row g-5" role="tabpanel" id="generate-panel" aria-labelledby="generate-tab">
             {/* Original Generate Recipe Form and Content */}
             <div className="col-md-8">
               <h3 className="pb-4 mb-4 fst-italic border-bottom">
@@ -1113,27 +1122,31 @@ export default function RecipesPage() {
 
         {/* Recipe Gallery Tab - Masonry Layout */}
         {activeTab === 'gallery' && (
-          <div className="recipe-gallery-container">
+          <div className="recipe-gallery-container" role="tabpanel" id="gallery-panel" aria-labelledby="gallery-tab">
             <h3 className="text-center mb-4">Recipe Inspiration Gallery</h3>
             <p className="text-center text-muted mb-5">Explore our collection of delicious plant-based recipes</p>
             
             {/* Recipe Search Section */}
             <div className="search-section mb-5">
               <h4 className="text-center mb-3">🔍 Search for Recipes</h4>
-              <form onSubmit={handleRecipeSearch} className="search-form">
+              <form onSubmit={handleRecipeSearch} className="search-form" role="search">
                 <div className="input-group mb-3">
+                  <label htmlFor="recipe-search-input" className="visually-hidden">Search for recipes</label>
                   <input 
                     type="text"
+                    id="recipe-search-input"
                     className="form-control form-control-lg"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search for recipes (e.g., 'Italian pasta', 'vegan desserts', 'quick breakfast')..."
                     disabled={searchLoading}
+                    aria-label="Search for recipes"
                   />
                   <button 
                     className="btn btn-primary btn-lg" 
                     type="submit" 
                     disabled={searchLoading || !searchQuery.trim()}
+                    aria-label={searchLoading ? 'Searching' : 'Search recipes'}
                   >
                     {searchLoading ? '🔍 Searching...' : '🔍 Search'}
                   </button>
@@ -1240,7 +1253,7 @@ export default function RecipesPage() {
 
         {/* Recipe Requests Tab */}
         {activeTab === 'requests' && (
-          <div className="row g-5">
+          <div className="row g-5" role="tabpanel" id="requests-panel" aria-labelledby="requests-tab">
             <div className="col-md-8">
               <h3 className="pb-4 mb-4 fst-italic border-bottom">
                 Request a Recipe

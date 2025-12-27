@@ -7,8 +7,9 @@ import './App.css';
 function App() {
   return (
     <Router>
+      <a href="#main-content" className="skip-to-main">Skip to main content</a>
       <Navigation />
-      <main className="container">
+      <main id="main-content" className="container">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
