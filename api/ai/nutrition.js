@@ -34,6 +34,13 @@ export default async function handler(req, res) {
       mealPhotoUrls 
     } = req.body;
 
+    console.log('🥗 Nutrition plan request received:', {
+      householdSize,
+      focusAreas,
+      timeAvailablePerDay,
+      mealPhotosCount: mealPhotoUrls?.length || 0
+    });
+
     // Validate required fields
     if (!householdSize || householdSize < 1) {
       return res.status(400).json({ 
@@ -62,12 +69,26 @@ export default async function handler(req, res) {
       });
     }
 
-    // Build comprehensive prompt
+    // Analyze meal photos if provided
+    let mealAnalysis = null;
+    if (mealPhotoUrls && mealPhotoUrls.length > 0) {
+      console.log(`📸 Analyzing ${mealPhotoUrls.length} meal photo(s) with Vision API...`);
+      try {
+        mealAnalysis = await analyzeMealPhotos(mealPhotoUrls, openaiKey, focusAreas);
+        console.log('✅ Meal analysis complete:', mealAnalysis);
+      } catch (visionError) {
+        console.error('⚠️ Vision analysis failed:', visionError.message);
+        // Continue without vision analysis
+      }
+    }
+
+    // Build comprehensive prompt (now includes meal analysis)
     const prompt = buildNutritionPrompt(
       householdSize, 
       focusAreas, 
       timeAvailablePerDay, 
-      mealPhotoUrls
+      mealPhotoUrls,
+      mealAnalysis
     );
 
     // Call OpenAI API with structured output
@@ -177,7 +198,7 @@ Always provide nutrition plans in valid JSON format with these exact fields:
 /**
  * Build comprehensive prompt for nutrition plan generation
  */
-function buildNutritionPrompt(householdSize, focusAreas, timeAvailablePerDay, mealPhotoUrls) {
+function buildNutritionPrompt(householdSize, focusAreas, timeAvailablePerDay, mealPhotoUrls, mealAnalysis) {
   let prompt = `Create a comprehensive plant-based nutrition and meal prep plan for a household of ${householdSize} ${householdSize === 1 ? 'person' : 'people'}.\n\n`;
   
   // Add focus areas
@@ -192,8 +213,12 @@ function buildNutritionPrompt(householdSize, focusAreas, timeAvailablePerDay, me
     prompt += `**Time Available for Meal Prep:** ${timeAvailablePerDay} minutes per day\n\n`;
   }
   
-  // Add meal photo context
-  if (mealPhotoUrls && mealPhotoUrls.length > 0) {
+  // Add meal analysis results if available
+  if (mealAnalysis) {
+    prompt += '**Current Meal Analysis from Photos:**\n';
+    prompt += `${mealAnalysis}\n\n`;
+    prompt += 'Please use this analysis to provide specific recommendations, address nutritional gaps, and build on positive eating habits observed.\n\n';
+  } else if (mealPhotoUrls && mealPhotoUrls.length > 0) {
     prompt += `**Current Meals:** User has provided ${mealPhotoUrls.length} photo(s) of their current meals for reference.\n\n`;
   }
   
@@ -457,4 +482,106 @@ function getFallbackNutritionPlan(householdSize, focusAreas, timeAvailablePerDay
     plans,
     shoppingList
   };
+}
+
+/**
+ * Analyze meal photos using OpenAI Vision API
+ * @param {string[]} photoUrls - Array of meal image URLs to analyze
+ * @param {string} apiKey - OpenAI API key
+ * @param {string[]} focusAreas - Health focus areas for targeted analysis
+ * @returns {Promise<string>} - Detailed nutritional analysis of the meals
+ */
+async function analyzeMealPhotos(photoUrls, apiKey, focusAreas) {
+  if (!photoUrls || photoUrls.length === 0) {
+    return null;
+  }
+
+  console.log(`🔍 Analyzing ${photoUrls.length} meal photo(s) with OpenAI Vision...`);
+
+  try {
+    // Prepare content array with text prompt and images
+    const focusAreasText = focusAreas.join(', ');
+    const content = [
+      {
+        type: 'text',
+        text: `Analyze these meal photos from a nutritional perspective. The person is focusing on: ${focusAreasText}.
+
+Provide a comprehensive nutritional analysis including:
+
+1. **Overall Assessment**: What type of meals are shown (breakfast, lunch, dinner, snacks)?
+2. **Nutritional Strengths**: What's good about these meals? Positive aspects to maintain.
+   - Whole food ingredients
+   - Fiber content
+   - Protein sources
+   - Healthy fats
+   - Variety and colors
+   - Portion sizes
+3. **Nutritional Gaps or Concerns**: What could be improved?
+   - Missing food groups
+   - Excessive processed foods
+   - Sodium/sugar concerns
+   - Lack of vegetables or fruits
+   - Inadequate protein
+   - Imbalanced portions
+4. **Specific Recommendations**: Based on the focus areas (${focusAreasText}), what changes would help?
+   - Foods to add
+   - Foods to reduce
+   - Preparation methods to consider
+   - Timing and frequency
+5. **Meal Pattern Observations**: Any patterns in eating habits visible from these photos?
+
+Be specific, constructive, and evidence-based. Focus on actionable improvements while acknowledging positive choices.
+
+Format your response as a clear, structured analysis that will help create a personalized nutrition plan.`
+      }
+    ];
+
+    // Add each photo as an image input
+    for (const photoUrl of photoUrls) {
+      content.push({
+        type: 'image_url',
+        image_url: {
+          url: photoUrl,
+          detail: 'high' // Use high detail for better nutritional assessment
+        }
+      });
+    }
+
+    // Call OpenAI Vision API (using Chat Completions with gpt-4o)
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o', // gpt-4o supports vision
+        messages: [
+          {
+            role: 'user',
+            content: content
+          }
+        ],
+        max_tokens: 1000,
+        temperature: 0.3 // Lower temperature for more consistent/accurate analysis
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('❌ OpenAI Vision API error:', response.status, error);
+      throw new Error(`Vision API failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const analysisText = data.choices[0]?.message?.content || '';
+    
+    console.log('📸 Vision API meal analysis:', analysisText.substring(0, 200) + '...');
+
+    return analysisText;
+
+  } catch (error) {
+    console.error('❌ Failed to analyze meal photos:', error);
+    throw error;
+  }
 }
