@@ -196,4 +196,45 @@ router.post('/recipe-images', async (req, res) => {
     }
 });
 
+// Plant Detail Generation
+router.post('/plant-detail', async (req, res) => {
+    try {
+        const { plantName, scientificName, type, growthStage, difficulty } = req.body;
+        
+        if (!plantName) {
+            return res.status(400).json({ 
+                ok: false, 
+                message: 'Plant name is required' 
+            });
+        }
+
+        const userId = req.headers['x-user-id'] || 'demo-user';
+        console.log('🌱 Generating detailed care plan for:', plantName);
+
+        // Import the plant-detail handler from root api directory
+        const path = require('path');
+        const apiPath = path.resolve(__dirname, '../../../api/ai/plant-detail.js');
+        const plantDetailHandler = require(apiPath);
+        
+        // Call the Vercel function handler directly
+        const mockReq = { method: 'POST', body: req.body, headers: req.headers };
+        const mockRes = {
+            status: (code) => ({
+                json: (data) => res.status(code).json(data),
+                end: () => res.status(code).end()
+            }),
+            json: (data) => res.json(data),
+            setHeader: () => {},
+            end: () => res.end()
+        };
+        
+        await plantDetailHandler.default(mockReq, mockRes);
+    }
+    catch (error) {
+        console.error('❌ Plant detail error:', error);
+        const payload = { ok: false, message: error.message };
+        res.status(500).json(payload);
+    }
+});
+
 exports.default = router;

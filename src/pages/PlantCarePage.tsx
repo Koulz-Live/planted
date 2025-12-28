@@ -24,7 +24,14 @@ interface PlantCarePlan {
   wateringSchedule: string;
   soilTips: string;
   sunlight: string;
+  temperature?: string;
+  fertilizing?: string;
+  pruning?: string;
+  commonPests?: string;
+  seasonalCare?: string;
+  propagation?: string;
   warnings?: string[];
+  biodiversityTips?: string[];
   nextSteps: string[];
 }
 
@@ -45,6 +52,180 @@ interface PlantIdentification {
   warnings?: string[];
 }
 
+interface GalleryPlant {
+  commonName: string;
+  scientificName: string;
+  type: string;
+  difficulty: 'Easy' | 'Moderate' | 'Advanced';
+  growthStage: GrowthStage;
+  description: string;
+  wateringNeeds: string;
+  sunlightNeeds: string;
+  climateZones: string[];
+  imageUrl: string;
+  benefits?: string[];
+}
+
+// Popular Plants Gallery - Diverse selection for beginners to advanced gardeners
+const mockGalleryPlants: GalleryPlant[] = [
+  {
+    commonName: 'Basil',
+    scientificName: 'Ocimum basilicum',
+    type: 'Culinary Herb',
+    difficulty: 'Easy',
+    growthStage: 'vegetative',
+    description: 'Aromatic herb perfect for cooking, thrives in warm weather and containers',
+    wateringNeeds: 'Regular, keep soil moist',
+    sunlightNeeds: 'Full sun (6-8 hours)',
+    climateZones: ['9-11'],
+    imageUrl: 'https://images.pexels.com/photos/4750270/pexels-photo-4750270.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Pest repellent', 'Companion plant for tomatoes', 'Fresh culinary use']
+  },
+  {
+    commonName: 'Tomato',
+    scientificName: 'Solanum lycopersicum',
+    type: 'Fruiting Vegetable',
+    difficulty: 'Moderate',
+    growthStage: 'fruiting',
+    description: 'Popular garden vegetable producing nutritious fruits throughout summer',
+    wateringNeeds: 'Deep watering 2-3 times per week',
+    sunlightNeeds: 'Full sun (6-8 hours)',
+    climateZones: ['3-11'],
+    imageUrl: 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['High vitamin C', 'Versatile in cuisine', 'Supports biodiversity']
+  },
+  {
+    commonName: 'Lavender',
+    scientificName: 'Lavandula angustifolia',
+    type: 'Perennial Herb',
+    difficulty: 'Easy',
+    growthStage: 'vegetative',
+    description: 'Fragrant Mediterranean herb with purple flowers, drought-tolerant once established',
+    wateringNeeds: 'Low, drought-tolerant',
+    sunlightNeeds: 'Full sun (6+ hours)',
+    climateZones: ['5-9'],
+    imageUrl: 'https://images.pexels.com/photos/1034546/pexels-photo-1034546.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Attracts pollinators', 'Medicinal properties', 'Drought-resistant']
+  },
+  {
+    commonName: 'Monstera Deliciosa',
+    scientificName: 'Monstera deliciosa',
+    type: 'Tropical Houseplant',
+    difficulty: 'Easy',
+    growthStage: 'vegetative',
+    description: 'Popular indoor plant with distinctive split leaves, air-purifying qualities',
+    wateringNeeds: 'Weekly, allow top soil to dry',
+    sunlightNeeds: 'Bright indirect light',
+    climateZones: ['10-11', 'Indoor'],
+    imageUrl: 'https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Air purifying', 'Low maintenance', 'Fast growing']
+  },
+  {
+    commonName: 'Lettuce',
+    scientificName: 'Lactuca sativa',
+    type: 'Leafy Green',
+    difficulty: 'Easy',
+    growthStage: 'vegetative',
+    description: 'Fast-growing salad crop ideal for containers and succession planting',
+    wateringNeeds: 'Frequent, shallow watering',
+    sunlightNeeds: 'Partial shade to full sun',
+    climateZones: ['2-11'],
+    imageUrl: 'https://images.pexels.com/photos/1458694/pexels-photo-1458694.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Quick harvest', 'Succession planting', 'Container-friendly']
+  },
+  {
+    commonName: 'Aloe Vera',
+    scientificName: 'Aloe barbadensis miller',
+    type: 'Succulent',
+    difficulty: 'Easy',
+    growthStage: 'vegetative',
+    description: 'Medicinal succulent with gel-filled leaves, extremely drought-tolerant',
+    wateringNeeds: 'Minimal, every 2-3 weeks',
+    sunlightNeeds: 'Bright indirect light',
+    climateZones: ['9-11', 'Indoor'],
+    imageUrl: 'https://images.pexels.com/photos/4750274/pexels-photo-4750274.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Medicinal gel', 'Drought-tolerant', 'Air purifying']
+  },
+  {
+    commonName: 'Rosemary',
+    scientificName: 'Salvia rosmarinus',
+    type: 'Perennial Herb',
+    difficulty: 'Moderate',
+    growthStage: 'vegetative',
+    description: 'Woody Mediterranean herb with needle-like aromatic leaves, drought-resistant',
+    wateringNeeds: 'Low to moderate',
+    sunlightNeeds: 'Full sun (6-8 hours)',
+    climateZones: ['8-10'],
+    imageUrl: 'https://images.pexels.com/photos/4750269/pexels-photo-4750269.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Culinary use', 'Pest repellent', 'Evergreen']
+  },
+  {
+    commonName: 'Snake Plant',
+    scientificName: 'Dracaena trifasciata',
+    type: 'Succulent Houseplant',
+    difficulty: 'Easy',
+    growthStage: 'vegetative',
+    description: 'Nearly indestructible houseplant with upright striped leaves, excellent air purifier',
+    wateringNeeds: 'Minimal, every 2-4 weeks',
+    sunlightNeeds: 'Low to bright indirect',
+    climateZones: ['9-11', 'Indoor'],
+    imageUrl: 'https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Air purifying', 'Low light tolerant', 'Extremely hardy']
+  },
+  {
+    commonName: 'Marigold',
+    scientificName: 'Tagetes erecta',
+    type: 'Annual Flower',
+    difficulty: 'Easy',
+    growthStage: 'fruiting',
+    description: 'Bright companion flower that repels pests and attracts beneficial insects',
+    wateringNeeds: 'Moderate, regular watering',
+    sunlightNeeds: 'Full sun (6+ hours)',
+    climateZones: ['2-11'],
+    imageUrl: 'https://images.pexels.com/photos/60597/dahlia-red-blossom-bloom-60597.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Pest deterrent', 'Companion planting', 'Attracts pollinators']
+  },
+  {
+    commonName: 'Mint',
+    scientificName: 'Mentha',
+    type: 'Perennial Herb',
+    difficulty: 'Easy',
+    growthStage: 'vegetative',
+    description: 'Fast-spreading aromatic herb, best contained to prevent invasiveness',
+    wateringNeeds: 'Regular, keep moist',
+    sunlightNeeds: 'Partial shade to full sun',
+    climateZones: ['3-11'],
+    imageUrl: 'https://images.pexels.com/photos/4750274/pexels-photo-4750274.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Culinary and medicinal', 'Pest repellent', 'Vigorous growth']
+  },
+  {
+    commonName: 'Pepper',
+    scientificName: 'Capsicum annuum',
+    type: 'Fruiting Vegetable',
+    difficulty: 'Moderate',
+    growthStage: 'fruiting',
+    description: 'Warm-season crop producing sweet or hot peppers, thrives in containers',
+    wateringNeeds: 'Regular, deep watering',
+    sunlightNeeds: 'Full sun (6-8 hours)',
+    climateZones: ['3-11'],
+    imageUrl: 'https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['High vitamin C', 'Container-friendly', 'Long harvest period']
+  },
+  {
+    commonName: 'Spider Plant',
+    scientificName: 'Chlorophytum comosum',
+    type: 'Perennial Houseplant',
+    difficulty: 'Easy',
+    growthStage: 'vegetative',
+    description: 'Adaptable houseplant with arching striped leaves and plantlets, excellent for beginners',
+    wateringNeeds: 'Moderate, weekly watering',
+    sunlightNeeds: 'Bright indirect light',
+    climateZones: ['9-11', 'Indoor'],
+    imageUrl: 'https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=600',
+    benefits: ['Air purifying', 'Easy propagation', 'Pet-friendly']
+  }
+];
+
 export default function PlantCarePage() {
   const [formData, setFormData] = useState<PlantCareFormData>({
     plantName: '',
@@ -64,7 +245,13 @@ export default function PlantCarePage() {
   const [history, setHistory] = useState<Array<{ id: string; plantName: string; timestamp: Date; }>>([]);
   
   // Tab state
-  const [activeTab, setActiveTab] = useState<'generate' | 'log'>('generate');
+  const [activeTab, setActiveTab] = useState<'generate' | 'gallery' | 'log'>('generate');
+  
+  // Gallery plant detail generation state
+  const [selectedGalleryPlant, setSelectedGalleryPlant] = useState<GalleryPlant | null>(null);
+  const [galleryPlantLoading, setGalleryPlantLoading] = useState(false);
+  const [galleryPlantError, setGalleryPlantError] = useState<string | null>(null);
+  const [generatedGalleryPlan, setGeneratedGalleryPlan] = useState<PlantCarePlan | null>(null);
   
   // Plant identification state
   const [identifyingPlant, setIdentifyingPlant] = useState(false);
@@ -424,6 +611,52 @@ export default function PlantCarePage() {
     }
   };
 
+  // Generate detailed care plan for gallery plants using OpenAI
+  const handleGalleryPlantGeneration = async (plant: GalleryPlant) => {
+    console.log('🌱 Generating detailed care plan for:', plant.commonName);
+    setSelectedGalleryPlant(plant);
+    setGalleryPlantLoading(true);
+    setGalleryPlantError(null);
+    setGeneratedGalleryPlan(null);
+
+    try {
+      const response = await fetch('/api/ai/plant-detail', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-user-id': 'demo-user'
+        },
+        body: JSON.stringify({
+          plantName: plant.commonName,
+          scientificName: plant.scientificName,
+          type: plant.type,
+          growthStage: plant.growthStage,
+          difficulty: plant.difficulty,
+          currentConditions: `Watering: ${plant.wateringNeeds}, Sunlight: ${plant.sunlightNeeds}`,
+          climateZone: plant.climateZones.join(', ')
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to generate care plan: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('✅ Generated detailed care plan:', result);
+
+      if (result.ok && result.carePlan) {
+        setGeneratedGalleryPlan(result.carePlan);
+      } else {
+        setGalleryPlantError(result.message || 'Failed to generate detailed care plan');
+      }
+    } catch (error) {
+      console.error('❌ Error generating gallery plant care plan:', error);
+      setGalleryPlantError('Failed to generate care plan details. Please try again.');
+    } finally {
+      setGalleryPlantLoading(false);
+    }
+  };
+
   return (
     <div className="plant-care-page">
       {/* Hero Section */}
@@ -469,6 +702,19 @@ export default function PlantCarePage() {
             </li>
             <li className="nav-item" role="presentation">
               <button 
+                className={`nav-link ${activeTab === 'gallery' ? 'active' : ''}`}
+                onClick={() => setActiveTab('gallery')}
+                type="button"
+                role="tab"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="me-2" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                  <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0M2 12s1.5-3 6-3 6 3 6 3v2H2z"/>
+                </svg>
+                Plant Gallery ({mockGalleryPlants.length})
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button 
                 className={`nav-link ${activeTab === 'log' ? 'active' : ''}`}
                 onClick={() => setActiveTab('log')}
                 type="button"
@@ -483,7 +729,9 @@ export default function PlantCarePage() {
           </ul>
 
           <h3 className="pb-4 mb-4 fst-italic border-bottom">
-            {activeTab === 'generate' ? 'Plant Care Request' : 'Plant Care Log'}
+            {activeTab === 'generate' && 'Plant Care Request'}
+            {activeTab === 'gallery' && 'Popular Plants'}
+            {activeTab === 'log' && 'Plant Care Log'}
           </h3>
 
           {/* Generate Care Plan Tab */}
@@ -906,6 +1154,98 @@ export default function PlantCarePage() {
           )}
           {/* End Generate Care Plan Tab */}
 
+          {/* Plant Gallery Tab */}
+          {activeTab === 'gallery' && (
+          <article className="blog-post">
+            <div className="p-4 mb-3 bg-body-tertiary rounded">
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                  <h5 className="mb-1">🌿 Popular Plants Library</h5>
+                  <p className="text-body-secondary small mb-0">
+                    Browse our curated collection of beginner-friendly to advanced plants. Get AI-powered care plans instantly!
+                  </p>
+                </div>
+              </div>
+
+              <div className="row g-4">
+                {mockGalleryPlants.map((plant, index) => (
+                  <div key={index} className="col-md-6 col-lg-4">
+                    <div className="card h-100" style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                      <img 
+                        src={plant.imageUrl} 
+                        className="card-img-top" 
+                        alt={plant.commonName}
+                        style={{ height: '200px', objectFit: 'cover' }}
+                      />
+                      <div className="card-body">
+                        <div className="d-flex justify-content-between align-items-start mb-2">
+                          <h6 className="card-title mb-0 fw-bold">{plant.commonName}</h6>
+                          <span className={`badge ${
+                            plant.difficulty === 'Easy' ? 'bg-success' : 
+                            plant.difficulty === 'Moderate' ? 'bg-warning text-dark' : 
+                            'bg-danger'
+                          }`}>
+                            {plant.difficulty}
+                          </span>
+                        </div>
+                        
+                        <p className="text-body-secondary small fst-italic mb-2">{plant.scientificName}</p>
+                        
+                        <p className="card-text small text-body-secondary mb-3">
+                          {plant.description}
+                        </p>
+
+                        <div className="d-flex flex-wrap gap-1 mb-3">
+                          <span className="badge bg-light text-dark border">
+                            {plant.type}
+                          </span>
+                          <span className="badge bg-light text-dark border">
+                            💧 {plant.wateringNeeds.split(',')[0]}
+                          </span>
+                          <span className="badge bg-light text-dark border">
+                            ☀️ {plant.sunlightNeeds.split('(')[0].trim()}
+                          </span>
+                        </div>
+
+                        {plant.benefits && plant.benefits.length > 0 && (
+                          <div className="mb-3">
+                            <small className="text-body-secondary">
+                              <strong>Benefits:</strong>
+                            </small>
+                            <ul className="small text-body-secondary mb-0 ps-3" style={{ listStyleType: 'circle' }}>
+                              {plant.benefits.slice(0, 2).map((benefit, i) => (
+                                <li key={i}>{benefit}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        <button 
+                          className="btn btn-sm btn-primary w-100"
+                          onClick={() => handleGalleryPlantGeneration(plant)}
+                          aria-label={`Get detailed care plan for ${plant.commonName}`}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" className="me-1" viewBox="0 0 16 16" style={{ verticalAlign: 'middle' }}>
+                            <path d="M8 5.5a2.5 2.5 0 0 1 2.5 2.5v1a1.5 1.5 0 0 1-3 0V8a.5.5 0 0 1 1 0v1a.5.5 0 0 0 1 0V8a1.5 1.5 0 0 0-3 0v1a2.5 2.5 0 0 0 5 0V8a3.5 3.5 0 1 0-7 0v5.5a.5.5 0 0 1-1 0V8a4.5 4.5 0 1 1 9 0v5.5a.5.5 0 0 1-1 0V8a3.5 3.5 0 0 0-7 0v1a1.5 1.5 0 0 0 3 0V8a.5.5 0 0 0-1 0z"/>
+                          </svg>
+                          Get Care Plan
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center mt-4">
+                <p className="text-body-secondary small mb-0">
+                  💡 Click "Get Care Plan" on any plant to receive AI-generated care instructions tailored to your climate
+                </p>
+              </div>
+            </div>
+          </article>
+          )}
+          {/* End Plant Gallery Tab */}
+
           {/* Care Log Tab */}
           {activeTab === 'log' && (
           <article className="blog-post">
@@ -1231,6 +1571,247 @@ export default function PlantCarePage() {
           </div>
         </div>
       </div>
+
+      {/* Modal for AI-generated gallery plant care details */}
+      {selectedGalleryPlant && (
+        <div className="modal show" tabIndex={-1} style={{ display: 'block', background: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div className="modal-content">
+              <div className="modal-header bg-success text-white">
+                <h5 className="modal-title">
+                  🌱 {generatedGalleryPlan?.title || `${selectedGalleryPlant.commonName} Care Plan`}
+                </h5>
+                <button 
+                  type="button" 
+                  className="btn-close btn-close-white" 
+                  aria-label="Close" 
+                  onClick={() => {
+                    setSelectedGalleryPlant(null);
+                    setGeneratedGalleryPlan(null);
+                    setGalleryPlantError(null);
+                  }}
+                ></button>
+              </div>
+              <div className="modal-body">
+                {galleryPlantLoading && (
+                  <div className="text-center py-5">
+                    <div className="spinner-border text-success" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <p className="mt-3 text-muted">AI is generating your detailed care plan...</p>
+                  </div>
+                )}
+
+                {galleryPlantError && (
+                  <div className="alert alert-danger" role="alert">
+                    <strong>⚠️ {galleryPlantError}</strong>
+                  </div>
+                )}
+
+                {generatedGalleryPlan && !galleryPlantLoading && (
+                  <>
+                    {/* Plant Image */}
+                    <div className="mb-4">
+                      <img 
+                        src={selectedGalleryPlant.imageUrl} 
+                        alt={selectedGalleryPlant.commonName}
+                        className="img-fluid rounded"
+                        style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
+                      />
+                    </div>
+
+                    {/* Plant Info Badges */}
+                    <div className="d-flex flex-wrap gap-2 mb-4">
+                      <span className="badge bg-light text-dark border">
+                        {selectedGalleryPlant.type}
+                      </span>
+                      <span className={`badge ${
+                        selectedGalleryPlant.difficulty === 'Easy' ? 'bg-success' : 
+                        selectedGalleryPlant.difficulty === 'Moderate' ? 'bg-warning text-dark' : 
+                        'bg-danger'
+                      }`}>
+                        {selectedGalleryPlant.difficulty}
+                      </span>
+                      <span className="badge bg-primary">
+                        {selectedGalleryPlant.growthStage}
+                      </span>
+                      <span className="badge bg-info text-dark">
+                        {selectedGalleryPlant.scientificName}
+                      </span>
+                    </div>
+
+                    {/* Summary */}
+                    {generatedGalleryPlan.summary && (
+                      <div className="mb-4">
+                        <p className="lead">{generatedGalleryPlan.summary}</p>
+                      </div>
+                    )}
+
+                    {/* Watering Schedule */}
+                    {generatedGalleryPlan.wateringSchedule && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          💧 Watering Schedule
+                        </h6>
+                        <p className="text-muted">{generatedGalleryPlan.wateringSchedule}</p>
+                      </div>
+                    )}
+
+                    {/* Soil Tips */}
+                    {generatedGalleryPlan.soilTips && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          🪴 Soil Health
+                        </h6>
+                        <p className="text-muted">{generatedGalleryPlan.soilTips}</p>
+                      </div>
+                    )}
+
+                    {/* Sunlight */}
+                    {generatedGalleryPlan.sunlight && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          ☀️ Sunlight Requirements
+                        </h6>
+                        <p className="text-muted">{generatedGalleryPlan.sunlight}</p>
+                      </div>
+                    )}
+
+                    {/* Temperature */}
+                    {generatedGalleryPlan.temperature && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          🌡️ Temperature & Climate
+                        </h6>
+                        <p className="text-muted">{generatedGalleryPlan.temperature}</p>
+                      </div>
+                    )}
+
+                    {/* Fertilizing */}
+                    {generatedGalleryPlan.fertilizing && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          🌿 Fertilization
+                        </h6>
+                        <p className="text-muted">{generatedGalleryPlan.fertilizing}</p>
+                      </div>
+                    )}
+
+                    {/* Pruning */}
+                    {generatedGalleryPlan.pruning && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          ✂️ Pruning & Maintenance
+                        </h6>
+                        <p className="text-muted">{generatedGalleryPlan.pruning}</p>
+                      </div>
+                    )}
+
+                    {/* Common Pests */}
+                    {generatedGalleryPlan.commonPests && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          🐛 Pest & Disease Management
+                        </h6>
+                        <p className="text-muted">{generatedGalleryPlan.commonPests}</p>
+                      </div>
+                    )}
+
+                    {/* Seasonal Care */}
+                    {generatedGalleryPlan.seasonalCare && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          📅 Seasonal Care Adjustments
+                        </h6>
+                        <p className="text-muted">{generatedGalleryPlan.seasonalCare}</p>
+                      </div>
+                    )}
+
+                    {/* Propagation */}
+                    {generatedGalleryPlan.propagation && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          🌱 Propagation Methods
+                        </h6>
+                        <p className="text-muted">{generatedGalleryPlan.propagation}</p>
+                      </div>
+                    )}
+
+                    {/* Warnings */}
+                    {generatedGalleryPlan.warnings && generatedGalleryPlan.warnings.length > 0 && (
+                      <div className="alert alert-warning" role="alert">
+                        <strong>⚠️ Important Warnings:</strong>
+                        <ul className="mb-0 mt-2">
+                          {generatedGalleryPlan.warnings.map((warning, i) => (
+                            <li key={i}>{warning}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Biodiversity Tips */}
+                    {generatedGalleryPlan.biodiversityTips && generatedGalleryPlan.biodiversityTips.length > 0 && (
+                      <div className="mb-4 alert alert-success">
+                        <h6 className="mb-2">
+                          🦋 Ecosystem & Biodiversity Benefits
+                        </h6>
+                        <ul className="mb-0">
+                          {generatedGalleryPlan.biodiversityTips.map((tip, i) => (
+                            <li key={i}>{tip}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Next Steps */}
+                    {generatedGalleryPlan.nextSteps && generatedGalleryPlan.nextSteps.length > 0 && (
+                      <div className="mb-0">
+                        <h6 className="border-bottom pb-2">
+                          📋 Next Steps
+                        </h6>
+                        <ol className="text-muted">
+                          {generatedGalleryPlan.nextSteps.map((step, i) => (
+                            <li key={i}>{step}</li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {!galleryPlantLoading && !generatedGalleryPlan && !galleryPlantError && (
+                  <div className="text-center py-4 text-muted">
+                    <div className="display-1 mb-3">🌱</div>
+                    <p>Click "Generate Care Plan" to see detailed instructions</p>
+                  </div>
+                )}
+              </div>
+              <div className="modal-footer">
+                {generatedGalleryPlan && (
+                  <button 
+                    type="button" 
+                    className="btn btn-success"
+                    onClick={() => savePlanToFavorites(generatedGalleryPlan)}
+                  >
+                    ❤️ Save to Favorites
+                  </button>
+                )}
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => {
+                    setSelectedGalleryPlant(null);
+                    setGeneratedGalleryPlan(null);
+                    setGalleryPlantError(null);
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
