@@ -897,7 +897,7 @@ export default function RecipesPage() {
         {activeTab === 'generate' && (
           <div className="row g-5" role="tabpanel" id="generate-panel" aria-labelledby="generate-tab">
             {/* Original Generate Recipe Form and Content */}
-            <div className="col-md-8">
+            <div className="col-md-8 col-sm-12">
               <h3 className="pb-4 mb-4 fst-italic border-bottom">
                 Recipe Generator
               </h3>
@@ -1066,7 +1066,7 @@ export default function RecipesPage() {
             </div>
 
             {/* Sidebar for Generated Recipes */}
-            <div className="col-md-4">
+            <div className="col-md-4 col-sm-12">
               <div className="position-sticky" style={{ top: '2rem' }}>
                 {recipes.length > 0 ? (
                   <div>
@@ -1254,7 +1254,7 @@ export default function RecipesPage() {
                     disabled={searchLoading || !searchQuery.trim()}
                     aria-label={searchLoading ? 'Searching' : 'Search recipes'}
                   >
-                    {searchLoading ? '🔍 Searching...' : '🔍 Search'}
+                    {searchLoading ? 'Searching...' : '🔍'}
                   </button>
                 </div>
               </form>
