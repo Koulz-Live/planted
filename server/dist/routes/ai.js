@@ -106,4 +106,94 @@ router.post('/storytelling', async (req, res) => {
         res.status(400).json(payload);
     }
 });
+
+// Recipe Detail Generation
+router.post('/recipe-detail', async (req, res) => {
+    try {
+        const { recipeTitle, recipeDescription, existingIngredients, category, prepTime, cookTime, servings } = req.body;
+        
+        if (!recipeTitle) {
+            return res.status(400).json({ 
+                ok: false, 
+                message: 'Recipe title is required' 
+            });
+        }
+
+        const userId = req.headers['x-user-id'] || 'demo-user';
+        console.log('🤖 Generating detailed recipe for:', recipeTitle);
+
+        // Import the recipe-detail handler from root api directory
+        const path = require('path');
+        const apiPath = path.resolve(__dirname, '../../../api/ai/recipe-detail.js');
+        const recipeDetailHandler = require(apiPath);
+        
+        // Call the Vercel function handler directly
+        const mockReq = { method: 'POST', body: req.body, headers: req.headers };
+        const mockRes = {
+            status: (code) => ({
+                json: (data) => res.status(code).json(data),
+                end: () => res.status(code).end()
+            }),
+            json: (data) => res.json(data),
+            setHeader: () => {},
+            end: () => res.end()
+        };
+        
+        await recipeDetailHandler.default(mockReq, mockRes);
+    }
+    catch (error) {
+        console.error('❌ Recipe detail error:', error);
+        const payload = { ok: false, message: error.message };
+        res.status(500).json(payload);
+    }
+});
+
+// Recipe Search
+router.post('/recipe-search', async (req, res) => {
+    try {
+        const path = require('path');
+        const apiPath = path.resolve(__dirname, '../../../api/ai/recipe-search.js');
+        const recipeSearchHandler = require(apiPath);
+        const mockReq = { method: 'POST', body: req.body, headers: req.headers };
+        const mockRes = {
+            status: (code) => ({
+                json: (data) => res.status(code).json(data),
+                end: () => res.status(code).end()
+            }),
+            json: (data) => res.json(data),
+            setHeader: () => {},
+            end: () => res.end()
+        };
+        await recipeSearchHandler.default(mockReq, mockRes);
+    }
+    catch (error) {
+        console.error('❌ Recipe search error:', error);
+        res.status(500).json({ ok: false, message: error.message });
+    }
+});
+
+// Recipe Images
+router.post('/recipe-images', async (req, res) => {
+    try {
+        const path = require('path');
+        const apiPath = path.resolve(__dirname, '../../../api/ai/recipe-images.js');
+        const recipeImagesHandler = require(apiPath);
+        const mockReq = { method: 'POST', body: req.body, headers: req.headers };
+        const mockRes = {
+            status: (code) => ({
+                json: (data) => res.status(code).json(data),
+                end: () => res.status(code).end()
+            }),
+            json: (data) => res.json(data),
+            setHeader: () => {},
+            end: () => res.end()
+        };
+        await recipeImagesHandler.default(mockReq, mockRes);
+    }
+    catch (error) {
+        console.error('❌ Recipe images error:', error);
+        res.status(500).json({ ok: false, message: error.message });
+    }
+});
+
 exports.default = router;

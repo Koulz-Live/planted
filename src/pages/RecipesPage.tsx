@@ -77,139 +77,139 @@ const seasonOptions = ['Spring', 'Summer', 'Fall', 'Winter', 'Any Season'];
 const toOptionId = (prefix: string, label: string) =>
   `${prefix}-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`.replace(/-+/g, '-').replace(/^-|-$/g, '');
 
-// Mock recipe gallery data
+// Mock recipe gallery data - Popular Kosher & Halal Recipes
 const mockGalleryRecipes: Recipe[] = [
   {
-    title: 'Mediterranean Quinoa Bowl',
-    description: 'Fresh quinoa with roasted vegetables, chickpeas, and tahini dressing',
-    ingredients: ['Quinoa', 'Chickpeas', 'Bell peppers', 'Cucumber', 'Cherry tomatoes', 'Tahini', 'Lemon'],
-    instructions: ['Cook quinoa', 'Roast vegetables', 'Mix tahini dressing', 'Combine all ingredients'],
-    prepTime: '15 min',
-    cookTime: '25 min',
-    servings: '4',
-    imageUrl: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Vegan'
-  },
-  {
-    title: 'Spicy Thai Noodle Soup',
-    description: 'Aromatic coconut curry soup with rice noodles and fresh herbs',
-    ingredients: ['Rice noodles', 'Coconut milk', 'Thai curry paste', 'Tofu', 'Bean sprouts', 'Lime', 'Cilantro'],
-    instructions: ['Prepare broth', 'Cook noodles', 'Add vegetables', 'Garnish with herbs'],
+    title: 'Shakshuka',
+    description: 'Traditional Middle Eastern dish with poached eggs in spiced tomato sauce (Kosher & Halal)',
+    ingredients: ['Tomatoes', 'Bell peppers', 'Onions', 'Eggs', 'Cumin', 'Paprika', 'Garlic', 'Olive oil'],
+    instructions: ['Sauté vegetables', 'Add spices and tomatoes', 'Create wells for eggs', 'Poach until set'],
     prepTime: '10 min',
     cookTime: '20 min',
-    servings: '3',
-    imageUrl: 'https://images.pexels.com/photos/1907227/pexels-photo-1907227.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Asian'
-  },
-  {
-    title: 'Roasted Vegetable Medley',
-    description: 'Colorful assortment of seasonal vegetables with herbs',
-    ingredients: ['Carrots', 'Zucchini', 'Bell peppers', 'Red onion', 'Olive oil', 'Rosemary', 'Thyme'],
-    instructions: ['Chop vegetables', 'Toss with oil and herbs', 'Roast at 400°F', 'Serve hot'],
-    prepTime: '15 min',
-    cookTime: '30 min',
-    servings: '6',
-    imageUrl: 'https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Mediterranean'
-  },
-  {
-    title: 'Avocado Toast Deluxe',
-    description: 'Creamy avocado on sourdough with cherry tomatoes and microgreens',
-    ingredients: ['Sourdough bread', 'Avocado', 'Cherry tomatoes', 'Microgreens', 'Lemon juice', 'Sea salt'],
-    instructions: ['Toast bread', 'Mash avocado', 'Top with tomatoes', 'Add microgreens'],
-    prepTime: '5 min',
-    cookTime: '5 min',
-    servings: '2',
-    imageUrl: 'https://images.pexels.com/photos/566566/pexels-photo-566566.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Breakfast'
-  },
-  {
-    title: 'Lentil Curry Power Bowl',
-    description: 'Hearty red lentil curry served over brown rice with spinach',
-    ingredients: ['Red lentils', 'Curry powder', 'Coconut milk', 'Spinach', 'Brown rice', 'Ginger', 'Garlic'],
-    instructions: ['Cook lentils', 'Prepare curry sauce', 'Add spinach', 'Serve over rice'],
-    prepTime: '10 min',
-    cookTime: '25 min',
     servings: '4',
-    imageUrl: 'https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Indian'
+    imageUrl: 'https://images.pexels.com/photos/6210876/pexels-photo-6210876.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'Middle Eastern'
   },
   {
-    title: 'Berry Smoothie Bowl',
-    description: 'Antioxidant-rich smoothie bowl topped with granola and fresh berries',
-    ingredients: ['Mixed berries', 'Banana', 'Almond milk', 'Granola', 'Chia seeds', 'Honey'],
-    instructions: ['Blend fruits with milk', 'Pour into bowl', 'Add toppings', 'Serve immediately'],
-    prepTime: '5 min',
-    cookTime: '0 min',
-    servings: '2',
-    imageUrl: 'https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Breakfast'
-  },
-  {
-    title: 'Grilled Vegetable Skewers',
-    description: 'Colorful veggie kabobs with balsamic glaze',
-    ingredients: ['Zucchini', 'Bell peppers', 'Red onion', 'Mushrooms', 'Cherry tomatoes', 'Balsamic vinegar'],
-    instructions: ['Cut vegetables', 'Thread on skewers', 'Brush with oil', 'Grill until tender'],
+    title: 'Falafel Bowl',
+    description: 'Crispy chickpea fritters with hummus, tahini, and fresh vegetables (Kosher & Halal)',
+    ingredients: ['Chickpeas', 'Parsley', 'Cilantro', 'Garlic', 'Cumin', 'Tahini', 'Cucumber', 'Tomatoes'],
+    instructions: ['Blend falafel ingredients', 'Form into balls', 'Fry until golden', 'Serve with tahini sauce'],
     prepTime: '20 min',
     cookTime: '15 min',
     servings: '4',
-    imageUrl: 'https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Mediterranean'
+    imageUrl: 'https://images.pexels.com/photos/6419733/pexels-photo-6419733.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'Kosher & Halal'
   },
   {
-    title: 'Fresh Spring Salad',
-    description: 'Mixed greens with strawberries, walnuts, and poppy seed dressing',
-    ingredients: ['Mixed greens', 'Strawberries', 'Walnuts', 'Feta cheese', 'Poppy seed dressing'],
-    instructions: ['Wash greens', 'Slice strawberries', 'Toast walnuts', 'Toss with dressing'],
+    title: 'Moroccan Tagine',
+    description: 'Aromatic vegetable stew with preserved lemons and olives (Kosher & Halal)',
+    ingredients: ['Mixed vegetables', 'Chickpeas', 'Preserved lemons', 'Olives', 'Cumin', 'Coriander', 'Saffron'],
+    instructions: ['Layer vegetables in tagine', 'Add spices and liquid', 'Slow cook', 'Serve over couscous'],
+    prepTime: '15 min',
+    cookTime: '45 min',
+    servings: '6',
+    imageUrl: 'https://images.pexels.com/photos/4871119/pexels-photo-4871119.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'Moroccan'
+  },
+  {
+    title: 'Acai Power Breakfast Bowl',
+    description: 'Energizing superfood bowl with acai, fresh fruits, and granola (Kosher & Halal)',
+    ingredients: ['Acai puree', 'Banana', 'Berries', 'Granola', 'Coconut flakes', 'Chia seeds', 'Honey', 'Almond butter'],
+    instructions: ['Blend acai with banana', 'Pour into bowl', 'Top with berries and granola', 'Add coconut, chia, and drizzle honey'],
     prepTime: '10 min',
     cookTime: '0 min',
+    servings: '2',
+    imageUrl: 'https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'Kosher & Halal'
+  },
+  {
+    title: 'Pap and Chakalaka',
+    description: 'Traditional South African meal with creamy maize porridge and spicy vegetable relish (Kosher & Halal)',
+    ingredients: ['Maize meal (pap)', 'Water', 'Salt', 'Butter', 'Tomatoes', 'Onions', 'Carrots', 'Beans', 'Curry powder', 'Chili'],
+    instructions: ['Cook pap until thick and creamy', 'Sauté onions and curry powder', 'Add vegetables and simmer', 'Serve pap with chakalaka on top'],
+    prepTime: '10 min',
+    cookTime: '30 min',
+    servings: '6',
+    imageUrl: 'https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'South African'
+  },
+  {
+    title: 'Full English Breakfast',
+    description: 'Classic British breakfast with eggs, beans, mushrooms, tomatoes, and toast (Kosher)',
+    ingredients: ['Eggs', 'Baked beans', 'Mushrooms', 'Tomatoes', 'Toast', 'Butter', 'Hash browns', 'Black pepper'],
+    instructions: ['Fry eggs sunny-side up', 'Grill tomatoes and mushrooms', 'Heat baked beans', 'Toast bread and serve hot'],
+    prepTime: '10 min',
+    cookTime: '15 min',
+    servings: '2',
+    imageUrl: 'https://images.pexels.com/photos/101533/pexels-photo-101533.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'English'
+  },
+  {
+    title: 'Sabich (Israeli Eggplant Pita)',
+    description: 'Popular Israeli street food with fried eggplant and hard-boiled eggs (Kosher)',
+    ingredients: ['Eggplant', 'Eggs', 'Pita bread', 'Tahini', 'Amba sauce', 'Israeli salad', 'Pickles'],
+    instructions: ['Fry eggplant slices', 'Boil eggs', 'Prepare salad', 'Assemble in pita with sauces'],
+    prepTime: '15 min',
+    cookTime: '20 min',
+    servings: '4',
+    imageUrl: 'https://images.pexels.com/photos/4518843/pexels-photo-4518843.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'Kosher'
+  },
+  {
+    title: 'Turkish Red Lentil Soup (Mercimek)',
+    description: 'Creamy, aromatic lentil soup with lemon and mint (Kosher & Halal)',
+    ingredients: ['Red lentils', 'Onions', 'Carrots', 'Tomato paste', 'Cumin', 'Mint', 'Lemon', 'Butter'],
+    instructions: ['Sauté vegetables', 'Add lentils and water', 'Simmer until soft', 'Blend and garnish'],
+    prepTime: '10 min',
+    cookTime: '25 min',
+    servings: '6',
+    imageUrl: 'https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'Kosher & Halal'
+  },
+  {
+    title: 'Mediterranean Grain Bowl',
+    description: 'Hearty bowl with farro, roasted vegetables, feta, and lemon herb dressing (Kosher)',
+    ingredients: ['Farro', 'Cherry tomatoes', 'Zucchini', 'Red onion', 'Feta cheese', 'Kalamata olives', 'Lemon', 'Fresh herbs'],
+    instructions: ['Cook farro until tender', 'Roast vegetables with olive oil', 'Crumble feta', 'Toss with lemon herb dressing'],
+    prepTime: '15 min',
+    cookTime: '35 min',
+    servings: '4',
+    imageUrl: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'Kosher'
+  },
+  {
+    title: 'Fattoush Salad',
+    description: 'Levantine bread salad with sumac and crispy pita chips (Kosher & Halal)',
+    ingredients: ['Romaine lettuce', 'Tomatoes', 'Cucumbers', 'Radishes', 'Pita bread', 'Sumac', 'Olive oil'],
+    instructions: ['Chop vegetables', 'Toast pita bread', 'Mix with sumac dressing', 'Top with crispy pita'],
+    prepTime: '15 min',
+    cookTime: '5 min',
     servings: '4',
     imageUrl: 'https://images.pexels.com/photos/1640770/pexels-photo-1640770.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Salads'
+    category: 'Kosher & Halal'
   },
   {
-    title: 'Chickpea Buddha Bowl',
-    description: 'Wholesome bowl with roasted chickpeas, quinoa, and tahini sauce',
-    ingredients: ['Chickpeas', 'Quinoa', 'Kale', 'Sweet potato', 'Tahini', 'Lemon'],
-    instructions: ['Roast chickpeas and sweet potato', 'Cook quinoa', 'Massage kale', 'Drizzle with tahini'],
-    prepTime: '15 min',
-    cookTime: '30 min',
-    servings: '3',
-    imageUrl: 'https://images.pexels.com/photos/1640771/pexels-photo-1640771.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Vegan'
-  },
-  {
-    title: 'Mushroom Risotto',
-    description: 'Creamy Italian rice dish with mixed mushrooms and parmesan',
-    ingredients: ['Arborio rice', 'Mixed mushrooms', 'Vegetable broth', 'White wine', 'Parmesan', 'Butter'],
-    instructions: ['Sauté mushrooms', 'Toast rice', 'Add broth gradually', 'Stir in cheese'],
-    prepTime: '10 min',
-    cookTime: '30 min',
-    servings: '4',
-    imageUrl: 'https://images.pexels.com/photos/1630309/pexels-photo-1630309.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'European'
-  },
-  {
-    title: 'Tropical Fruit Salad',
-    description: 'Refreshing mix of tropical fruits with lime and mint',
-    ingredients: ['Mango', 'Pineapple', 'Papaya', 'Kiwi', 'Lime juice', 'Fresh mint'],
-    instructions: ['Cube fruits', 'Toss with lime juice', 'Chill', 'Garnish with mint'],
-    prepTime: '15 min',
-    cookTime: '0 min',
+    title: 'Halal Biryani',
+    description: 'Fragrant South Asian rice dish with vegetables and aromatic spices (Halal)',
+    ingredients: ['Basmati rice', 'Mixed vegetables', 'Saffron', 'Cardamom', 'Cinnamon', 'Bay leaves', 'Fried onions'],
+    instructions: ['Parboil rice with spices', 'Layer with vegetables', 'Steam cook', 'Garnish with fried onions'],
+    prepTime: '20 min',
+    cookTime: '40 min',
     servings: '6',
-    imageUrl: 'https://images.pexels.com/photos/1132047/pexels-photo-1132047.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Dessert'
+    imageUrl: 'https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'South Asian'
   },
   {
-    title: 'Veggie Stir-Fry',
-    description: 'Quick and healthy Asian-style vegetable stir-fry',
-    ingredients: ['Mixed vegetables', 'Soy sauce', 'Ginger', 'Garlic', 'Sesame oil', 'Rice'],
-    instructions: ['Prep vegetables', 'Heat wok', 'Stir-fry vegetables', 'Add sauce'],
-    prepTime: '15 min',
-    cookTime: '10 min',
-    servings: '4',
-    imageUrl: 'https://images.pexels.com/photos/2097090/pexels-photo-2097090.jpeg?auto=compress&cs=tinysrgb&w=600',
-    category: 'Asian'
+    title: 'Israeli Couscous Salad',
+    description: 'Pearl couscous with roasted vegetables and herbs (Kosher)',
+    ingredients: ['Israeli couscous', 'Cherry tomatoes', 'Zucchini', 'Red onion', 'Fresh herbs', 'Lemon', 'Olive oil'],
+    instructions: ['Cook couscous', 'Roast vegetables', 'Mix with herbs and dressing', 'Serve warm or cold'],
+    prepTime: '10 min',
+    cookTime: '20 min',
+    servings: '6',
+    imageUrl: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600',
+    category: 'Kosher'
   }
 ];
 
@@ -245,8 +245,13 @@ export default function RecipesPage() {
     dietaryRestrictions: [] as string[]
   });
 
-  // Expanded recipe modal state (gallery tab)
-  const [expandedRecipeIndex, setExpandedRecipeIndex] = useState<number | null>(null);
+  // Expanded recipe modal state (gallery tab) - removed, now using single modal
+  
+  // Gallery recipe detail generation state
+  const [selectedGalleryRecipe, setSelectedGalleryRecipe] = useState<Recipe | null>(null);
+  const [galleryRecipeLoading, setGalleryRecipeLoading] = useState(false);
+  const [galleryRecipeError, setGalleryRecipeError] = useState<string | null>(null);
+  const [generatedGalleryRecipe, setGeneratedGalleryRecipe] = useState<Recipe | null>(null);
 
   // Load history from Firestore
   useEffect(() => {
@@ -711,6 +716,107 @@ export default function RecipesPage() {
       setSearchError('Failed to search recipes. Please try again.');
     } finally {
       setSearchLoading(false);
+    }
+  };
+
+  // Generate detailed recipe for gallery items using OpenAI
+  const handleGalleryRecipeGeneration = async (recipe: Recipe) => {
+    console.log('🤖 Generating detailed recipe for:', recipe.title);
+    setSelectedGalleryRecipe(recipe);
+    setGalleryRecipeLoading(true);
+    setGalleryRecipeError(null);
+    setGeneratedGalleryRecipe(null);
+
+    try {
+      const response = await fetch('/api/ai/recipe-detail', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-user-id': 'demo-user'
+        },
+        body: JSON.stringify({
+          recipeTitle: recipe.title,
+          recipeDescription: recipe.description,
+          existingIngredients: recipe.ingredients,
+          category: recipe.category,
+          prepTime: recipe.prepTime,
+          cookTime: recipe.cookTime,
+          servings: recipe.servings
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to generate recipe: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('✅ Generated detailed recipe:', result);
+
+      if (result.ok && result.recipe) {
+        // Fetch images for the detailed recipe - tries Pexels, Pixabay, then Unsplash
+        console.log('🖼️  Fetching images for detailed recipe...');
+        
+        // Default fallback images only if all APIs fail
+        const fallbackImages = [
+          `https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80`,
+          `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80`,
+          `https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&q=80`,
+          `https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&q=80`
+        ];
+        
+        try {
+          const imageResponse = await fetch('/api/ai/recipe-images', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              recipeTitle: result.recipe.title,
+              recipeDescription: result.recipe.description
+            })
+          });
+
+          console.log('📡 Image API response status:', imageResponse.status);
+
+          if (imageResponse.ok) {
+            const imageData = await imageResponse.json();
+            console.log('✅ Image API response:', {
+              ok: imageData.ok,
+              provider: imageData.provider,
+              imageCount: imageData.images?.length || 0,
+              firstImage: imageData.images?.[0]?.substring(0, 80) + '...'
+            });
+            
+            if (imageData.ok && imageData.images && imageData.images.length > 0) {
+              // API returns images from Unsplash, Pexels, or Pixabay
+              result.recipe.images = imageData.images;
+              console.log(`✅ Set ${imageData.images.length} images from ${imageData.provider}`);
+            } else {
+              console.warn('⚠️ API returned no images, using fallback');
+              result.recipe.images = fallbackImages;
+            }
+          } else {
+            console.error('❌ Image API error (status ' + imageResponse.status + '), using fallback');
+            result.recipe.images = fallbackImages;
+          }
+        } catch (imgError) {
+          console.error('❌ Failed to fetch images (network error), using fallback:', imgError);
+          result.recipe.images = fallbackImages;
+        }
+
+        console.log('📦 Final recipe with images:', {
+          title: result.recipe.title,
+          imageCount: result.recipe.images?.length || 0,
+          firstImage: result.recipe.images?.[0]?.substring(0, 60)
+        });
+
+        setGeneratedGalleryRecipe(result.recipe);
+      } else {
+        setGalleryRecipeError(result.message || 'Failed to generate detailed recipe');
+      }
+    } catch (error) {
+      console.error('❌ Error generating gallery recipe:', error);
+      setGalleryRecipeError('Failed to generate recipe details. Please try again.');
+    } finally {
+      setGalleryRecipeLoading(false);
     }
   };
 
@@ -1208,7 +1314,8 @@ export default function RecipesPage() {
                         
                         <button
                           className="btn btn-sm btn-outline-primary mt-2"
-                          onClick={() => setExpandedRecipeIndex(index)}
+                          onClick={() => handleGalleryRecipeGeneration(recipe)}
+                          aria-label={`View detailed recipe for ${recipe.title}`}
                         >
                           View Recipe
                         </button>
@@ -1240,7 +1347,11 @@ export default function RecipesPage() {
                       </div>
                     )}
                     
-                    <button className="btn btn-sm btn-outline-primary mt-2">
+                    <button 
+                      className="btn btn-sm btn-outline-primary mt-2"
+                      onClick={() => handleGalleryRecipeGeneration(recipe)}
+                      aria-label={`View detailed recipe for ${recipe.title}`}
+                    >
                       View Recipe
                     </button>
                   </div>
@@ -1401,31 +1512,183 @@ export default function RecipesPage() {
         )}
       </div>
 
-      {/* Modal for expanded recipe */}
-      {expandedRecipeIndex !== null && searchResults[expandedRecipeIndex] && (
+      {/* Modal for AI-generated gallery recipe details */}
+      {selectedGalleryRecipe && (
         <div className="modal show" tabIndex={-1} style={{ display: 'block', background: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg modal-dialog-centered">
+          <div className="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">{searchResults[expandedRecipeIndex].title}</h5>
-                <button type="button" className="btn-close" aria-label="Close" onClick={() => setExpandedRecipeIndex(null)}></button>
+                <h5 className="modal-title">
+                  {generatedGalleryRecipe?.title || selectedGalleryRecipe.title}
+                </h5>
+                <button 
+                  type="button" 
+                  className="btn-close" 
+                  aria-label="Close" 
+                  onClick={() => {
+                    setSelectedGalleryRecipe(null);
+                    setGeneratedGalleryRecipe(null);
+                    setGalleryRecipeError(null);
+                  }}
+                ></button>
               </div>
               <div className="modal-body">
-                <h6>Ingredients</h6>
-                <ul>
-                  {searchResults[expandedRecipeIndex].ingredients?.map((ing, i) => (
-                    <li key={i}>{ing}</li>
-                  ))}
-                </ul>
-                <h6>Instructions</h6>
-                <ol>
-                  {searchResults[expandedRecipeIndex].instructions?.map((step, i) => (
-                    <li key={i}>{step}</li>
-                  ))}
-                </ol>
+                {galleryRecipeLoading && (
+                  <div className="text-center py-5">
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                    <p className="mt-3 text-muted">AI is generating your detailed recipe...</p>
+                  </div>
+                )}
+
+                {galleryRecipeError && (
+                  <div className="alert alert-danger" role="alert">
+                    <strong>⚠️ {galleryRecipeError}</strong>
+                  </div>
+                )}
+
+                {generatedGalleryRecipe && !galleryRecipeLoading && (
+                  <>
+                    {/* Recipe Images Carousel */}
+                    {generatedGalleryRecipe.images && generatedGalleryRecipe.images.length > 0 && (
+                      <div className="mb-4">
+                        <RecipeImageCarousel 
+                          images={generatedGalleryRecipe.images} 
+                          recipeName={generatedGalleryRecipe.title} 
+                        />
+                      </div>
+                    )}
+
+                    {/* Description */}
+                    {generatedGalleryRecipe.description && (
+                      <div className="mb-4">
+                        <p className="lead">{generatedGalleryRecipe.description}</p>
+                      </div>
+                    )}
+
+                    {/* Quick Info */}
+                    <div className="d-flex flex-wrap gap-3 mb-4">
+                      {generatedGalleryRecipe.prepTime && (
+                        <div className="badge bg-info text-dark">
+                          <Icon name="calendar" className="me-1" /> Prep: {generatedGalleryRecipe.prepTime}
+                        </div>
+                      )}
+                      {generatedGalleryRecipe.cookTime && (
+                        <div className="badge bg-warning text-dark">
+                          <Icon name="fire" className="me-1" /> Cook: {generatedGalleryRecipe.cookTime}
+                        </div>
+                      )}
+                      {generatedGalleryRecipe.servings && (
+                        <div className="badge bg-success">
+                          <Icon name="people" className="me-1" /> Servings: {generatedGalleryRecipe.servings}
+                        </div>
+                      )}
+                      {generatedGalleryRecipe.category && (
+                        <div className="badge bg-primary">
+                          {generatedGalleryRecipe.category}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Ingredients */}
+                    <div className="mb-4">
+                      <h6 className="border-bottom pb-2">
+                        <Icon name="basket" className="me-2" />
+                        Ingredients
+                      </h6>
+                      <ul className="list-group list-group-flush">
+                        {generatedGalleryRecipe.ingredients?.map((ing, i) => (
+                          <li key={i} className="list-group-item">
+                            <Icon name="checkCircle" className="me-2 text-success" />
+                            {ing}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Instructions */}
+                    <div className="mb-4">
+                      <h6 className="border-bottom pb-2">
+                        <Icon name="clipboardData" className="me-2" />
+                        Instructions
+                      </h6>
+                      <ol className="list-group list-group-numbered">
+                        {generatedGalleryRecipe.instructions?.map((step, i) => (
+                          <li key={i} className="list-group-item">
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+
+                    {/* Cultural Notes */}
+                    {generatedGalleryRecipe.culturalNotes && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          <Icon name="globe" className="me-2" />
+                          Cultural Notes
+                        </h6>
+                        <p className="text-muted">{generatedGalleryRecipe.culturalNotes}</p>
+                      </div>
+                    )}
+
+                    {/* Nutrition Highlights */}
+                    {generatedGalleryRecipe.nutritionHighlights && generatedGalleryRecipe.nutritionHighlights.length > 0 && (
+                      <div className="mb-4">
+                        <h6 className="border-bottom pb-2">
+                          <Icon name="heart" className="me-2" />
+                          Nutrition Highlights
+                        </h6>
+                        <ul className="list-unstyled">
+                          {generatedGalleryRecipe.nutritionHighlights.map((highlight, i) => (
+                            <li key={i} className="mb-2">
+                              <Icon name="checkCircle" className="me-2 text-success" />
+                              {highlight}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Source */}
+                    {generatedGalleryRecipe.source && (
+                      <div className="alert alert-info">
+                        <small>
+                          <strong>Source:</strong> {generatedGalleryRecipe.source}
+                        </small>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {!galleryRecipeLoading && !generatedGalleryRecipe && !galleryRecipeError && (
+                  <div className="text-center py-4 text-muted">
+                    <Icon name="dish" className="display-1 mb-3" />
+                    <p>Click "Generate Recipe" to see detailed instructions</p>
+                  </div>
+                )}
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setExpandedRecipeIndex(null)}>
+                {generatedGalleryRecipe && (
+                  <button 
+                    type="button" 
+                    className="btn btn-success"
+                    onClick={() => saveRecipeToFavorites(generatedGalleryRecipe)}
+                  >
+                    <Icon name="heart" className="me-2" />
+                    Save to Favorites
+                  </button>
+                )}
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => {
+                    setSelectedGalleryRecipe(null);
+                    setGeneratedGalleryRecipe(null);
+                    setGalleryRecipeError(null);
+                  }}
+                >
                   Close
                 </button>
               </div>

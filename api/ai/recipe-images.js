@@ -156,17 +156,23 @@ export default async function handler(req, res) {
 
     console.log('📝 Fetching images for recipe:', recipeTitle);
 
+    // Try Unsplash first (resolves redirects to actual image URLs)
     let images = await getUnsplashImages(recipeTitle);
     let provider = images.length ? 'unsplash' : 'none';
+    console.log(`🖼️  Unsplash resolved returned ${images.length} images`);
 
+    // Fallback to Pexels if Unsplash fails
     if (images.length === 0) {
       images = await getPexelsImages({ recipeTitle, recipeDescription, count: 4 });
       if (images.length) provider = 'pexels';
+      console.log(`🖼️  Pexels returned ${images.length} images`);
     }
 
+    // Fallback to Pixabay if both fail
     if (images.length === 0) {
       images = await getPixabayImages({ recipeTitle, recipeDescription, count: 4 });
       if (images.length) provider = 'pixabay';
+      console.log(`🖼️  Pixabay returned ${images.length} images`);
     }
 
     // Last resort: return Unsplash source URLs (even if we couldn't resolve/validate)
@@ -180,6 +186,7 @@ export default async function handler(req, res) {
         `${baseUrl}${q},cuisine,delicious`
       ];
       provider = 'unsplash-source';
+      console.log(`🖼️  Using Unsplash source URLs (fallback)`);
     }
 
     // Ensure at least 4 images
