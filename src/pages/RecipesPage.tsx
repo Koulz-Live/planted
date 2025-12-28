@@ -1237,14 +1237,14 @@ export default function RecipesPage() {
               <h4 className="text-center mb-3">🔍 Search for Recipes</h4>
               <form onSubmit={handleRecipeSearch} className="search-form" role="search">
                 <div className="input-group mb-3">
-                  <label htmlFor="recipe-search-input" className="visually-hidden">Search for recipes</label>
+                  <label htmlFor="recipe-search-input" className="visually-hidden">Search for Recipes</label>
                   <input 
                     type="text"
                     id="recipe-search-input"
                     className="form-control form-control-lg"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search for recipes (e.g., 'Italian pasta', 'vegan desserts', 'quick breakfast')..."
+                    placeholder="e.g., Italian pasta, vegan desserts, quick breakfast..."
                     disabled={searchLoading}
                     aria-label="Search for recipes"
                   />
@@ -1313,7 +1313,7 @@ export default function RecipesPage() {
                         )}
                         
                         <button
-                          className="btn btn-sm btn-outline-primary mt-2"
+                          className="btn btn-sm btn-outline-primary mt-2 text-muted"
                           onClick={() => handleGalleryRecipeGeneration(recipe)}
                           aria-label={`View detailed recipe for ${recipe.title}`}
                         >
@@ -1348,7 +1348,7 @@ export default function RecipesPage() {
                     )}
                     
                     <button 
-                      className="btn btn-sm btn-outline-primary mt-2"
+                      className="btn btn-sm btn-outline-success mt-2 text-light"
                       onClick={() => handleGalleryRecipeGeneration(recipe)}
                       aria-label={`View detailed recipe for ${recipe.title}`}
                     >
