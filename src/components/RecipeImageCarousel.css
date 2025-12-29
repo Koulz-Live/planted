@@ -1,6 +1,6 @@
 .recipe-image-carousel {
   width: 100%;
-  margin: 1.5rem 0;
+  margin: 0;
   position: relative;
 }
 
@@ -9,9 +9,9 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
-  border-radius: 12px;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
 }
 
 .carousel-images {
@@ -120,13 +120,13 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
-  border-radius: 12px;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: none;
 }
 
 .recipe-image-placeholder span {

@@ -1330,7 +1330,7 @@ export default function RecipesPage() {
                         )}
                         
                         <button
-                          className="btn btn-sm btn-outline-primary mt-2 text-muted"
+                          className="btn btn-sm btn-outline-primary text-light mt-2"
                           onClick={() => handleGalleryRecipeGeneration(recipe)}
                           aria-label={`View detailed recipe for ${recipe.title}`}
                         >
@@ -1365,7 +1365,7 @@ export default function RecipesPage() {
                     )}
                     
                     <button 
-                      className="btn btn-sm btn-outline-success mt-2 text-light"
+                      className="btn btn-sm btn-outline-success text-light mt-2"
                       onClick={() => handleGalleryRecipeGeneration(recipe)}
                       aria-label={`View detailed recipe for ${recipe.title}`}
                     >
