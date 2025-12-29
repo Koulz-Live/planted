@@ -843,52 +843,69 @@ export default function RecipesPage() {
         </div>
       </div>
 
-      {/* Tabs Navigation */}
+      {/* Tabs Navigation - Card Style */}
       <div className="recipe-tabs-container mb-4">
-        <ul className="nav nav-tabs recipe-tabs" role="tablist" aria-label="Recipe section tabs">
-          <li className="nav-item" role="presentation">
-            <button 
-              className={`nav-link ${activeTab === 'generate' ? 'active' : ''}`}
+        <div className="row g-3" role="tablist" aria-label="Recipe section tabs">
+          <div className="col-md-4 col-sm-12">
+            <div 
+              className={`card h-100 shadow-sm ${activeTab === 'generate' ? 'border-primary' : ''}`}
+              style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
               onClick={() => setActiveTab('generate')}
-              type="button"
               role="tab"
               aria-selected={activeTab === 'generate'}
               aria-controls="generate-panel"
               id="generate-tab"
             >
-              <Icon name="dish" className="icon-inline me-2" aria-hidden="true" />
-              Generate Recipes
-            </button>
-          </li>
-          <li className="nav-item" role="presentation">
-            <button 
-              className={`nav-link ${activeTab === 'gallery' ? 'active' : ''}`}
+              <div className={`card-body text-center ${activeTab === 'generate' ? 'bg-primary bg-opacity-10' : ''}`}>
+                <Icon name="dish" className="icon-inline mb-2" aria-hidden="true" style={{ fontSize: '2rem' }} />
+                <h5 className="card-title mb-2">Generate Recipes</h5>
+                <p className="card-text text-muted small mb-0">
+                  AI-powered personalized recipes
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="col-md-4 col-sm-12">
+            <div 
+              className={`card h-100 shadow-sm ${activeTab === 'gallery' ? 'border-success' : ''}`}
+              style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
               onClick={() => setActiveTab('gallery')}
-              type="button"
               role="tab"
               aria-selected={activeTab === 'gallery'}
               aria-controls="gallery-panel"
               id="gallery-tab"
             >
-              <Icon name="basket" className="icon-inline me-2" aria-hidden="true" />
-              Recipe Gallery
-            </button>
-          </li>
-          <li className="nav-item" role="presentation">
-            <button 
-              className={`nav-link ${activeTab === 'requests' ? 'active' : ''}`}
+              <div className={`card-body text-center ${activeTab === 'gallery' ? 'bg-success bg-opacity-10' : ''}`}>
+                <Icon name="basket" className="icon-inline mb-2" aria-hidden="true" style={{ fontSize: '2rem' }} />
+                <h5 className="card-title mb-2">Recipe Gallery</h5>
+                <p className="card-text text-muted small mb-0">
+                  Browse curated plant-based recipes
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="col-md-4 col-sm-12">
+            <div 
+              className={`card h-100 shadow-sm ${activeTab === 'requests' ? 'border-warning' : ''}`}
+              style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
               onClick={() => setActiveTab('requests')}
-              type="button"
               role="tab"
               aria-selected={activeTab === 'requests'}
               aria-controls="requests-panel"
               id="requests-tab"
             >
-              <Icon name="lightbulb" className="icon-inline me-2" aria-hidden="true" />
-              Recipe Requests
-            </button>
-          </li>
-        </ul>
+              <div className={`card-body text-center ${activeTab === 'requests' ? 'bg-warning bg-opacity-10' : ''}`}>
+                <Icon name="lightbulb" className="icon-inline mb-2" aria-hidden="true" style={{ fontSize: '2rem' }} />
+                <h5 className="card-title mb-2">Recipe Requests</h5>
+                <p className="card-text text-muted small mb-0">
+                  Request your favorite dishes
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Tab Content */}
@@ -1627,7 +1644,7 @@ export default function RecipesPage() {
                       <div className="mb-4">
                         <h6 className="border-bottom pb-2">
                           <Icon name="globe" className="me-2" />
-                          Cultural Notes
+                          Historic facts
                         </h6>
                         <p className="text-muted">{generatedGalleryRecipe.culturalNotes}</p>
                       </div>
