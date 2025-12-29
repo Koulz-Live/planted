@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
+import { BackToTop } from './components/BackToTop';
 import { HomePage, AboutPage, PlantCarePage, RecipesPage, NutritionPage, LearningPage, StorytellingPage, CommunityPage, ChallengesPage, SOCPage, SOCManagementPage } from './pages';
 import './App.css';
 
@@ -25,6 +26,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      <BackToTop />
     </Router>
   );
 }
