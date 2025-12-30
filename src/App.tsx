@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
 import { BackToTop } from './components/BackToTop';
-import { HomePage, AboutPage, PlantCarePage, RecipesPage, NutritionPage, LearningPage, StorytellingPage, CommunityPage, ChallengesPage, SOCPage, SOCManagementPage } from './pages';
+import { HomePage, AboutPage, PlantCarePage, RecipesPage, NutritionPage, EducationPage, CommunityPage, ChallengesPage, SOCPage, SOCManagementPage } from './pages';
 import './App.css';
 
 function App() {
@@ -17,8 +17,9 @@ function App() {
           <Route path="/plant-care" element={<PlantCarePage />} />
           <Route path="/recipes" element={<RecipesPage />} />
           <Route path="/nutrition" element={<NutritionPage />} />
-          <Route path="/learning" element={<LearningPage />} />
-          <Route path="/storytelling" element={<StorytellingPage />} />
+          <Route path="/education" element={<EducationPage />} />
+          <Route path="/learning" element={<EducationPage />} />
+          <Route path="/storytelling" element={<EducationPage />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/soc" element={<SOCPage />} />

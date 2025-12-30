@@ -23,7 +23,7 @@ export function Navigation() {
             </Link>
           </div>
           <div className="col-4 d-flex justify-content-end align-items-center gap-2">
-            <Link className="link-secondary" to="/learning" aria-label="Search learning resources">
+            <Link className="link-secondary" to="/education" aria-label="Search learning resources">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="mx-2" role="img" viewBox="0 0 24 24" aria-hidden="true">
                 <title>Search</title>
                 <circle cx="10.5" cy="10.5" r="7.5"></circle>
@@ -67,11 +67,10 @@ export function Navigation() {
             <Icon name="heart" className="icon-inline me-1 d-md-none" aria-hidden="true" />
             Nutrition
           </Link>
-          <Link className={`nav-item nav-link link-body-emphasis ${isActive('/learning')}`} to="/learning" aria-current={location.pathname === '/learning' ? 'page' : undefined}>
+          <Link className={`nav-item nav-link link-body-emphasis ${isActive('/education') || isActive('/learning') || isActive('/storytelling')}`} to="/education" aria-current={location.pathname === '/education' || location.pathname === '/learning' || location.pathname === '/storytelling' ? 'page' : undefined}>
             <Icon name="book" className="icon-inline me-1 d-md-none" aria-hidden="true" />
-            Learning
+            Education
           </Link>
-          <Link className={`nav-item nav-link link-body-emphasis ${isActive('/storytelling')}`} to="/storytelling" aria-current={location.pathname === '/storytelling' ? 'page' : undefined}>Stories</Link>
           <Link className={`nav-item nav-link link-body-emphasis ${isActive('/community')}`} to="/community" aria-current={location.pathname === '/community' ? 'page' : undefined}>
             <Icon name="people" className="icon-inline me-1 d-md-none" aria-hidden="true" />
             Community

@@ -68,10 +68,7 @@ export function Footer() {
                 <Link to="/plant-care" className="text-body-secondary text-decoration-none">Plant Care</Link>
               </li>
               <li className="mb-2">
-                <Link to="/learning" className="text-body-secondary text-decoration-none">Learning</Link>
-              </li>
-              <li className="mb-2">
-                <Link to="/storytelling" className="text-body-secondary text-decoration-none">Stories</Link>
+                <Link to="/education" className="text-body-secondary text-decoration-none">Education</Link>
               </li>
               <li className="mb-2">
                 <Link to="/challenges" className="text-body-secondary text-decoration-none">Challenges</Link>

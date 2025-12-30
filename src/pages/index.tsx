@@ -3,6 +3,7 @@ export { default as AboutPage } from './About';
 export { default as PlantCarePage } from './PlantCarePage';
 export { default as RecipesPage } from './RecipesPage';
 export { default as NutritionPage } from './NutritionPage';
+export { default as EducationPage } from './EducationPage';
 export { default as LearningPage } from './LearningPage';
 export { default as StorytellingPage } from './StorytellingPage';
 export { default as CommunityPage } from './CommunityPage';
