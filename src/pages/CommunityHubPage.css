@@ -1,0 +1,63 @@
+.community-hub-page {
+  min-height: 100vh;
+}
+
+.community-hub-tabs-container {
+  margin-bottom: 2rem;
+}
+
+.community-hub-tabs-container .card {
+  border-width: 2px;
+  transition: all 0.3s ease;
+}
+
+.community-hub-tabs-container .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+.community-hub-tabs-container .card.border-primary {
+  border-color: #0d6efd !important;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+}
+
+.community-hub-tabs-container .card.border-warning {
+  border-color: #ffc107 !important;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+.community-hub-tabs-container .card-body {
+  padding: 2rem 1.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.community-hub-tabs-container .icon-inline {
+  color: var(--bs-primary);
+  transition: transform 0.3s ease;
+}
+
+.community-hub-tabs-container .card:hover .icon-inline {
+  transform: scale(1.1);
+}
+
+/* Remove duplicate hero sections from child components */
+.community-hub-page .community-page > div:first-child,
+.community-hub-page .challenges-page > div:first-child {
+  display: none;
+}
+
+/* Adjust container padding for nested pages */
+.community-hub-page .community-page,
+.community-hub-page .challenges-page {
+  padding-top: 0;
+}
+
+@media (max-width: 768px) {
+  .community-hub-tabs-container .card-body {
+    padding: 1.5rem 1rem;
+  }
+  
+  .community-hub-tabs-container .icon-inline {
+    font-size: 1.5rem !important;
+  }
+}

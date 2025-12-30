@@ -14,7 +14,7 @@ export function Navigation() {
       <header className="border-bottom lh-1 py-3">
         <div className="row flex-nowrap justify-content-between align-items-center">
           <div className="col-4 pt-1">
-            <Link className="link-secondary text-decoration-none" to="/community" aria-label="Subscribe to community">Subscribe</Link>
+            <Link className="link-secondary text-decoration-none" to="/community-hub" aria-label="Subscribe to community">Subscribe</Link>
           </div>
           <div className="col-4 text-center">
             <Link className="blog-header-logo text-body-emphasis text-decoration-none fs-2 fw-bold d-inline-flex align-items-center gap-2" to="/" aria-label="Planted - Home">
@@ -32,7 +32,7 @@ export function Navigation() {
             </Link>
             <Link 
               className="btn btn-sm btn-success d-flex align-items-center gap-1 shadow-sm" 
-              to="/community" 
+              to="/community-hub" 
               aria-label="Join our community"
               style={{ 
                 fontWeight: '600',
@@ -71,11 +71,10 @@ export function Navigation() {
             <Icon name="book" className="icon-inline me-1 d-md-none" aria-hidden="true" />
             Education
           </Link>
-          <Link className={`nav-item nav-link link-body-emphasis ${isActive('/community')}`} to="/community" aria-current={location.pathname === '/community' ? 'page' : undefined}>
+          <Link className={`nav-item nav-link link-body-emphasis ${isActive('/community-hub') || isActive('/community') || isActive('/challenges')}`} to="/community-hub" aria-current={location.pathname === '/community-hub' || location.pathname === '/community' || location.pathname === '/challenges' ? 'page' : undefined}>
             <Icon name="people" className="icon-inline me-1 d-md-none" aria-hidden="true" />
             Community
           </Link>
-          <Link className={`nav-item nav-link link-body-emphasis ${isActive('/challenges')}`} to="/challenges" aria-current={location.pathname === '/challenges' ? 'page' : undefined}>Challenges</Link>
           <Link className={`nav-item nav-link link-body-emphasis ${isActive('/soc')}`} to="/soc" aria-current={location.pathname === '/soc' ? 'page' : undefined}>SOC</Link>
         </nav>
       </div>

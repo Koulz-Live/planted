@@ -52,7 +52,7 @@ export function Footer() {
                 </Link>
               </li>
               <li className="mb-2">
-                <Link to="/community" className="text-body-secondary text-decoration-none d-flex align-items-center gap-2">
+                <Link to="/community-hub" className="text-body-secondary text-decoration-none d-flex align-items-center gap-2">
                   <Icon name="people" className="icon-inline" aria-hidden="true" />
                   <span>Community</span>
                 </Link>
@@ -71,7 +71,7 @@ export function Footer() {
                 <Link to="/education" className="text-body-secondary text-decoration-none">Education</Link>
               </li>
               <li className="mb-2">
-                <Link to="/challenges" className="text-body-secondary text-decoration-none">Challenges</Link>
+                <Link to="/community-hub" className="text-body-secondary text-decoration-none">Community Hub</Link>
               </li>
               <li className="mb-2">
                 <Link to="/soc" className="text-body-secondary text-decoration-none">SOC</Link>
@@ -86,7 +86,7 @@ export function Footer() {
               Join our community for recipes, tips, and sustainable living inspiration.
             </p>
             <Link 
-              to="/community" 
+              to="/community-hub" 
               className="btn btn-success w-100 mb-3"
               aria-label="Join our community"
             >

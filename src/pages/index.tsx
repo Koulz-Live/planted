@@ -6,6 +6,7 @@ export { default as NutritionPage } from './NutritionPage';
 export { default as EducationPage } from './EducationPage';
 export { default as LearningPage } from './LearningPage';
 export { default as StorytellingPage } from './StorytellingPage';
+export { default as CommunityHubPage } from './CommunityHubPage';
 export { default as CommunityPage } from './CommunityPage';
 export { default as ChallengesPage } from './ChallengesPage';
 export { default as SOCPage } from './SOCPage';
