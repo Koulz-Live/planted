@@ -17,7 +17,49 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFiles = (files: FileList | null) => {
+  // Compress image to reduce payload size for API calls
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          // Create canvas for compression
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Calculate new dimensions (max 1200px width/height)
+          const maxDimension = 1200;
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = (height / width) * maxDimension;
+              width = maxDimension;
+            } else {
+              width = (width / height) * maxDimension;
+              height = maxDimension;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          // Draw and compress
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          // Convert to base64 with 0.8 quality (reduced file size)
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          resolve(compressedDataUrl);
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleFiles = async (files: FileList | null) => {
     if (!files) return;
 
     const newImages: string[] = [];
@@ -27,18 +69,18 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     for (let i = 0; i < filesToProcess; i++) {
       const file = files[i];
       if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const url = e.target?.result as string;
-          newImages.push(url);
+        try {
+          const compressedUrl = await compressImage(file);
+          newImages.push(compressedUrl);
           
           if (newImages.length === filesToProcess) {
             const updated = [...images, ...newImages];
             setImages(updated);
             onImagesChange(updated);
           }
-        };
-        reader.readAsDataURL(file);
+        } catch (error) {
+          console.error('Error compressing image:', error);
+        }
       }
     }
   };

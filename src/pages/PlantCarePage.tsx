@@ -435,6 +435,57 @@ export default function PlantCarePage() {
     setLogFormData(prev => ({ ...prev, photoUrls: urls }));
   };
 
+  // Compress image to reduce payload size and avoid 413 errors
+  const compressImageForAPI = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          // Create canvas for compression
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          if (!ctx) {
+            reject(new Error('Failed to get canvas context'));
+            return;
+          }
+          
+          // Calculate new dimensions (max 800px for API calls to reduce payload)
+          const maxDimension = 800;
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = (height / width) * maxDimension;
+              width = maxDimension;
+            } else {
+              width = (width / height) * maxDimension;
+              height = maxDimension;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          // Draw and compress
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to base64 with 0.7 quality for smaller payload
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          
+          console.log(`📏 Image compressed: ${(file.size / 1024).toFixed(0)}KB → ${(compressedDataUrl.length / 1024).toFixed(0)}KB`);
+          resolve(compressedDataUrl);
+        };
+        img.onerror = () => reject(new Error('Failed to load image'));
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleLogInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -959,13 +1010,14 @@ export default function PlantCarePage() {
                         onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            // Convert to base64 for API call
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                              const base64 = reader.result as string;
-                              identifyPlantFromPhoto(base64);
-                            };
-                            reader.readAsDataURL(file);
+                            try {
+                              // Compress image before sending to API
+                              const compressedBase64 = await compressImageForAPI(file);
+                              identifyPlantFromPhoto(compressedBase64);
+                            } catch (error) {
+                              console.error('Error compressing image:', error);
+                              setError('Failed to process image. Please try a different photo.');
+                            }
                           }
                         }}
                         disabled={identifyingPlant}
