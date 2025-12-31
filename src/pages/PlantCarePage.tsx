@@ -417,6 +417,12 @@ export default function PlantCarePage() {
 
   const handleImagesChange = (urls: string[]) => {
     setFormData(prev => ({ ...prev, photoUrls: urls }));
+    
+    // Auto-identify plant from first photo if plant name is empty and we just added photos
+    if (urls.length > 0 && formData.photoUrls.length === 0 && !formData.plantName.trim()) {
+      console.log('🔍 Auto-identifying plant from uploaded photo...');
+      identifyPlantFromPhoto(urls[0]);
+    }
   };
 
   const handleLogImagesChange = (urls: string[]) => {
