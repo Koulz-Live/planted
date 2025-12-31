@@ -421,7 +421,13 @@ export default function PlantCarePage() {
     // Auto-identify plant from first photo if plant name is empty and we just added photos
     if (urls.length > 0 && formData.photoUrls.length === 0 && !formData.plantName.trim()) {
       console.log('🔍 Auto-identifying plant from uploaded photo...');
-      identifyPlantFromPhoto(urls[0]);
+      // Use setTimeout to avoid blocking the UI and to ensure state updates complete
+      setTimeout(() => {
+        identifyPlantFromPhoto(urls[0]).catch(err => {
+          console.error('Failed to auto-identify plant:', err);
+          // Silently fail - user can still manually enter plant name
+        });
+      }, 100);
     }
   };
 
@@ -446,6 +452,8 @@ export default function PlantCarePage() {
     setError(null);
 
     try {
+      console.log('🔍 Attempting to identify plant from photo...');
+      
       const response = await fetch('/api/ai/identify-plant', {
         method: 'POST',
         headers: {
@@ -455,7 +463,17 @@ export default function PlantCarePage() {
         body: JSON.stringify({ photoUrl })
       });
 
+      console.log('📡 API response status:', response.status);
+
+      if (!response.ok) {
+        console.error('❌ API returned error status:', response.status);
+        const errorText = await response.text();
+        console.error('Error details:', errorText);
+        throw new Error(`API returned ${response.status}`);
+      }
+
       const result = await response.json();
+      console.log('✅ Identification result:', result);
 
       if (result.ok && result.data) {
         const identification: PlantIdentification = {
@@ -471,13 +489,18 @@ export default function PlantCarePage() {
         // If high confidence, pre-fill plant name
         if (identification.confidence >= 70 && identification.commonName) {
           setFormData(prev => ({ ...prev, plantName: identification.commonName }));
+          console.log('✅ Auto-filled plant name:', identification.commonName);
+        } else {
+          console.log('⚠️ Low confidence (' + identification.confidence + '%), showing suggestions');
         }
       } else {
-        setError(result.message || 'Failed to identify plant. Please enter name manually.');
+        console.warn('⚠️ API returned no data or not ok:', result);
+        setError(result.message || 'Could not identify plant. Please enter name manually.');
       }
     } catch (err) {
-      console.error('Error identifying plant:', err);
-      setError('Network error during plant identification. Please try again or enter name manually.');
+      console.error('❌ Error identifying plant:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`Unable to analyze photo (${errorMessage}). Please enter plant name manually.`);
     } finally {
       setIdentifyingPlant(false);
     }
@@ -1093,20 +1116,20 @@ export default function PlantCarePage() {
                   <label className="form-label fw-bold">
                     Observations & Photos (Optional)
                     <span className="text-success fw-normal ms-2" style={{ fontSize: '0.875rem' }}>
-                      📸 Photos improve accuracy by up to 40%
+                      📸 AI will auto-identify plant from photos!
                     </span>
                   </label>
                   <ImageUpload
                     onImagesChange={handleImagesChange}
                     maxImages={5}
-                    helperText="Drag & drop images here, or browse files. Add close-ups of leaves, soil surface, or any problem areas."
+                    helperText="Upload plant photos for automatic AI identification. Add close-ups of leaves, flowers, or full plant view."
                   />
-                  <div className="d-flex gap-3 mt-2">
+                  <div className="d-flex flex-column gap-2 mt-2">
                     <div className="small text-body-secondary">
-                      <strong>Helpful photos:</strong>
+                      <strong>💡 Tip:</strong> Upload a clear photo and AI will identify your plant automatically!
                     </div>
                     <div className="small text-body-secondary">
-                      🌿 Leaf close-up · 🪴 Soil surface · 📷 Full plant view
+                      <strong>Best photos:</strong> 🌿 Leaf close-up · 🌸 Flowers · 🪴 Full plant · 📷 Multiple angles
                     </div>
                   </div>
                 </div>
