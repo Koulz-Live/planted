@@ -15,7 +15,8 @@
     "deploy:afrihost": "npm run build:production && echo 'Build complete! Ready for Afrihost deployment.'"
   },
   "dependencies": {
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "firebase": "^11.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

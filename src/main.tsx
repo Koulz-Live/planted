@@ -4,6 +4,7 @@ import App from './App.tsx'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 const rootElement = document.getElementById('root');
 
