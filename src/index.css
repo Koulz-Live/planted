@@ -459,9 +459,11 @@ textarea {
 
 .nav-scroller {
   position: relative;
-  z-index: 2;
+  /* Ensure mega menus can stack above page sections */
+  z-index: 9999;
   height: 2.75rem;
-  overflow-y: hidden;
+  /* Important: allow dropdown menus to render outside the scroller */
+  overflow: visible;
 }
 
 .nav-scroller .nav {
