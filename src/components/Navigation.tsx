@@ -83,7 +83,9 @@ export function Navigation() {
               className={`nav-item nav-link link-body-emphasis btn btn-link text-decoration-none d-flex align-items-center gap-1 ${
                 isActive('/plant-care') || isActive('/education') || isActive('/learning') ? 'active' : ''
               }`}
-              style={{ border: 'none', padding: '0.5rem 0', background: 'transparent' }}
+              style={{ border: 'none', padding: '0.5rem 0', background: 'transparent', cursor: 'pointer' }}
+              onClick={() => setActiveMenu(activeMenu === 'grow' ? null : 'grow')}
+              type="button"
             >
               <Icon name="sprout" className="icon-inline" aria-hidden="true" />
               Grow
@@ -172,7 +174,9 @@ export function Navigation() {
               className={`nav-item nav-link link-body-emphasis btn btn-link text-decoration-none d-flex align-items-center gap-1 ${
                 isActive('/recipes') || isActive('/nutrition') ? 'active' : ''
               }`}
-              style={{ border: 'none', padding: '0.5rem 0', background: 'transparent' }}
+              style={{ border: 'none', padding: '0.5rem 0', background: 'transparent', cursor: 'pointer' }}
+              onClick={() => setActiveMenu(activeMenu === 'cook' ? null : 'cook')}
+              type="button"
             >
               <Icon name="dish" className="icon-inline" aria-hidden="true" />
               Cook
@@ -261,7 +265,9 @@ export function Navigation() {
               className={`nav-item nav-link link-body-emphasis btn btn-link text-decoration-none d-flex align-items-center gap-1 ${
                 isActive('/community-hub') || isActive('/community') || isActive('/challenges') || isActive('/soc') ? 'active' : ''
               }`}
-              style={{ border: 'none', padding: '0.5rem 0', background: 'transparent' }}
+              style={{ border: 'none', padding: '0.5rem 0', background: 'transparent', cursor: 'pointer' }}
+              onClick={() => setActiveMenu(activeMenu === 'share' ? null : 'share')}
+              type="button"
             >
               <Icon name="people" className="icon-inline" aria-hidden="true" />
               Share
